@@ -2,4 +2,4 @@
 /*.iml
 /node_modules
 /bower_components
-/use/client/index.js
+/src/client/index.js

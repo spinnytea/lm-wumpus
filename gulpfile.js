@@ -31,55 +31,34 @@ if(reporter === 'skipped') {
 }
 
 
-var files = ['config.js', 'spec/**/*.js', 'src/core/**/*.js'];
-
-gulp.task('mocha', ['jshint'], function() {
-  return gulp.src(['spec/**/*.js'], {read: false})
-    .pipe(mocha({reporter: reporter}));
-});
-
-gulp.task('jshint', [], function () {
-  return gulp.src(files).pipe(jshint())
-    .pipe(jshint.reporter('jshint-stylish'))
-    .pipe(jshint.reporter('fail'));
-});
-
-gulp.task('test', ['mocha'], function() {
-  gulp.watch(files, ['mocha']);
-});
-
-
-//
-// targets for the use cases
 // TODO modify this section of the gulp file using ~/git/ggj-2015
-//
 var fork = require('child_process').fork;
 
 var browserify = require('gulp-browserify');
 var browserSync = require('browser-sync');
 
-gulp.task('use-client-jshint', [], function() {
-  return gulp.src(['use/client/js/**/*.js']).pipe(jshint())
+gulp.task('client-jshint', [], function() {
+  return gulp.src(['src/client/js/**/*.js']).pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'))
     .pipe(jshint.reporter('fail'));
 });
-gulp.task('use-server-jshint', [], function() {
-  return gulp.src(['use/server/**/*.js', 'gulpfile.js']).pipe(jshint())
+gulp.task('server-jshint', [], function() {
+  return gulp.src(['src/server/**/*.js', 'gulpfile.js']).pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'))
     .pipe(jshint.reporter('fail'));
 });
 
-gulp.task('use-browserify', ['use-client-jshint'], function() {
-  return gulp.src('use/client/js/index.js')
+gulp.task('browserify', ['client-jshint'], function() {
+  return gulp.src('src/client/js/index.js')
     .pipe(browserify({
       debug: true
     }))
-    .pipe(gulp.dest('use/client'));
+    .pipe(gulp.dest('src/client'));
 });
 
 var browserSyncSync = false;
 var serverHandle;
-gulp.task('use-sync', ['use-browserify'], function() {
+gulp.task('sync', ['browserify'], function() {
   if(serverHandle) {
     if(!browserSyncSync) {
       browserSyncSync = true;
@@ -99,35 +78,35 @@ gulp.task('use-sync', ['use-browserify'], function() {
   }
 });
 
-gulp.task('use-server', ['use-server-jshint'], function() {
+gulp.task('server', ['server-jshint'], function() {
   if(serverHandle) {
     serverHandle.kill();
   } else {
-    serverHandle = fork('use/server');
+    serverHandle = fork('src/server');
     serverHandle.on('close', function() {
-      serverHandle = fork('use/server');
+      serverHandle = fork('src/server');
     });
   }
 });
 
 gulp.task('use', [], function() {
   // whenever you change client files, restart the browser
-  gulp.watch(['use/client/**/*', '!use/client/index.js'], ['use-sync']);
+  gulp.watch(['src/client/**/*', '!src/client/index.js'], ['sync']);
   // any time the server starts, restart the browser, restart the browser
-  gulp.watch('use/server/.stamp', ['use-sync']);
+  gulp.watch('src/server/.stamp', ['sync']);
 
   // any time we make changes to the server, restart the server
-  gulp.watch('use/server/**/*', ['use-server']);
+  gulp.watch('src/server/**/*', ['server']);
 //  .on('change', function(event) {
 //    gutil.log(gutil.colors.yellow('Server file changed: ' +
 //      path.relative(path.join(__dirname, 'use', 'server'), event.path)));
 //  });
 
   // try to start the server the first time
-  return gulp.start('use-server');
+  return gulp.start('server');
 });
 
-gulp.task('use-mocha', ['use-server-jshint'], function() {
-  return gulp.src(['use-spec/**/*.js'], {read: false})
+gulp.task('mocha', ['server-jshint'], function() {
+  return gulp.src(['spec/**/*.js'], {read: false})
     .pipe(mocha({reporter: reporter}));
 });

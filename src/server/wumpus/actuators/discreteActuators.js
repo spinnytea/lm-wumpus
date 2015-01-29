@@ -2,11 +2,11 @@
 // this name is redundant, but helps to distinguish it from the primitive 'discrete' which means something different
 // config.game.grain === 'discrete'
 
-var actuator = require('../../../../src/core/planning/actuator');
-var discrete = require('../../../../src/core/planning/primitives/discrete');
-var ideas = require('../../../../src/core/database/ideas');
-var links = require('../../../../src/core/database/links');
-var subgraph = require('../../../../src/core/database/subgraph');
+var actuator = require('lime/src/planning/actuator');
+var discrete = require('lime/src/planning/primitives/discrete');
+var ideas = require('lime/src/database/ideas');
+var links = require('lime/src/database/links');
+var subgraph = require('lime/src/database/subgraph');
 // TODO incorporate points
 
 // @param directions: the directions unit idea

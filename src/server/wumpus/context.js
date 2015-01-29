@@ -1,12 +1,12 @@
 'use strict';
 var _ = require('lodash');
 
-var actuator = require('../../../src/core/planning/actuator');
+var actuator = require('lime/src/planning/actuator');
 var config = require('../../../config');
-var discrete = require('../../../src/core/planning/primitives/discrete');
-var ideas = require('../../../src/core/database/ideas');
-var links = require('../../../src/core/database/links');
-var subgraph = require('../../../src/core/database/subgraph');
+var discrete = require('lime/src/planning/primitives/discrete');
+var ideas = require('lime/src/database/ideas');
+var links = require('lime/src/database/links');
+var subgraph = require('lime/src/database/subgraph');
 
 var discreteActuators = require('./actuators/discreteActuators');
 

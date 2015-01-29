@@ -1,9 +1,9 @@
 'use strict';
 
-var blueprint = require('../../../src/core/planning/primitives/blueprint');
-var links = require('../../../src/core/database/links');
-var serialplan = require('../../../src/core/planning/serialplan');
-var subgraph = require('../../../src/core/database/subgraph');
+var blueprint = require('lime/src/planning/primitives/blueprint');
+var links = require('lime/src/database/links');
+var serialplan = require('lime/src/planning/serialplan');
+var subgraph = require('lime/src/database/subgraph');
 
 var context = require('./context');
 

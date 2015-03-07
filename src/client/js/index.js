@@ -2,6 +2,7 @@
 angular.module('lime.client', [
   require('./wumpus/wumpusModule').name,
   require('./subgraph/subgraphModule').name,
+  require('./todo/todoModule').name,
   'ngRoute',
 ]).config([
   '$routeProvider',
@@ -14,6 +15,10 @@ angular.module('lime.client', [
     .when('/subgraph/example', {
       templateUrl: 'partials/subgraph/example.html',
       controller: 'lime.client.subgraph.example',
+    })
+    .when('/todo', {
+      templateUrl: 'partials/todo/list.html',
+      controller: 'lime.client.todo.displaylist',
     })
     ;
   }

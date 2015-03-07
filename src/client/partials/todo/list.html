@@ -1,0 +1,8 @@
+<h1>TODO List</h1>
+<section ng-repeat="item in list">
+    <header><h2>{{item.title}}</h2></header>
+    <div>{{item.description}}</div>
+    <ul>
+        <li ng-repeat="task in item.tasks">{{task}}</li>
+    </ul>
+</section>

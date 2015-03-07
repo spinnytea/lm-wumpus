@@ -89,7 +89,7 @@ gulp.task('server', ['server-jshint'], function() {
   }
 });
 
-gulp.task('use', [], function() {
+gulp.task('run', [], function() {
   // whenever you change client files, restart the browser
   gulp.watch(['src/client/**/*', '!src/client/index.js'], ['sync']);
   // any time the server starts, restart the browser, restart the browser

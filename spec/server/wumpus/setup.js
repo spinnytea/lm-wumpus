@@ -4,6 +4,8 @@ var expect = require('chai').expect;
 
 var server = require('../../../src/server/wumpus/index');
 var context = require('../../../src/server/wumpus/context');
+var init_world_model = require('./test_data');
+var config = require('../../../src/client/js/wumpus/impl/config');
 
 // TODO basics of testing wumpus
 // start the server in a second terminal
@@ -24,15 +26,6 @@ var context = require('../../../src/server/wumpus/context');
 var socket = {};
 socket.messages = {};
 socket.emit = function(room, message) { socket.messages[room] = message; };
-
-var config = { game: {
-  chance: 'deterministic', // stochastic
-  grain: 'discrete', // continuous
-  observable: 'fully', // partially
-  timing: 'static', // dynamic
-  agents: 'single', // multi
-  player: 'lemon', // person
-} };
 
 describe('setup', function() {
   afterEach(function() {
@@ -59,9 +52,12 @@ describe('setup', function() {
   describe('server', function() {
     beforeEach(function() {
       context.setup(socket, config);
+      context.sense(init_world_model);
     });
 
-    it.skip('actuators');
+    it.skip('actuators', function() {
+      console.log(context.keys);
+    });
 
     it.skip('goal');
   }); // end server

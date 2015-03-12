@@ -113,4 +113,5 @@ gulp.task('mocha', ['server-jshint'], function() {
 
 gulp.task('test', [], function() {
   gulp.watch(['spec/**/*.js'], ['mocha']);
+  gulp.start('mocha');
 });

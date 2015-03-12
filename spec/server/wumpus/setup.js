@@ -2,6 +2,10 @@
 /* global describe, it, beforeEach, afterEach, before */
 var expect = require('chai').expect;
 
+var discrete = require('lime/src/planning/primitives/discrete');
+var links = require('lime/src/database/links');
+var subgraph = require('lime/src/database/subgraph');
+
 var server = require('../../../src/server/wumpus/index');
 var context = require('../../../src/server/wumpus/context');
 var config = require('../../../src/client/js/wumpus/impl/config');
@@ -25,6 +29,25 @@ var config = require('../../../src/client/js/wumpus/impl/config');
 var socket = {};
 socket.messages = {};
 socket.emit = function(room, message) { socket.messages[room] = message; };
+
+function getRoomProperty(number, link) {
+  var sg = new subgraph.Subgraph();
+
+  var currentRoom = sg.addVertex(subgraph.matcher.discrete, {
+    value: number,
+    unit: context.idea('agentLocation').data().unit,
+    loc: context.roomLoc[number]
+  });
+  var targetProperty = sg.addVertex(subgraph.matcher.filler);
+  sg.addEdge(currentRoom, links.list.type_of,
+    sg.addVertex(subgraph.matcher.id, context.idea('room')), 2);
+  sg.addEdge(currentRoom, links.list['wumpus_sense_has' + link], targetProperty, 1);
+
+  var result = subgraph.search(sg);
+  expect(result).to.deep.equal([sg]);
+
+  return sg.vertices[targetProperty].data;
+}
 
 describe('setup', function() {
   afterEach(function() {
@@ -79,7 +102,7 @@ describe('setup', function() {
       it('grab without gold', function() {
         expect(context.idea('agentHasGold').data().value).to.equal(false);
         expect(context.idea('agentLocation').data().value).to.equal(63);
-        // TODO verify that this room does not have gold
+        expect(getRoomProperty(63, 'Gold').value).to.equal(false);
         actuatorCallback('grab');
         expect(socket.messages.message).to.equal('actuator:grab> could not apply');
         expect(context.idea('agentHasGold').data().value).to.equal(false);
@@ -87,7 +110,7 @@ describe('setup', function() {
 
       it('cannot exit without the gold', function() {
         expect(context.idea('agentLocation').data().value).to.equal(63);
-        // TODO verify that this room has an exit
+        expect(getRoomProperty(63, 'Exit').value).to.equal(true);
         actuatorCallback('exit');
         expect(socket.messages.message).to.equal('actuator:exit> could not apply');
       });

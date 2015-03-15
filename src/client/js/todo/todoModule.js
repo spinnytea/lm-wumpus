@@ -3,15 +3,15 @@
 
 module.exports = angular.module('lime.client.todo', [])
 .factory('lime.client.todo.list', function() {
-  return [
+  var list = [
     {
       title: 'High Level Planning',
       description: 'We can go to a room, pick up the gold, go to the exit, leave. ' +
       'We can do these actions independently, but we need a single plan to do them all.' +
       'Likewise, we don\'t astar to have to plan the WHOLE thing at once, we want to solve each step independently.',
       tasks: [
-        { text: 'How do we specify these goals independently; is it a list of goals (do x, then do y)?', status: 'minus' },
-        { text: 'How do we figure what these goals should be (dependency graph? ~ this is a harder problem)?', status: 'minus' },
+        { text: 'How do we specify these goals independently; is it a list of goals (do x, then do y)?', status: 'none' },
+        { text: 'How do we figure what these goals should be (dependency graph? ~ this is a harder problem)?', status: 'none' },
       ]
     },
     {
@@ -23,11 +23,26 @@ module.exports = angular.module('lime.client.todo', [])
       'to figure ensure that all our many tools operate as desired, ' +
       'to keep the whole project working.',
       tasks: [
-        { text: 'use client to generate a room; save this as our example', status: 'check' },
-        { text: 'server: goal room', status: 'minus' },
+        { text: 'use client to generate a room; save this as our example', status: 'done' },
+        { text: 'server: goal room', status: 'none' },
       ]
     },
   ];
+
+  list.forEach(function(group) {
+    group.tasks.forEach(function(task) {
+      switch(task.status) {
+        case 'none':
+          task.icon = 'minus';
+          break;
+        case 'done':
+          task.icon = 'check';
+          break;
+      }
+    });
+  });
+
+  return list;
 })
 .controller('lime.client.todo.displaylist', [
   '$scope',

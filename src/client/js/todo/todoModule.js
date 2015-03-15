@@ -24,6 +24,7 @@ module.exports = angular.module('lime.client.todo', [])
       'to keep the whole project working.',
       tasks: [
         { text: 'use client to generate a room; save this as our example', status: 'done' },
+        { text: 'in-depth test: create/solve room', status: 'inprogress' },
         { text: 'server: goal room', status: 'none' },
       ]
     },
@@ -34,6 +35,9 @@ module.exports = angular.module('lime.client.todo', [])
       switch(task.status) {
         case 'none':
           task.icon = 'circle-o';
+          break;
+        case 'inprogress':
+          task.icon = 'spinner fa-spin';
           break;
         case 'done':
           task.icon = 'check';

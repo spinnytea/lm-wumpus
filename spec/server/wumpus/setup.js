@@ -10,12 +10,6 @@ var server = require('../../../src/server/wumpus/index');
 var context = require('../../../src/server/wumpus/context');
 var config = require('../../../src/client/js/wumpus/impl/config');
 
-// TODO in depth test
-// create a room
-// solve the room
-
-// TODO remove need for config.js in lm-wumpus
-
 var socket = {};
 socket.messages = {};
 socket.emit = function(room, message) { socket.messages[room] = message; };

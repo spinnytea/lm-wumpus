@@ -33,7 +33,7 @@ module.exports = angular.module('lime.client.todo', [])
     group.tasks.forEach(function(task) {
       switch(task.status) {
         case 'none':
-          task.icon = 'minus';
+          task.icon = 'circle-o';
           break;
         case 'done':
           task.icon = 'check';

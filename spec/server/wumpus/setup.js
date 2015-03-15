@@ -66,59 +66,127 @@ describe('setup', function() {
       context.setup(socket, config);
       context.sense(init_world_model);
       actuatorCallback = server.setup.actuator(socket);
+      expect(socket.messages.message).to.equal('Connected');
     });
 
-    describe('actuators', function() {
-      it('basic', function() {
-        expect(socket.messages.message).to.equal('Connected');
+    describe('helper functions', function() {
+      it('agentDirection', function() {
         expect(context.idea('agentDirection').data().value).to.equal('east');
-        actuatorCallback('right');
-        expect(socket.messages.message).to.equal('actuator:right> potassium');
-        expect(context.idea('agentDirection').data().value).to.equal('south');
-        actuatorCallback('right');
-        expect(socket.messages.message).to.equal('actuator:right> potassium');
-        expect(context.idea('agentDirection').data().value).to.equal('west');
-        actuatorCallback('left');
-        expect(socket.messages.message).to.equal('actuator:left> potassium');
-        expect(context.idea('agentDirection').data().value).to.equal('south');
+        expect(context.idea('agentDirection').data().value).to.not.equal('west');
       });
 
-      it('grab without gold', function() {
-        expect(context.idea('agentHasGold').data().value).to.equal(false);
+      it('agentLocation', function() {
         expect(context.idea('agentLocation').data().value).to.equal(63);
+        expect(context.idea('agentLocation').data().value).to.not.equal(65);
+      });
+
+      it('agentHasGold', function() {
+        expect(context.idea('agentHasGold').data().value).to.equal(false);
+        expect(context.idea('agentHasGold').data().value).to.not.equal(true);
+      });
+
+      it('getRoomProperty', function() {
         expect(getRoomProperty(63, 'Gold').value).to.equal(false);
-        actuatorCallback('grab');
-        expect(socket.messages.message).to.equal('actuator:grab> could not apply');
-        expect(context.idea('agentHasGold').data().value).to.equal(false);
-        expect(context.idea('agentLocation').data().value).to.equal(63);
+        expect(getRoomProperty(63, 'Pit').value).to.equal(false);
+        expect(getRoomProperty(68, 'Gold').value).to.equal(true);
+        expect(getRoomProperty(76, 'Pit').value).to.equal(true);
       });
+    }); // end helper functions
 
-      it('cannot exit without the gold', function() {
-        expect(context.idea('agentLocation').data().value).to.equal(63);
-        expect(getRoomProperty(63, 'Exit').value).to.equal(true);
-        actuatorCallback('exit');
-        expect(socket.messages.message).to.equal('actuator:exit> could not apply');
-        expect(context.idea('agentHasGold').data().value).to.equal(false);
-        expect(context.idea('agentLocation').data().value).to.equal(63);
-      });
-
-      it.skip('cannot exit on non exit', function() {
-        // TODO make sure the player has gold
-      });
-
-      it('cannot go into a pit', function() {
+    describe('actuators', function() {
+      it('left', function() {
+        expect(context.idea('agentDirection').data().value).to.equal('east');
         expect(context.idea('agentLocation').data().value).to.equal(63);
         actuatorCallback('left');
-        actuatorCallback('up');
+        expect(socket.messages.message).to.equal('actuator:left> potassium');
+        expect(context.idea('agentDirection').data().value).to.equal('north');
+        expect(context.idea('agentLocation').data().value).to.equal(63);
         actuatorCallback('left');
         expect(socket.messages.message).to.equal('actuator:left> potassium');
         expect(context.idea('agentDirection').data().value).to.equal('west');
-        expect(context.idea('agentLocation').data().value).to.equal(66);
-        actuatorCallback('up');
-        expect(socket.messages.message).to.equal('actuator:up> could not apply');
-        expect(context.idea('agentDirection').data().value).to.equal('west');
-        expect(context.idea('agentLocation').data().value).to.equal(66);
+        expect(context.idea('agentLocation').data().value).to.equal(63);
+        actuatorCallback('left');
+        expect(socket.messages.message).to.equal('actuator:left> potassium');
+        expect(context.idea('agentDirection').data().value).to.equal('south');
+        expect(context.idea('agentLocation').data().value).to.equal(63);
+        actuatorCallback('left');
+        expect(socket.messages.message).to.equal('actuator:left> potassium');
+        expect(context.idea('agentDirection').data().value).to.equal('east');
+        expect(context.idea('agentLocation').data().value).to.equal(63);
       });
+
+      it('right', function() {
+        expect(context.idea('agentDirection').data().value).to.equal('east');
+        expect(context.idea('agentLocation').data().value).to.equal(63);
+        actuatorCallback('right');
+        expect(socket.messages.message).to.equal('actuator:right> potassium');
+        expect(context.idea('agentDirection').data().value).to.equal('south');
+        expect(context.idea('agentLocation').data().value).to.equal(63);
+        actuatorCallback('right');
+        expect(socket.messages.message).to.equal('actuator:right> potassium');
+        expect(context.idea('agentDirection').data().value).to.equal('west');
+        expect(context.idea('agentLocation').data().value).to.equal(63);
+        actuatorCallback('right');
+        expect(socket.messages.message).to.equal('actuator:right> potassium');
+        expect(context.idea('agentDirection').data().value).to.equal('north');
+        expect(context.idea('agentLocation').data().value).to.equal(63);
+        actuatorCallback('right');
+        expect(socket.messages.message).to.equal('actuator:right> potassium');
+        expect(context.idea('agentDirection').data().value).to.equal('east');
+        expect(context.idea('agentLocation').data().value).to.equal(63);
+      });
+
+      describe('up', function() {
+        it('basic', function() {
+          expect(context.idea('agentLocation').data().value).to.equal(63);
+          expect(context.idea('agentDirection').data().value).to.equal('east');
+          actuatorCallback('up');
+          expect(socket.messages.message).to.equal('actuator:up> potassium');
+          expect(context.idea('agentLocation').data().value).to.equal(65);
+          expect(context.idea('agentDirection').data().value).to.equal('east');
+        });
+
+        it('cannot go into a pit', function() {
+          expect(context.idea('agentLocation').data().value).to.equal(63);
+          actuatorCallback('left');
+          actuatorCallback('up');
+          actuatorCallback('left');
+          expect(socket.messages.message).to.equal('actuator:left> potassium');
+          expect(context.idea('agentDirection').data().value).to.equal('west');
+          expect(context.idea('agentLocation').data().value).to.equal(66);
+          actuatorCallback('up');
+          expect(socket.messages.message).to.equal('actuator:up> could not apply');
+          expect(context.idea('agentDirection').data().value).to.equal('west');
+          expect(context.idea('agentLocation').data().value).to.equal(66);
+        });
+      }); // end up
+
+      describe('grab', function() {
+        it('without gold', function() {
+          expect(context.idea('agentHasGold').data().value).to.equal(false);
+          expect(context.idea('agentLocation').data().value).to.equal(63);
+          expect(getRoomProperty(63, 'Gold').value).to.equal(false);
+          actuatorCallback('grab');
+          expect(socket.messages.message).to.equal('actuator:grab> could not apply');
+          expect(context.idea('agentHasGold').data().value).to.equal(false);
+          expect(context.idea('agentLocation').data().value).to.equal(63);
+        });
+      }); // end gold
+
+      describe('exit', function() {
+        it('cannot exit without the gold', function() {
+          expect(context.idea('agentLocation').data().value).to.equal(63);
+          expect(getRoomProperty(63, 'Exit').value).to.equal(true);
+          actuatorCallback('exit');
+          expect(socket.messages.message).to.equal('actuator:exit> could not apply');
+          expect(context.idea('agentHasGold').data().value).to.equal(false);
+          expect(context.idea('agentLocation').data().value).to.equal(63);
+        });
+
+        it.skip('cannot exit on non exit', function() {
+          // TODO make sure the player has gold
+        });
+      }); // end exit
 
       it('go for goal', function () {
         // go to the room with the gold
@@ -157,6 +225,12 @@ describe('setup', function() {
       });
     }); // end actuators
 
-    it.skip('goal');
+    describe('goal', function() {
+      describe('room', function() {
+        it.skip('close');
+
+        it.skip('far');
+      }); // end room
+    }); // end goal
   }); // end server
 }); // end setup

@@ -10,16 +10,6 @@ var server = require('../../../src/server/wumpus/index');
 var context = require('../../../src/server/wumpus/context');
 var config = require('../../../src/client/js/wumpus/impl/config');
 
-// TODO basics of testing wumpus
-// start the server in a second terminal
-// create a socket
-//
-// OOORRRR use the server directly, like, with function calls
-//
-// exercise the various commands we can call
-// ensure we get the results we expect
-// basically, pretend to be a client
-
 // TODO in depth test
 // create a room
 // solve the room

@@ -4,7 +4,7 @@ var path = require('path');
 var touch = require('touch');
 
 var app = express();
-app.use('/vender', express.static(path.join(__dirname, '..', '..', 'bower_components')));
+app.use('/vendor', express.static(path.join(__dirname, '..', '..', 'vendor')));
 app.use(express.static(path.join(__dirname, '..', 'client')));
 app.listen(8888, function() {
   touch.sync(path.join(__dirname, '.stamp'));

@@ -10,8 +10,8 @@ module.exports = angular.module('lime.client.todo', [])
       'We can do these actions independently, but we need a single plan to do them all.' +
       'Likewise, we don\'t astar to have to plan the WHOLE thing at once, we want to solve each step independently.',
       tasks: [
-        'How do we specify these goals independently; is it a list of goals (do x, then do y)?',
-        'How do we figure what these goals should be (dependency graph? ~ this is a harder problem)?',
+        { text: 'How do we specify these goals independently; is it a list of goals (do x, then do y)?', status: 'minus' },
+        { text: 'How do we figure what these goals should be (dependency graph? ~ this is a harder problem)?', status: 'minus' },
       ]
     },
     {
@@ -23,8 +23,8 @@ module.exports = angular.module('lime.client.todo', [])
       'to figure ensure that all our many tools operate as desired, ' +
       'to keep the whole project working.',
       tasks: [
-        'use client to generate a room; save this as our example',
-        'server: goal room',
+        { text: 'use client to generate a room; save this as our example', status: 'check' },
+        { text: 'server: goal room', status: 'minus' },
       ]
     },
   ];

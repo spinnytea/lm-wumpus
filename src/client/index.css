@@ -80,3 +80,12 @@ svg.subgraph {
   stroke: #999;
   stroke-opacity: .6;
 }
+
+/*
+ * task list
+ */
+
+.tasklist ul {
+  list-style-type: none;
+  padding-left: 20px;
+}

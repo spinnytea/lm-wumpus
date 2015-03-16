@@ -183,8 +183,20 @@ describe('setup', function() {
           expect(context.idea('agentLocation').data().value).to.equal(63);
         });
 
-        it.skip('cannot exit on non exit', function() {
-          // TODO make sure the player has gold
+        it('cannot exit on non exit', function() {
+          expect(context.idea('agentHasGold').data().value).to.equal(false);
+          expect(context.idea('agentDirection').data().value).to.equal('east');
+          expect(context.idea('agentLocation').data().value).to.equal(63);
+          actuatorCallback('right');
+          actuatorCallback('up');
+          actuatorCallback('right');
+          actuatorCallback('up');
+          actuatorCallback('grab');
+          expect(context.idea('agentHasGold').data().value).to.equal(true);
+          expect(context.idea('agentDirection').data().value).to.equal('west');
+          expect(context.idea('agentLocation').data().value).to.equal(68);
+          actuatorCallback('exit');
+          expect(socket.messages.message).to.equal('actuator:exit> could not apply');
         });
       }); // end exit
 

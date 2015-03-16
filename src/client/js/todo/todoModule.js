@@ -15,7 +15,7 @@ module.exports = angular.module('lime.client.todo', [])
       ]
     },
     {
-      title: 'Unit Tests',
+      title: 'Integration Tests',
       description: 'Really, this is more like an integration test. But we need something at this higher level. ' +
       'The unit tests in lime test each thing independently. We need to test how they interact with each other, ' +
       'how each of these intended use cases works. ' +

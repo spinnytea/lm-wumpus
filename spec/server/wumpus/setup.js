@@ -57,7 +57,6 @@ describe('setup', function() {
 
   describe('server', function() {
     var init_world_model;
-    var actuatorCallback;
     before(function() {
       init_world_model = require('./test_data');
     });
@@ -65,7 +64,6 @@ describe('setup', function() {
     beforeEach(function() {
       context.setup(socket, config);
       context.sense(init_world_model);
-      actuatorCallback = server.setup.actuator(socket);
       expect(socket.messages.message).to.equal('Connected');
     });
 
@@ -94,6 +92,11 @@ describe('setup', function() {
     }); // end helper functions
 
     describe('actuators', function() {
+      var actuatorCallback;
+      beforeEach(function() {
+        actuatorCallback = server.setup.actuator(socket);
+      });
+
       it('left', function() {
         expect(context.idea('agentDirection').data().value).to.equal('east');
         expect(context.idea('agentLocation').data().value).to.equal(63);
@@ -238,10 +241,41 @@ describe('setup', function() {
     }); // end actuators
 
     describe('goal', function() {
-      describe('room', function() {
-        it.skip('close');
+      var goalCallback;
+      beforeEach(function() {
+        goalCallback = server.setup.goal(socket);
+      });
 
-        it.skip('far');
+      describe('room', function() {
+        it('65', function() {
+          expect(context.idea('agentLocation').data().value).to.equal(63);
+          expect(context.idea('agentDirection').data().value).to.equal('east');
+          goalCallback('room 65');
+          expect(socket.messages.message).to.equal('goal:room 65> oxygen potassium');
+          expect(context.idea('agentLocation').data().value).to.equal(65);
+          expect(context.idea('agentDirection').data().value).to.equal('east');
+        });
+
+        it('73', function() {
+          expect(context.idea('agentLocation').data().value).to.equal(63);
+          expect(context.idea('agentDirection').data().value).to.equal('east');
+          goalCallback('room 73');
+          expect(socket.messages.message).to.equal('goal:room 73> oxygen potassium');
+          expect(context.idea('agentLocation').data().value).to.equal(73);
+          expect(context.idea('agentDirection').data().value).to.equal('east');
+        });
+
+        it('69', function() {
+          expect(context.idea('agentLocation').data().value).to.equal(63);
+          expect(context.idea('agentDirection').data().value).to.equal('east');
+          goalCallback('room 69');
+          expect(socket.messages.message).to.equal('goal:room 69> oxygen potassium');
+          expect(context.idea('agentLocation').data().value).to.equal(69);
+          // up-right-up is shorter than right-up-left-up, so we SHOULD be facing south
+          expect(context.idea('agentDirection').data().value).to.equal('south');
+        });
+
+        it.skip('far away');
       }); // end room
     }); // end goal
   }); // end server

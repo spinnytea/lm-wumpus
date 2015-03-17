@@ -5,6 +5,7 @@ var links = require('lime/src/database/links');
 var serialplan = require('lime/src/planning/serialplan');
 var subgraph = require('lime/src/database/subgraph');
 
+// TODO refactor this context based on the config it can handle (see context.setup)
 var context = require('./context');
 
 exports.setup = function(io) {

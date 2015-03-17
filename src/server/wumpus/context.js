@@ -371,15 +371,34 @@ exports.sense = function(state) {
     config.save();
     subgraph.search(exports.subgraph);
   //  console.log('discrete concrete: ' + exports.subgraph.concrete);
-  }
+  } // end if context.keys.instance (init word from context)
 
   senseRooms(state.rooms);
   senseAgent(state.agent);
 };
 
-function senseRooms() {
-// TODO sense rooms
-//  console.log(rooms[0]);
+function senseRooms(rooms) {
+  // find the existing room and senses
+  // update the properties of the room
+  rooms.forEach(function(room) {
+    var sg = new subgraph.Subgraph();
+
+    // the values we want to update
+    var roomHasGold = sg.addVertex(subgraph.matcher.similar, {unit: discrete.definitions.list.boolean});
+
+    // configure the rest of the subgraph
+    var currentRoom = sg.addVertex(subgraph.matcher.discrete,
+      discrete.cast({value: room.id, unit: exports.idea('roomDefinition').id, loc: { x: room.x, y: room.y }}));
+    sg.addEdge(currentRoom, links.list.type_of, sg.addVertex(subgraph.matcher.id, exports.idea('room').id));
+    sg.addEdge(currentRoom, links.list.wumpus_sense_hasGold, roomHasGold);
+    // find
+    subgraph.search(sg);
+    if(!sg.concrete) throw new Error('Cannot find room');
+
+    // update the values
+    // TODO log when the sensed value differs from the internal value
+    sg.vertices[roomHasGold].idea.update(discrete.cast({value: room.hasGold, unit: discrete.definitions.list.boolean}));
+  });
 }
 
 function senseAgent(agent) {

@@ -1,5 +1,5 @@
 'use strict';
-/* global describe, it, beforeEach, afterEach, before */
+/* global describe, it, beforeEach, afterEach, before, after */
 var expect = require('chai').expect;
 
 var discrete = require('lime/src/planning/primitives/discrete');
@@ -34,10 +34,6 @@ function getRoomProperty(number, link) {
 }
 
 describe('setup', function() {
-  afterEach(function() {
-    context.cleanup();
-  });
-
   it('context', function() {
     // invalid config
     context.setup(socket, { game: {} });
@@ -53,18 +49,32 @@ describe('setup', function() {
     context.cleanup();
     context.setup(socket, config);
     expect(socket.messages.message).to.equal('Connected');
+
+    context.cleanup();
   });
 
   describe('server', function() {
     var init_world_model;
     before(function() {
       init_world_model = require('./test_data');
+      context.setup(socket, config);
+      expect(socket.messages.message).to.equal('Connected');
+    });
+
+    after(function() {
+      context.cleanup();
     });
 
     beforeEach(function() {
-      context.setup(socket, config);
       context.sense(init_world_model);
-      expect(socket.messages.message).to.equal('Connected');
+      context.subgraph.invalidateCache();
+
+      // test room config
+      expect(getRoomProperty(63, 'Exit').value).to.equal(true);
+      expect(getRoomProperty(68, 'Gold').value).to.equal(true);
+      expect(context.idea('agentDirection').data().value).to.equal('east');
+      expect(context.idea('agentLocation').data().value).to.equal(63);
+      expect(context.idea('agentHasGold').data().value).to.equal(false);
     });
 
     describe('helper functions', function() {

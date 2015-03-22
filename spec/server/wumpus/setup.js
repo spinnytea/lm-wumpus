@@ -5,6 +5,7 @@ var expect = require('chai').expect;
 var discrete = require('lime/src/planning/primitives/discrete');
 var links = require('lime/src/database/links');
 var subgraph = require('lime/src/database/subgraph');
+var tools = require('lime/spec/testingTools');
 
 var server = require('../../../src/server/wumpus/index');
 var context = require('../../../src/server/wumpus/context');
@@ -50,6 +51,50 @@ describe('setup', function() {
     context.setup(socket, config);
     expect(socket.messages.message).to.equal('Connected');
 
+    context.cleanup();
+  });
+  it.skip('I don\'t know how to handle this. with game params');
+
+  it('discrete.definitions.difference.wumpus_room', function() {
+    context.setup(socket, config);
+    var spacing = config.room.spacing;
+
+    expect(discrete.definitions.difference.wumpus_room).to.be.a('function');
+    var roomDefinition = discrete.definitions.create([1, 2], 'wumpus_room');
+    var d1 = discrete.cast({value: 1, unit: roomDefinition.id, loc: { x: 0, y: 0 }});
+    var d2 = discrete.cast({value: 1, unit: roomDefinition.id, loc: { x: 0, y: 0 }});
+
+    expect(discrete.difference(d1, d2)).to.equal(0);
+
+    // technically, they are the same room; so the loc must be wrong
+    d2.loc.x = spacing;
+    expect(discrete.difference(d1, d2)).to.equal(0);
+
+    // make d2 a different room
+    d2.value = 2;
+
+    // same y, different x
+    d2.loc.x = spacing;
+    expect(discrete.difference(d1, d2)).to.equal(1);
+    d2.loc.x = spacing*5;
+    expect(discrete.difference(d1, d2)).to.equal(5);
+
+    // same x, different y
+    d2.loc.x = 0;
+    d2.loc.y = spacing;
+    expect(discrete.difference(d1, d2)).to.equal(1);
+    d2.loc.y = spacing*5;
+    expect(discrete.difference(d1, d2)).to.equal(5);
+
+    // different both
+    d2.loc.x = spacing;
+    d2.loc.y = spacing;
+    expect(discrete.difference(d1, d2)).to.equal(3);
+    d2.loc.x = spacing*5;
+    d2.loc.y = spacing*5;
+    expect(discrete.difference(d1, d2)).to.equal(11);
+
+    tools.ideas.clean(roomDefinition);
     context.cleanup();
   });
 

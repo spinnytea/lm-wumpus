@@ -17,16 +17,16 @@ links.create('wumpus_sense_hasPit');
 links.create('wumpus_sense_hasGold');
 links.create('wumpus_sense_hasExit');
 links.create('wumpus_room_door');
-// TODO write some basic unit tests for the server
-// - prove that our actions still work
-// - left, right, up, grab, exit
-// - goal/room
-// (just create a local socket io connection, call index.setup, send it commands, check context.idea)
+
+// TODO debug astar path expansions with/out this
+// - what do they look like?
+// - it IS better than not using this at all
+// - why does this still take p60/f100 to get to a room?
 discrete.definitions.difference.wumpus_room = function(d1, d2) {
-  // TODO debug astar path expansions with/out this
-  // - what do they look like?
-  // - it IS better than not using this at all
-  // - why does this still take p60/f100 to get to a room?
+  // if these are the same room, then the distance is 0
+  // this is a short circuit
+  // if the loc is different for some reason,
+  // then... then that must be an error in the loc
   if(d1.value === d2.value)
     return 0;
 

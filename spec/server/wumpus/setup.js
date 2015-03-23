@@ -11,9 +11,7 @@ var server = require('../../../src/server/wumpus/index');
 var context = require('../../../src/server/wumpus/context');
 var config = require('../../../src/client/js/wumpus/impl/config');
 
-var socket = {};
-socket.messages = {};
-socket.emit = function(room, message) { socket.messages[room] = message; };
+var socket = require('./socket');
 
 function getRoomProperty(number, link) {
   var sg = new subgraph.Subgraph();
@@ -99,21 +97,9 @@ describe('setup', function() {
   });
 
   describe('server', function() {
-    var init_world_model;
-    before(function() {
-      init_world_model = require('./test_data');
-      context.setup(socket, config);
-      expect(socket.messages.message).to.equal('Connected');
-    });
-
-    after(function() {
-      context.cleanup();
-    });
+    socket.setup();
 
     beforeEach(function() {
-      context.sense(init_world_model);
-      context.subgraph.invalidateCache();
-
       // test room config
       expect(getRoomProperty(63, 'Exit').value).to.equal(true);
       expect(getRoomProperty(68, 'Gold').value).to.equal(true);

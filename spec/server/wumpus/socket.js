@@ -5,7 +5,8 @@ var context = require('../../../src/server/wumpus/context');
 var config = require('../../../src/client/js/wumpus/impl/config');
 
 //
-// dummy socket for the specs
+// dummy socket.io impl for the specs
+// contains the methods that we use
 //
 
 exports.messages = {};

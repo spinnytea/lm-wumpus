@@ -24,9 +24,9 @@ module.exports = angular.module('lime.client.todo', [])
       'to keep the whole project working.',
       tasks: [
         { text: 'use client to generate a room; save this as our example', status: 'done' },
-        { text: 'in-depth test: create/solve room', status: 'inprogress' },
+        { text: 'astar in-depth test: create/solve room', status: 'done' },
         { text: 'server: actuator tests', status: 'done' },
-        { text: 'server: goal room', status: 'inprogress' },
+        { text: 'server: goal room', status: 'done' },
       ]
     },
   ];

@@ -316,7 +316,27 @@ describe('setup', function() {
           expect(context.idea('agentDirection').data().value).to.equal('south');
         });
 
-        it.skip('far away');
+        it('78', function() {
+          expect(context.idea('agentLocation').data().value).to.equal(63);
+          expect(context.idea('agentDirection').data().value).to.equal('east');
+          goalCallback('room 78');
+          expect(socket.messages.message).to.equal('goal:room 78> oxygen potassium');
+          expect(context.idea('agentLocation').data().value).to.equal(78);
+          expect(context.idea('agentDirection').data().value).to.equal('north');
+        });
+
+        it('68-78', function() {
+          expect(context.idea('agentLocation').data().value).to.equal(63);
+          expect(context.idea('agentDirection').data().value).to.equal('east');
+          goalCallback('room 68');
+          expect(socket.messages.message).to.equal('goal:room 68> oxygen potassium');
+          expect(context.idea('agentLocation').data().value).to.equal(68);
+          expect(context.idea('agentDirection').data().value).to.equal('west');
+          goalCallback('room 78');
+          expect(socket.messages.message).to.equal('goal:room 78> oxygen potassium');
+          expect(context.idea('agentLocation').data().value).to.equal(78);
+          expect(context.idea('agentDirection').data().value).to.equal('north');
+        });
       }); // end room
     }); // end goal
   }); // end server

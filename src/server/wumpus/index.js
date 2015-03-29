@@ -67,28 +67,11 @@ exports.setup.actuator = function(socket) {
 
 exports.setup.goal = function(socket) {
   return function(str) {
-    // all plans are going to involve an agent
-    var goal = new subgraph.Subgraph();
-    var agentInstance = goal.addVertex(subgraph.matcher.filler);
-    goal.addEdge(
-      goal.addVertex(subgraph.matcher.id, context.idea('instance')),
-      links.list.thought_description,
-      agentInstance);
-    goal.addEdge(agentInstance, links.list.type_of,
-      goal.addVertex(subgraph.matcher.id, context.idea('agent')));
-    var roomDefinition = goal.addVertex(subgraph.matcher.id, context.idea('roomDefinition'));
+
+    var goal;
 
     if(str.indexOf('room') === 0) {
-      // the agent needs to be in the location we provide
-      var roomId = +str.substring(str.indexOf(' ')+1);
-      var loc = context.roomLoc[roomId];
-
-      // TODO specify new agent location based on room
-      var roomInstance = goal.addVertex(subgraph.matcher.discrete, { value: roomId, unit: context.idea('roomDefinition').id, loc: loc });
-      goal.addEdge(roomDefinition, links.list.thought_description, roomInstance);
-//        var agentLocation = goal.addVertex(subgraph.matcher.discrete, roomInstance, {transitionable:true,matchRef:true});
-      var agentLocation = goal.addVertex(subgraph.matcher.discrete, { value: roomId, unit: context.idea('roomDefinition').id, loc: loc }, {transitionable:true});
-      goal.addEdge(agentInstance, links.list.wumpus_sense_agent_loc, agentLocation);
+      goal = createGoal.room(+str.substring(str.indexOf(' ')+1));
     } else {
       socket.emit('message', 'goal:'+str+'> not a valid goal');
       return;
@@ -122,4 +105,29 @@ exports.setup.goal = function(socket) {
       socket.emit('message', 'goal:'+str+'> could not find a path');
     }
   };
+};
+
+var createGoal = {
+  // the agent needs to be in the location we provide
+  room: function(roomId) {
+    var goal = new subgraph.Subgraph();
+    var agentInstance = goal.addVertex(subgraph.matcher.filler);
+    goal.addEdge(
+      goal.addVertex(subgraph.matcher.id, context.idea('instance')),
+      links.list.thought_description,
+      agentInstance);
+    goal.addEdge(agentInstance, links.list.type_of,
+      goal.addVertex(subgraph.matcher.id, context.idea('agent')));
+    var roomDefinition = goal.addVertex(subgraph.matcher.id, context.idea('roomDefinition'));
+
+    // TODO specify new agent location based on room
+    var loc = context.roomLoc[roomId];
+    var roomInstance = goal.addVertex(subgraph.matcher.discrete, { value: roomId, unit: context.idea('roomDefinition').id, loc: loc });
+    goal.addEdge(roomDefinition, links.list.thought_description, roomInstance);
+//        var agentLocation = goal.addVertex(subgraph.matcher.discrete, roomInstance, {transitionable:true,matchRef:true});
+    var agentLocation = goal.addVertex(subgraph.matcher.discrete, { value: roomId, unit: context.idea('roomDefinition').id, loc: loc }, {transitionable:true});
+    goal.addEdge(agentInstance, links.list.wumpus_sense_agent_loc, agentLocation);
+
+    return goal;
+  }
 };

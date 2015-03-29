@@ -338,6 +338,8 @@ describe('setup', function() {
           expect(context.idea('agentDirection').data().value).to.equal('north');
         });
       }); // end room
+
+      it.skip('win');
     }); // end goal
   }); // end server
 }); // end setup

@@ -7,11 +7,11 @@ module.exports = angular.module('lime.client.todo', [])
     {
       title: 'High Level Planning',
       description: 'We can go to a room, pick up the gold, go to the exit, leave. ' +
-      'We can do these actions independently, but we need a single plan to do them all.' +
+      'We can do these actions independently, but we need a single plan to do them all. ' +
       'Likewise, we don\'t astar to have to plan the WHOLE thing at once, we want to solve each step independently.',
       tasks: [
-        { text: 'How do we specify these goals independently; is it a list of goals (do x, then do y)?', status: 'none' },
-        { text: 'How do we figure what these goals should be (dependency graph? ~ this is a harder problem)?', status: 'none' },
+        { text: 'How do we specify these goals independently; is it a list of goals (do x, then do y)?', status: 'done' },
+        { text: 'How do we figure what these goals should be (dependency graph? ~ this is a harder problem)? (this is for later)', status: 'wontfix' },
       ]
     },
     {
@@ -29,6 +29,15 @@ module.exports = angular.module('lime.client.todo', [])
         { text: 'server: goal room', status: 'done' },
       ]
     },
+    {
+      title: 'Refactor Tests',
+      description: 'Allow for for each of the config types',
+      tasks: [
+        { text: 'pull current into "basic"', status: 'none' },
+        { text: 'finish testing "basic"', status: 'none' },
+        { text: 'pick one complexity to account for, do it (pick the easiest)', status: 'none' },
+      ]
+    },
   ];
 
   list.forEach(function(group) {
@@ -39,6 +48,9 @@ module.exports = angular.module('lime.client.todo', [])
           break;
         case 'inprogress':
           task.icon = 'spinner fa-spin';
+          break;
+        case 'wontfix':
+          task.icon = 'times';
           break;
         case 'done':
           task.icon = 'check';

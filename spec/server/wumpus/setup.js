@@ -340,6 +340,13 @@ describe('setup', function() {
       }); // end room
 
       it.skip('win');
+
+      it.skip('create a goal that is "go to room with gold"', function() {
+        // we want to identify the room so we can travel to it
+        // do we need to know the room before hand?
+        // no, the GOAL should be "room with gold"
+        // ... we don't need to do a fancy search, we just find the room by proxy, and match the room location value
+      });
     }); // end goal
   }); // end server
 }); // end setup

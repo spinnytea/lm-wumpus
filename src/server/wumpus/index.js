@@ -108,25 +108,34 @@ exports.setup.goal = function(socket) {
 };
 
 var createGoal = {
-  // the agent needs to be in the location we provide
-  room: function(roomId) {
-    var goal = new subgraph.Subgraph();
-    var agentInstance = goal.addVertex(subgraph.matcher.filler);
+  agent: function() {
+    var ctx = {};
+    var goal = ctx.goal = new subgraph.Subgraph();
+
+    ctx.agentInstance = goal.addVertex(subgraph.matcher.filler);
     goal.addEdge(
       goal.addVertex(subgraph.matcher.id, context.idea('instance')),
       links.list.thought_description,
-      agentInstance);
-    goal.addEdge(agentInstance, links.list.type_of,
+      ctx.agentInstance);
+    goal.addEdge(ctx.agentInstance, links.list.type_of,
       goal.addVertex(subgraph.matcher.id, context.idea('agent')));
-    var roomDefinition = goal.addVertex(subgraph.matcher.id, context.idea('roomDefinition'));
+    ctx.roomDefinition = goal.addVertex(subgraph.matcher.id, context.idea('roomDefinition'));
 
-    // TODO specify new agent location based on room
-    var loc = context.roomLoc[roomId];
-    var roomInstance = goal.addVertex(subgraph.matcher.discrete, { value: roomId, unit: context.idea('roomDefinition').id, loc: loc });
-    goal.addEdge(roomDefinition, links.list.thought_description, roomInstance);
+    return ctx;
+  },
+
+  // the agent needs to be in the location we provide
+  room: function(roomId) {
+    var ctx = createGoal.agent();
+    var goal = ctx.goal;
+
+    // TODO specify new agent location based on room (instead of roomId)
+    ctx.loc = context.roomLoc[roomId];
+    ctx.roomInstance = goal.addVertex(subgraph.matcher.discrete, { value: roomId, unit: context.idea('roomDefinition').id, loc: ctx.loc });
+    goal.addEdge(ctx.roomDefinition, links.list.thought_description, ctx.roomInstance);
 //        var agentLocation = goal.addVertex(subgraph.matcher.discrete, roomInstance, {transitionable:true,matchRef:true});
-    var agentLocation = goal.addVertex(subgraph.matcher.discrete, { value: roomId, unit: context.idea('roomDefinition').id, loc: loc }, {transitionable:true});
-    goal.addEdge(agentInstance, links.list.wumpus_sense_agent_loc, agentLocation);
+    ctx.agentLocation = goal.addVertex(subgraph.matcher.discrete, { value: roomId, unit: context.idea('roomDefinition').id, loc: ctx.loc }, {transitionable:true});
+    goal.addEdge(ctx.agentInstance, links.list.wumpus_sense_agent_loc, ctx.agentLocation);
 
     return goal;
   }

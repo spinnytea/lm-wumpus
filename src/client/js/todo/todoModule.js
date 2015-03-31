@@ -35,7 +35,7 @@ module.exports = angular.module('lime.client.todo', [])
       tasks: [
         { text: 'pull current into "basic"', status: 'none' },
         { text: 'finish testing "basic"', status: 'none' },
-        { text: 'pick one complexity to account for, do it (pick the easiest)', status: 'none' },
+        { text: 'do hierarchy planning with basic: rooms then turns', status: 'none' },
       ]
     },
   ];

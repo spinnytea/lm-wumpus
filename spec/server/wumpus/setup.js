@@ -341,6 +341,22 @@ describe('setup', function() {
         });
       }); // end room
 
+      it('gold', function() {
+        expect(context.idea('agentLocation').data().value).to.equal(63);
+        expect(context.idea('agentDirection').data().value).to.equal('east');
+        expect(context.idea('agentHasGold').data().value).to.equal(false);
+        expect(getRoomProperty(68, 'Gold').value).to.equal(true);
+        goalCallback('room 68');
+        expect(context.idea('agentLocation').data().value).to.equal(68);
+
+        // pick up the gold
+        goalCallback('gold');
+        expect(socket.messages.message).to.equal('goal:gold> oxygen potassium');
+
+        expect(context.idea('agentHasGold').data().value).to.equal(true);
+        expect(getRoomProperty(68, 'Gold').value).to.equal(false);
+      });
+
       it.skip('win');
 
       it.skip('create a goal that is "go to room with gold"', function() {

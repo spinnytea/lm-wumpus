@@ -1,6 +1,7 @@
 'use strict';
 
 var blueprint = require('lime/src/planning/primitives/blueprint');
+var discrete = require('lime/src/planning/primitives/discrete');
 var links = require('lime/src/database/links');
 var serialplan = require('lime/src/planning/serialplan');
 var subgraph = require('lime/src/database/subgraph');
@@ -72,6 +73,8 @@ exports.setup.goal = function(socket) {
 
     if(str.indexOf('room') === 0) {
       goal = createGoal.room(+str.substring(str.indexOf(' ')+1));
+    } else if(str.indexOf('gold') === 0) {
+      goal = createGoal.gold();
     } else {
       socket.emit('message', 'goal:'+str+'> not a valid goal');
       return;
@@ -136,6 +139,17 @@ var createGoal = {
 //        var agentLocation = goal.addVertex(subgraph.matcher.discrete, roomInstance, {transitionable:true,matchRef:true});
     ctx.agentLocation = goal.addVertex(subgraph.matcher.discrete, { value: roomId, unit: context.idea('roomDefinition').id, loc: ctx.loc }, {transitionable:true});
     goal.addEdge(ctx.agentInstance, links.list.wumpus_sense_agent_loc, ctx.agentLocation);
+
+    return goal;
+  },
+
+  // the agent needs to have the gold
+  gold: function() {
+    var ctx = createGoal.agent();
+    var goal = ctx.goal;
+
+    ctx.agentHasGold = goal.addVertex(subgraph.matcher.discrete, {value:true, unit: discrete.definitions.list.boolean}, {transitionable:true});
+    goal.addEdge(ctx.agentInstance, links.list.wumpus_sense_hasGold, ctx.agentHasGold);
 
     return goal;
   }

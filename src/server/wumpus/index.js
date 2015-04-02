@@ -75,6 +75,8 @@ exports.setup.goal = function(socket) {
       goal = createGoal.room(+str.substring(str.indexOf(' ')+1));
     } else if(str.indexOf('gold') === 0) {
       goal = createGoal.gold();
+    } else if(str.indexOf('win') === 0) {
+      goal = createGoal.win();
     } else {
       socket.emit('message', 'goal:'+str+'> not a valid goal');
       return;
@@ -150,6 +152,17 @@ var createGoal = {
 
     ctx.agentHasGold = goal.addVertex(subgraph.matcher.discrete, {value:true, unit: discrete.definitions.list.boolean}, {transitionable:true});
     goal.addEdge(ctx.agentInstance, links.list.wumpus_sense_hasGold, ctx.agentHasGold);
+
+    return goal;
+  },
+
+  // the agent needs to exit
+  win: function() {
+    var ctx = createGoal.agent();
+    var goal = ctx.goal;
+
+    ctx.agentHasWon = goal.addVertex(subgraph.matcher.discrete, {value:true, unit: discrete.definitions.list.boolean}, {transitionable:true});
+    goal.addEdge(ctx.agentInstance, links.list.wumpus_sense_hasWon, ctx.agentHasWon);
 
     return goal;
   }

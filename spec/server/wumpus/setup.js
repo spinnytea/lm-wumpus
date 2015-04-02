@@ -368,7 +368,28 @@ describe('setup', function() {
         expect(getRoomProperty(68, 'Gold').value).to.equal(false);
       });
 
-      it.skip('win');
+      it('win', function() {
+        expect(context.idea('agentLocation').data().value).to.equal(63);
+        expect(context.idea('agentDirection').data().value).to.equal('east');
+        expect(context.idea('agentHasGold').data().value).to.equal(false);
+        expect(context.idea('agentHasWon').data().value).to.equal(false);
+
+        goalCallback('room 68');
+        expect(socket.messages.message).to.equal('goal:room 68> oxygen potassium');
+        goalCallback('gold');
+        expect(socket.messages.message).to.equal('goal:gold> oxygen potassium');
+        goalCallback('room 63');
+        expect(socket.messages.message).to.equal('goal:room 63> oxygen potassium');
+
+        expect(context.idea('agentLocation').data().value).to.equal(63);
+        expect(context.idea('agentHasGold').data().value).to.equal(true);
+
+        // exit
+        goalCallback('win');
+        expect(socket.messages.message).to.equal('goal:win> oxygen potassium');
+
+        expect(context.idea('agentHasWon').data().value).to.equal(true);
+      });
 
       it.skip('create a goal that is "go to room with gold"', function() {
         // we want to identify the room so we can travel to it

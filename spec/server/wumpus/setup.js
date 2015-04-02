@@ -124,6 +124,11 @@ describe('setup', function() {
         expect(context.idea('agentHasGold').data().value).to.not.equal(true);
       });
 
+      it('agentHasWon', function() {
+        expect(context.idea('agentHasWon').data().value).to.equal(false);
+        expect(context.idea('agentHasWon').data().value).to.not.equal(true);
+      });
+
       it('getRoomProperty', function() {
         expect(getRoomProperty(63, 'Gold').value).to.equal(false);
         expect(getRoomProperty(63, 'Pit').value).to.equal(false);
@@ -219,15 +224,18 @@ describe('setup', function() {
 
       describe('exit', function() {
         it('cannot exit without the gold', function() {
+          expect(context.idea('agentHasWon').data().value).to.equal(false);
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(getRoomProperty(63, 'Exit').value).to.equal(true);
           actuatorCallback('exit');
           expect(socket.messages.message).to.equal('actuator:exit> could not apply');
           expect(context.idea('agentHasGold').data().value).to.equal(false);
           expect(context.idea('agentLocation').data().value).to.equal(63);
+          expect(context.idea('agentHasWon').data().value).to.equal(false);
         });
 
         it('cannot exit on non exit', function() {
+          expect(context.idea('agentHasWon').data().value).to.equal(false);
           expect(context.idea('agentHasGold').data().value).to.equal(false);
           expect(context.idea('agentDirection').data().value).to.equal('east');
           expect(context.idea('agentLocation').data().value).to.equal(63);
@@ -241,6 +249,7 @@ describe('setup', function() {
           expect(context.idea('agentLocation').data().value).to.equal(68);
           actuatorCallback('exit');
           expect(socket.messages.message).to.equal('actuator:exit> could not apply');
+          expect(context.idea('agentHasWon').data().value).to.equal(false);
         });
       }); // end exit
 
@@ -250,6 +259,7 @@ describe('setup', function() {
         // go to the room with the exit
         // exit
 
+        expect(context.idea('agentHasWon').data().value).to.equal(false);
         expect(context.idea('agentHasGold').data().value).to.equal(false);
         expect(context.idea('agentDirection').data().value).to.equal('east');
         expect(context.idea('agentLocation').data().value).to.equal(63);
@@ -278,6 +288,7 @@ describe('setup', function() {
         expect(context.idea('agentLocation').data().value).to.equal(63);
         actuatorCallback('exit');
         expect(socket.messages.message).to.equal('actuator:exit> potassium');
+        expect(context.idea('agentHasWon').data().value).to.equal(true);
       });
     }); // end actuators
 

@@ -8,6 +8,7 @@ var ideas = require('lime/src/database/ideas');
 var links = require('lime/src/database/links');
 var subgraph = require('lime/src/database/subgraph');
 // TODO incorporate points
+// TODO require the agent to be alive to take action; do not disallow moving into a pit
 
 // @param directions: the directions unit idea
 // @param agent: the agent type idea
@@ -143,6 +144,7 @@ exports.exit = function(agent, room, actuator_context) {
   var agentInstance = a.requirements.addVertex(subgraph.matcher.filler);
   var agentLocation = a.requirements.addVertex(subgraph.matcher.filler);
   var agentHasGold = a.requirements.addVertex(subgraph.matcher.discrete, {value:true, unit: discrete.definitions.list.boolean}, {transitionable:true});
+  var agentHasWon = a.requirements.addVertex(subgraph.matcher.discrete, {value:false, unit: discrete.definitions.list.boolean}, {transitionable:true});
   a.requirements.addEdge(
     agentInstance,
     links.list.type_of,
@@ -151,6 +153,7 @@ exports.exit = function(agent, room, actuator_context) {
   );
   a.requirements.addEdge(agentInstance, links.list.wumpus_sense_agent_loc, agentLocation, 4);
   a.requirements.addEdge(agentInstance, links.list.wumpus_sense_hasGold, agentHasGold, 4);
+  a.requirements.addEdge(agentInstance, links.list.wumpus_sense_hasWon, agentHasWon, 4);
 
   // that room has an exit
   var currentRoom = a.requirements.addVertex(subgraph.matcher.discrete, agentLocation, {matchRef:true});
@@ -160,11 +163,8 @@ exports.exit = function(agent, room, actuator_context) {
   a.requirements.addEdge(currentRoom, links.list.wumpus_sense_hasExit, roomHasExit, 1);
 
 
-  // TODO make the exit change the state in some way
-  // - remove the player from the board? the roomDefinitions are per-run; how do we update the value?
-  // - add a state? playing/win/lose
-  // - winning should add points
-  a.transitions.push({ vertex_id: agentHasGold, replace: {value:true, unit: discrete.definitions.list.boolean} });
+  // the agent has won
+  a.transitions.push({ vertex_id: agentHasWon, replace: {value:true, unit: discrete.definitions.list.boolean} });
 
 
   a.action = 'wumpus_known_discrete_exit';

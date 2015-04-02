@@ -16,6 +16,7 @@ links.create('wumpus_sense_agent_loc');
 links.create('wumpus_sense_hasPit');
 links.create('wumpus_sense_hasGold');
 links.create('wumpus_sense_hasExit');
+links.create('wumpus_sense_hasWon');
 links.create('wumpus_room_door');
 
 // TODO debug astar path expansions with/out this
@@ -351,21 +352,25 @@ exports.sense = function(state) {
     var agentDirection = ideas.create();
     var agentLocation = ideas.create();
     var agentHasGold = ideas.create();
+    var agentHasWon = ideas.create();
     instance.link(links.list.thought_description, agentInstance);
     agentInstance.link(links.list.type_of, exports.idea('agent'));
     agentInstance.link(links.list.wumpus_sense_agent_dir, agentDirection);
     agentInstance.link(links.list.wumpus_sense_agent_loc, agentLocation);
     agentInstance.link(links.list.wumpus_sense_hasGold, agentHasGold);
+    agentInstance.link(links.list.wumpus_sense_hasWon, agentHasWon);
 
     exports.keys.agentInstance = exports.subgraph.addVertex(subgraph.matcher.filler);
     exports.keys.agentDirection = exports.subgraph.addVertex(subgraph.matcher.id, agentDirection, {transitionable:true});
     exports.keys.agentLocation = exports.subgraph.addVertex(subgraph.matcher.id, agentLocation, {transitionable:true});
     exports.keys.agentHasGold = exports.subgraph.addVertex(subgraph.matcher.id, agentHasGold, {transitionable:true});
+    exports.keys.agentHasWon = exports.subgraph.addVertex(subgraph.matcher.id, agentHasWon, {transitionable:true});
     exports.subgraph.addEdge(exports.keys.instance, links.list.thought_description, exports.keys.agentInstance);
     exports.subgraph.addEdge(exports.keys.agentInstance, links.list.type_of, exports.keys.agent);
     exports.subgraph.addEdge(exports.keys.agentInstance, links.list.wumpus_sense_agent_dir, exports.keys.agentDirection);
     exports.subgraph.addEdge(exports.keys.agentInstance, links.list.wumpus_sense_agent_loc, exports.keys.agentLocation);
     exports.subgraph.addEdge(exports.keys.agentInstance, links.list.wumpus_sense_hasGold, exports.keys.agentHasGold);
+    exports.subgraph.addEdge(exports.keys.agentInstance, links.list.wumpus_sense_hasWon, exports.keys.agentHasWon);
 
 
     config.save();
@@ -425,8 +430,12 @@ function senseAgent(agent) {
   // update agent hasGold
   exports.idea('agentHasGold').update(discrete.cast({value: agent.hasGold, unit: discrete.definitions.list.boolean}));
 
+  // update agent hasWon
+  exports.idea('agentHasWon').update(discrete.cast({value: agent.win, unit: discrete.definitions.list.boolean}));
+
   // TODO create a function to reset vertex data cache
   exports.subgraph.vertices[exports.keys.agentDirection].data = undefined;
   exports.subgraph.vertices[exports.keys.agentLocation].data = undefined;
   exports.subgraph.vertices[exports.keys.agentHasGold].data = undefined;
+  exports.subgraph.vertices[exports.keys.agentHasWon].data = undefined;
 }

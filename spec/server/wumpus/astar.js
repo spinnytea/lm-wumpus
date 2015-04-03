@@ -1,5 +1,5 @@
 'use strict';
-/* global describe, it, beforeEach, afterEach, before, after */
+/* global describe, it */
 var expect = require('chai').expect;
 
 var astar = require('lime/src/planning/algorithms/astar');
@@ -10,8 +10,6 @@ var serialplan = require('lime/src/planning/serialplan');
 var subgraph = require('lime/src/database/subgraph');
 
 var context = require('../../../src/server/wumpus/context');
-var config = require('../../../src/client/js/wumpus/impl/config');
-var spacing = config.room.spacing;
 
 var socket = require('./socket');
 

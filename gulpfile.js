@@ -37,6 +37,11 @@ var fork = require('child_process').fork;
 var browserify = require('gulp-browserify');
 var browserSync = require('browser-sync');
 
+gulp.task('spec-jshint', [], function() {
+  return gulp.src(['spec/**/*.js']).pipe(jshint())
+    .pipe(jshint.reporter('jshint-stylish'))
+    .pipe(jshint.reporter('fail'));
+});
 gulp.task('client-jshint', [], function() {
   return gulp.src(['src/client/js/**/*.js']).pipe(jshint())
     .pipe(jshint.reporter('jshint-stylish'))
@@ -106,7 +111,7 @@ gulp.task('run', [], function() {
   return gulp.start('server');
 });
 
-gulp.task('mocha', ['server-jshint'], function() {
+gulp.task('mocha', ['server-jshint', 'spec-jshint'], function() {
   return gulp.src(['spec/**/*.js'], {read: false})
     .pipe(mocha({reporter: reporter}));
 });

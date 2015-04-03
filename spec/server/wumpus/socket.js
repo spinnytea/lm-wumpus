@@ -1,6 +1,5 @@
 'use strict';
 /* global beforeEach, before, after */
-var server = require('../../../src/server/wumpus/index');
 var context = require('../../../src/server/wumpus/context');
 var config = require('../../../src/client/js/wumpus/impl/config');
 

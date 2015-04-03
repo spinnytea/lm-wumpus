@@ -1,5 +1,5 @@
 'use strict';
-/* global describe, it, beforeEach, afterEach, before, after */
+/* global describe, it, beforeEach */
 var expect = require('chai').expect;
 
 var discrete = require('lime/src/planning/primitives/discrete');

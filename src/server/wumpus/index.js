@@ -138,9 +138,7 @@ var createGoal = {
     ctx.roomInstance = goal.addVertex(subgraph.matcher.discrete, { value: roomId, unit: context.idea('roomDefinition').id, loc: ctx.loc });
     goal.addEdge(ctx.roomDefinition, links.list.thought_description, ctx.roomInstance);
 
-    // TODO specify new agent location based on room (instead of roomId)
-    //ctx.agentLocation = goal.addVertex(subgraph.matcher.discrete, ctx.roomInstance, {transitionable:true,matchRef:true});
-    ctx.agentLocation = goal.addVertex(subgraph.matcher.discrete, { value: roomId, unit: context.idea('roomDefinition').id, loc: ctx.loc }, {transitionable:true});
+    ctx.agentLocation = goal.addVertex(subgraph.matcher.discrete, ctx.roomInstance, {transitionable:true,matchRef:true});
     goal.addEdge(ctx.agentInstance, links.list.wumpus_sense_agent_loc, ctx.agentLocation);
 
     return goal;

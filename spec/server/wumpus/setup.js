@@ -301,6 +301,15 @@ describe('setup', function() {
       describe('room', function() {
         it.skip('specify new agent location based on room (instead of roomId)');
 
+        it('63', function() {
+          expect(context.idea('agentLocation').data().value).to.equal(63);
+          expect(context.idea('agentDirection').data().value).to.equal('east');
+          goalCallback('room 63');
+          expect(socket.messages.message).to.equal('goal:room 63> here\'s the plan: do nothing');
+          expect(context.idea('agentLocation').data().value).to.equal(63);
+          expect(context.idea('agentDirection').data().value).to.equal('east');
+        });
+
         it('65', function() {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentDirection').data().value).to.equal('east');
@@ -412,13 +421,6 @@ describe('setup', function() {
       it.skip('play', function() {
         // first I need to define a target room based on the attribute
         // see bellow
-      });
-
-      it.skip('create a goal that is "go to room with gold"', function() {
-        // we want to identify the room so we can travel to it
-        // do we need to know the room before hand?
-        // no, the GOAL should be "room with gold"
-        // ... we don't need to do a fancy search, we just find the room by proxy, and match the room location value
       });
     }); // end goal
   }); // end server

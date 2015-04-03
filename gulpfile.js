@@ -73,7 +73,7 @@ gulp.task('sync', ['browserify'], function() {
         online: false,
         injectChanges: false,
         open: false,
-        logConnections: true,
+        logConnections: true
       });
     } else {
       return browserSync.reload({stream: false});
@@ -117,6 +117,6 @@ gulp.task('mocha', ['server-jshint', 'spec-jshint'], function() {
 });
 
 gulp.task('test', [], function() {
-  gulp.watch(['spec/**/*.js', 'src/server/**/*.js'], ['mocha']);
+  gulp.watch(['spec/**/*.js', 'src/server/**/*.js', 'node_modules/lime/**/*.js'], ['mocha']);
   gulp.start('mocha');
 });

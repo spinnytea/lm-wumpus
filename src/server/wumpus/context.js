@@ -24,6 +24,11 @@ links.create('wumpus_room_door');
 // - it IS better than not using this at all
 // - why does this still take p60/f100 to get to a room?
 discrete.definitions.difference.wumpus_room = function(d1, d2) {
+
+  // if these are not in the same room group (different games) then you can't get between them
+  if(d1.unit !== d2.unit)
+    return Infinity;
+
   // if these are the same room, then the distance is 0
   // this is a short circuit
   // if the loc is different for some reason,

@@ -361,6 +361,17 @@ describe('setup', function() {
         });
       }); // end room
 
+      describe.skip('goto', function() {
+        it('gold', function() {
+          expect(context.idea('agentLocation').data().value).to.equal(63);
+          expect(context.idea('agentDirection').data().value).to.equal('east');
+          goalCallback('goto gold');
+          expect(socket.messages.message).to.equal('goal:goto gold> oxygen potassium');
+        });
+
+        it.skip('exit');
+      }); // end goto
+
       describe('gold', function() {
         it('in the room', function() {
           expect(context.idea('agentLocation').data().value).to.equal(63);
@@ -420,7 +431,6 @@ describe('setup', function() {
 
       it.skip('play', function() {
         // first I need to define a target room based on the attribute
-        // see bellow
       });
     }); // end goal
   }); // end server

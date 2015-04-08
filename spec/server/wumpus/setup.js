@@ -361,13 +361,19 @@ describe('setup', function() {
         });
       }); // end room
 
-      describe.skip('goto', function() {
+      describe('goto', function() {
         it('gold', function() {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentDirection').data().value).to.equal('east');
+          expect(context.idea('agentHasGold').data().value).to.equal(false);
           goalCallback('goto gold');
           expect(socket.messages.message).to.equal('goal:goto gold> oxygen potassium');
+          expect(context.idea('agentLocation').data().value).to.equal(68);
+          expect(context.idea('agentDirection').data().value).to.equal('west');
+          expect(context.idea('agentHasGold').data().value).to.equal(false);
         });
+
+        it.skip('gold step-through');
 
         it.skip('exit');
       }); // end goto

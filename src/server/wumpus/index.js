@@ -72,11 +72,13 @@ exports.setup.goal = function(socket) {
     var goal;
 
     if(str.indexOf('room') === 0) {
-      goal = createGoal.room(+str.substring(str.indexOf(' ')+1));
+      goal = createGoal.room(+str.substring(str.indexOf(' ')+1)).goal;
+    } else if(str.indexOf('goto') === 0) {
+      goal = createGoal.goto().goal;
     } else if(str.indexOf('gold') === 0) {
-      goal = createGoal.gold();
+      goal = createGoal.gold().goal;
     } else if(str.indexOf('win') === 0) {
-      goal = createGoal.win();
+      goal = createGoal.win().goal;
     } else {
       socket.emit('message', 'goal:'+str+'> not a valid goal');
       return;
@@ -134,14 +136,33 @@ var createGoal = {
     var ctx = createGoal.agent();
     var goal = ctx.goal;
 
+    // room location
     ctx.loc = context.roomLoc[roomId];
     ctx.roomInstance = goal.addVertex(subgraph.matcher.discrete, { value: roomId, unit: context.idea('roomDefinition').id, loc: ctx.loc });
     goal.addEdge(ctx.roomDefinition, links.list.thought_description, ctx.roomInstance);
 
+    // the agent is at that room location
     ctx.agentLocation = goal.addVertex(subgraph.matcher.discrete, ctx.roomInstance, {transitionable:true,matchRef:true});
     goal.addEdge(ctx.agentInstance, links.list.wumpus_sense_agent_loc, ctx.agentLocation);
 
-    return goal;
+    return ctx;
+  },
+
+  goto: function() {
+    var ctx = createGoal.agent();
+    var goal = ctx.goal;
+
+    // room with the gold
+    ctx.roomInstance = goal.addVertex(subgraph.matcher.similar, { unit: context.idea('roomDefinition').id });
+    goal.addEdge(ctx.roomDefinition, links.list.thought_description, ctx.roomInstance);
+    ctx.roomHasGold = goal.addVertex(subgraph.matcher.discrete, discrete.cast({value:true, unit: discrete.definitions.list.boolean}), {transitionable:true,unitOnly:false});
+    goal.addEdge(ctx.roomInstance, links.list.wumpus_sense_hasGold, ctx.roomHasGold);
+
+    // the agent is at that room
+    ctx.agentLocation = goal.addVertex(subgraph.matcher.discrete, ctx.roomInstance, {transitionable:true,matchRef:true});
+    goal.addEdge(ctx.agentInstance, links.list.wumpus_sense_agent_loc, ctx.agentLocation);
+
+    return ctx;
   },
 
   // the agent needs to have the gold
@@ -149,10 +170,11 @@ var createGoal = {
     var ctx = createGoal.agent();
     var goal = ctx.goal;
 
+    // the agent has the gold
     ctx.agentHasGold = goal.addVertex(subgraph.matcher.discrete, {value:true, unit: discrete.definitions.list.boolean}, {transitionable:true});
     goal.addEdge(ctx.agentInstance, links.list.wumpus_sense_hasGold, ctx.agentHasGold);
 
-    return goal;
+    return ctx;
   },
 
   // the agent needs to exit
@@ -163,6 +185,6 @@ var createGoal = {
     ctx.agentHasWon = goal.addVertex(subgraph.matcher.discrete, {value:true, unit: discrete.definitions.list.boolean}, {transitionable:true});
     goal.addEdge(ctx.agentInstance, links.list.wumpus_sense_hasWon, ctx.agentHasWon);
 
-    return goal;
+    return ctx;
   }
 };

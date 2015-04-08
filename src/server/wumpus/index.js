@@ -73,8 +73,10 @@ exports.setup.goal = function(socket) {
 
     if(str.indexOf('room') === 0) {
       goal = createGoal.room(+str.substring(str.indexOf(' ')+1)).goal;
-    } else if(str.indexOf('goto') === 0) {
-      goal = createGoal.goto().goal;
+    } else if(str.indexOf('goto gold') === 0) {
+      goal = createGoal.goto(links.list.wumpus_sense_hasGold, true).goal;
+    } else if(str.indexOf('goto exit') === 0) {
+      goal = createGoal.goto(links.list.wumpus_sense_hasExit, false).goal;
     } else if(str.indexOf('gold') === 0) {
       goal = createGoal.gold().goal;
     } else if(str.indexOf('win') === 0) {
@@ -148,15 +150,15 @@ var createGoal = {
     return ctx;
   },
 
-  goto: function() {
+  goto: function(propLink, transitionable) {
     var ctx = createGoal.agent();
     var goal = ctx.goal;
 
     // room with the gold
     ctx.roomInstance = goal.addVertex(subgraph.matcher.similar, { unit: context.idea('roomDefinition').id });
     goal.addEdge(ctx.roomDefinition, links.list.thought_description, ctx.roomInstance);
-    ctx.roomHasGold = goal.addVertex(subgraph.matcher.discrete, discrete.cast({value:true, unit: discrete.definitions.list.boolean}), {transitionable:true,unitOnly:false});
-    goal.addEdge(ctx.roomInstance, links.list.wumpus_sense_hasGold, ctx.roomHasGold);
+    ctx.roomHasProp = goal.addVertex(subgraph.matcher.discrete, discrete.cast({value:true, unit: discrete.definitions.list.boolean}), {transitionable:transitionable,unitOnly:false});
+    goal.addEdge(ctx.roomInstance, propLink, ctx.roomHasProp);
 
     // the agent is at that room
     ctx.agentLocation = goal.addVertex(subgraph.matcher.discrete, ctx.roomInstance, {transitionable:true,matchRef:true});

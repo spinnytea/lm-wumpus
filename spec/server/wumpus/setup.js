@@ -375,7 +375,20 @@ describe('setup', function() {
 
         it.skip('gold step-through');
 
-        it.skip('exit');
+        it('exit', function() {
+          expect(context.idea('agentLocation').data().value).to.equal(63);
+          expect(context.idea('agentDirection').data().value).to.equal('east');
+          expect(context.idea('agentHasGold').data().value).to.equal(false);
+          goalCallback('room 78');
+          expect(socket.messages.message).to.equal('goal:room 78> oxygen potassium');
+          expect(context.idea('agentLocation').data().value).to.equal(78);
+          expect(context.idea('agentDirection').data().value).to.equal('north');
+          goalCallback('goto exit');
+          expect(socket.messages.message).to.equal('goal:goto exit> oxygen potassium');
+          expect(context.idea('agentLocation').data().value).to.equal(63);
+          expect(context.idea('agentDirection').data().value).to.equal('south');
+          expect(context.idea('agentHasGold').data().value).to.equal(false);
+        });
       }); // end goto
 
       describe('gold', function() {

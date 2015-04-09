@@ -3,6 +3,7 @@
 var expect = require('chai').expect;
 
 var links = require('lime/src/database/links');
+var number = require('lime/src/planning/primitives/number');
 var subgraph = require('lime/src/database/subgraph');
 
 var server = require('../../../src/server/wumpus/index');
@@ -68,6 +69,8 @@ describe('setup', function() {
       expect(getRoomProperty(68, 'Gold').value).to.equal(true);
       expect(context.idea('agentDirection').data().value).to.equal('east');
       expect(context.idea('agentLocation').data().value).to.equal(63);
+      expect(context.idea('agentLocX').data().value).to.deep.equal(number.value(0));
+      expect(context.idea('agentLocY').data().value).to.deep.equal(number.value(0));
       expect(context.idea('agentHasGold').data().value).to.equal(false);
     });
 
@@ -149,23 +152,33 @@ describe('setup', function() {
       });
 
       describe('up', function() {
+        var spacing = config.room.spacing;
+
         it('basic', function() {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentDirection').data().value).to.equal('east');
+          expect(context.idea('agentLocX').data().value).to.deep.equal(number.value(0));
+          expect(context.idea('agentLocY').data().value).to.deep.equal(number.value(0));
           actuatorCallback('up');
           expect(socket.messages.message).to.equal('actuator:up> potassium');
           expect(context.idea('agentLocation').data().value).to.equal(65);
           expect(context.idea('agentDirection').data().value).to.equal('east');
+          expect(context.idea('agentLocX').data().value).to.deep.equal(number.value(spacing));
+          expect(context.idea('agentLocY').data().value).to.deep.equal(number.value(0));
         });
 
         it('cannot go into a pit', function() {
           expect(context.idea('agentLocation').data().value).to.equal(63);
+          expect(context.idea('agentLocX').data().value).to.deep.equal(number.value(0));
+          expect(context.idea('agentLocY').data().value).to.deep.equal(number.value(0));
           actuatorCallback('left');
           actuatorCallback('up');
           actuatorCallback('left');
           expect(socket.messages.message).to.equal('actuator:left> potassium');
           expect(context.idea('agentDirection').data().value).to.equal('west');
           expect(context.idea('agentLocation').data().value).to.equal(66);
+          expect(context.idea('agentLocX').data().value).to.deep.equal(number.value(0));
+          expect(context.idea('agentLocY').data().value).to.deep.equal(number.value(-spacing));
           actuatorCallback('up');
           expect(socket.messages.message).to.equal('actuator:up> could not apply');
           expect(context.idea('agentDirection').data().value).to.equal('west');

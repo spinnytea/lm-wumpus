@@ -22,14 +22,11 @@ links.create('wumpus_room_door');
 links.create('wumpus_room_loc_x');
 links.create('wumpus_room_loc_y');
 
-// TODO debug astar path expansions with/out this
-// - what do they look like?
-// - it IS better than not using this at all
-// - why does this still take p60/f100 to get to a room?
+// FIXME delete this difference
 discrete.definitions.difference.wumpus_room = function(d1, d2) {
 
-  //if(d1.loc || d2.loc)
-  //  throw new Error('remove loc!');
+  if(d1.loc || d2.loc)
+    throw new Error('remove loc!');
 
   // if these are not in the same room group (different games) then you can't get between them
   if(d1.unit !== d2.unit)
@@ -44,14 +41,8 @@ discrete.definitions.difference.wumpus_room = function(d1, d2) {
 
   return 1;
 };
-// these are cached for ease of use in index.js
-// we want them to be stored with the idea (alongside the discrete value)
-// but there isn't a good way to recover the loc from the roomId
-// - i can build a subgraph and search for the room
-// - that seems ugly
-// - but I guess that's technically accurate
-// TODO specify new agent location based on room
-// - this is breaking and I wanted to get on with discrete.definitions.difference
+
+// FIXME delete roomLoc
 exports.roomLoc = {};
 
 // create the actions that we can use
@@ -187,7 +178,7 @@ var getDiscreteContext = function() {
     // create actuators
     discreteActuators.turn(directions, agent, -1, 'left', [wumpus_world, action_left]);
     discreteActuators.turn(directions, agent, 1, 'right', [wumpus_world, action_right]);
-    discreteActuators.forward(directions, agent, room, [wumpus_world, action_up]);
+    discreteActuators.forward(directions, agent, room, room_coord, [wumpus_world, action_up]);
     discreteActuators.grab(agent, room, [wumpus_world, action_grab]);
     discreteActuators.exit(agent, room, [wumpus_world, action_exit]);
 

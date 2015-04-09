@@ -22,26 +22,6 @@ links.create('wumpus_room_door');
 links.create('wumpus_room_loc_x');
 links.create('wumpus_room_loc_y');
 
-// FIXME delete this difference
-discrete.definitions.difference.wumpus_room = function(d1, d2) {
-
-  if(d1.loc || d2.loc)
-    throw new Error('remove loc!');
-
-  // if these are not in the same room group (different games) then you can't get between them
-  if(d1.unit !== d2.unit)
-    return Infinity;
-
-  // if these are the same room, then the distance is 0
-  // this is a short circuit
-  // if the loc is different for some reason,
-  // then... then that must be an error in the loc
-  if(d1.value === d2.value)
-    return 0;
-
-  return 1;
-};
-
 // FIXME delete roomLoc
 exports.roomLoc = {};
 
@@ -87,6 +67,7 @@ exports.setup = function(s, c) {
   socket = s;
   gameConfig = c;
   getDiscreteContext();
+  exports.idea('room_coord').update({name: 'room_coord', scale: 1/c.room.spacing});
   s.emit('message', 'Connected');
 };
 
@@ -135,7 +116,7 @@ var getDiscreteContext = function() {
   exports.keys.room = exports.subgraph.addVertex(subgraph.matcher.exact, {name:'room'});
   exports.subgraph.addEdge(exports.keys.wumpus_world, links.list.context, exports.keys.room);
   // room coord
-  exports.keys.room_coord = exports.subgraph.addVertex(subgraph.matcher.exact, {name:'room_coord'});
+  exports.keys.room_coord = exports.subgraph.addVertex(subgraph.matcher.similar, {name:'room_coord'});
   exports.subgraph.addEdge(exports.keys.wumpus_world, links.list.context, exports.keys.room_coord);
 
   var results = subgraph.search(exports.subgraph);
@@ -215,7 +196,7 @@ exports.sense = function(state) {
     // rooms
     //
     // create a discrete definition with these rooms (room id as the value)
-    var roomDefinition = discrete.definitions.create(state.rooms.map(function(r) { return r.id; }), 'wumpus_room');
+    var roomDefinition = discrete.definitions.create(state.rooms.map(function(r) { return r.id; }));
     instance.link(links.list.context, roomDefinition);
     roomDefinition.link(links.list.thought_description, ideas.create({name:'room def'}));
     exports.keys.roomDefinition = exports.subgraph.addVertex(subgraph.matcher.similar, discrete.definitions.similar);

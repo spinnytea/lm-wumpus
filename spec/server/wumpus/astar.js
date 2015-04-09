@@ -5,6 +5,7 @@ var expect = require('chai').expect;
 var astar = require('lime/src/planning/algorithms/astar');
 var blueprint = require('lime/src/planning/primitives/blueprint');
 var links = require('lime/src/database/links');
+var number = require('lime/src/planning/primitives/number');
 var Path = require('lime/src/planning/primitives/path');
 var serialplan = require('lime/src/planning/serialplan');
 var subgraph = require('lime/src/database/subgraph');
@@ -32,13 +33,21 @@ function createStates(targetRoomId) {
     agentInstance);
   goal.addEdge(agentInstance, links.list.type_of,
     goal.addVertex(subgraph.matcher.id, context.idea('agent')));
-  var agentLocation = goal.addVertex(subgraph.matcher.discrete, { value: targetRoomId, unit: context.idea('roomDefinition').id, loc: loc }, {transitionable:true});
+  var agentLocation = goal.addVertex(subgraph.matcher.discrete, { value: targetRoomId, unit: context.idea('roomDefinition').id }, {transitionable:true});
   goal.addEdge(agentInstance, links.list.wumpus_sense_agent_loc, agentLocation);
+  goal.addEdge(agentLocation, links.list.wumpus_room_loc_x,
+    goal.addVertex(subgraph.matcher.number, number.cast({ value: number.value(loc.x), unit: context.idea('room_coord').id }), {transitionable:true}));
+  goal.addEdge(agentLocation, links.list.wumpus_room_loc_y,
+    goal.addVertex(subgraph.matcher.number, number.cast({ value: number.value(loc.y), unit: context.idea('room_coord').id }), {transitionable:true}));
 
   // specify the target room
-  var roomInstance = goal.addVertex(subgraph.matcher.discrete, { value: targetRoomId, unit: context.idea('roomDefinition').id, loc: loc });
+  var roomInstance = goal.addVertex(subgraph.matcher.discrete, { value: targetRoomId, unit: context.idea('roomDefinition').id });
   goal.addEdge(roomInstance, links.list.thought_description.opposite,
     goal.addVertex(subgraph.matcher.id, context.idea('roomDefinition')));
+  goal.addEdge(roomInstance, links.list.wumpus_room_loc_x,
+    goal.addVertex(subgraph.matcher.number, number.cast({ value: number.value(loc.x), unit: context.idea('room_coord').id })));
+  goal.addEdge(roomInstance, links.list.wumpus_room_loc_y,
+    goal.addVertex(subgraph.matcher.number, number.cast({ value: number.value(loc.y), unit: context.idea('room_coord').id })));
 
 
   // get a list of all available actions
@@ -76,10 +85,9 @@ function summary(frontier) {
     };
   });
 
-
 }
 
-describe.skip('astar', function() {
+describe('astar', function() {
   socket.setup();
 
   it('basic', function() {
@@ -91,7 +99,7 @@ describe.skip('astar', function() {
 
     var path = astar.search(states.start, states.goal);
 
-    expect(path).to.be.ok;
+    expect(path).to.not.equal(undefined);
     expect(actionNames(path)).to.deep.equal(['right', 'up', 'right', 'up']);
   });
 
@@ -103,11 +111,13 @@ describe.skip('astar', function() {
     var path = new Path.Path([states.start], [], states.goal);
     astar.units.step(path, frontier);
 
+    expect(actionNames(path)).to.deep.equal([]);
+    expect(stateRooms(path, agentLocation_vertexId)).to.deep.equal([63]);
     expect(frontier._elements.length).to.equal(3);
     expect(summary(frontier)).to.deep.equal([
-      { comp: 8, cost: 2, dist: 3, p: ['left'] },
-      { comp: 8, cost: 2, dist: 3, p: ['right'] },
-      { comp: 10, cost: 2, dist: 4, p: ['up'] }
+      { comp: 6.5, cost: 2, dist: 3, p: ['left'] },
+      { comp: 6.5, cost: 2, dist: 3, p: ['right'] },
+      { comp: 9.25, cost: 5, dist: 4, p: ['up'] }
     ]);
 
     path = frontier.deq();
@@ -117,11 +127,11 @@ describe.skip('astar', function() {
     expect(stateRooms(path, agentLocation_vertexId)).to.deep.equal([63, 63]);
     expect(frontier._elements.length).to.equal(5);
     expect(summary(frontier)).to.deep.equal([
-      { comp: 8, cost: 2, dist: 3, p: ['right'] },
-      { comp: 10, cost: 4, dist: 3, p: ['left', 'left'] },
-      { comp: 10, cost: 4, dist: 3, p: ['left', 'right'] },
-      { comp: 10, cost: 2, dist: 4, p: ['up'] },
-      { comp: 12, cost: 4, dist: 4, p: ['left', 'up'] }
+      { comp: 6.5, cost: 2, dist: 3, p: ['right'] },
+      { comp: 7, cost: 4, dist: 3, p: ['left', 'left'] },
+      { comp: 7, cost: 4, dist: 3, p: ['left', 'right'] },
+      { comp: 9.25, cost: 5, dist: 4, p: ['up'] },
+      { comp: 9.75, cost: 7, dist: 4, p: ['left', 'up'] }
     ]);
 
     path = frontier.deq();
@@ -131,13 +141,13 @@ describe.skip('astar', function() {
     expect(stateRooms(path, agentLocation_vertexId)).to.deep.equal([63, 63]);
     expect(frontier._elements.length).to.equal(7);
     expect(summary(frontier)).to.deep.equal([
-      { comp: 6, cost: 4, dist: 1, p: ['right', 'up'] },
-      { comp: 10, cost: 4, dist: 3, p: ['left', 'right'] },
-      { comp: 10, cost: 4, dist: 3, p: ['right', 'right'] },
-      { comp: 10, cost: 4, dist: 3, p: ['left', 'left'] },
-      { comp: 10, cost: 4, dist: 3, p: ['right', 'left'] },
-      { comp: 10, cost: 2, dist: 4, p: ['up'] },
-      { comp: 12, cost: 4, dist: 4, p: ['left', 'up'] }
+      { comp: 5.75, cost: 7, dist: 2, p: ['right', 'up'] },
+      { comp: 7, cost: 4, dist: 3, p: ['left', 'right'] },
+      { comp: 7, cost: 4, dist: 3, p: ['right', 'right'] },
+      { comp: 7, cost: 4, dist: 3, p: ['left', 'left'] },
+      { comp: 7, cost: 4, dist: 3, p: ['right', 'left'] },
+      { comp: 9.25, cost: 5, dist: 4, p: ['up'] },
+      { comp: 9.75, cost: 7, dist: 4, p: ['left', 'up'] }
     ]);
 
     path = frontier.deq();
@@ -147,14 +157,14 @@ describe.skip('astar', function() {
     expect(stateRooms(path, agentLocation_vertexId)).to.deep.equal([63, 63, 67]);
     expect(frontier._elements.length).to.equal(8);
     expect(summary(frontier)).to.deep.equal([
-      { comp: 8, cost: 6, dist: 1, p: ['right', 'up', 'left'] },
-      { comp: 8, cost: 6, dist: 1, p: ['right', 'up', 'right'] },
-      { comp: 10, cost: 4, dist: 3, p: ['right', 'right'] },
-      { comp: 10, cost: 4, dist: 3, p: ['right', 'left'] },
-      { comp: 10, cost: 4, dist: 3, p: ['left', 'left'] },
-      { comp: 10, cost: 4, dist: 3, p: ['left', 'right'] },
-      { comp: 10, cost: 2, dist: 4, p: ['up'] },
-      { comp: 12, cost: 4, dist: 4, p: ['left', 'up'] }
+      { comp: 6.25, cost: 9, dist: 2, p: ['right', 'up', 'left'] },
+      { comp: 6.25, cost: 9, dist: 2, p: ['right', 'up', 'right'] },
+      { comp: 7, cost: 4, dist: 3, p: ['right', 'right'] },
+      { comp: 7, cost: 4, dist: 3, p: ['right', 'left'] },
+      { comp: 7, cost: 4, dist: 3, p: ['left', 'left'] },
+      { comp: 7, cost: 4, dist: 3, p: ['left', 'right'] },
+      { comp: 9.25, cost: 5, dist: 4, p: ['up'] },
+      { comp: 9.75, cost: 7, dist: 4, p: ['left', 'up'] }
     ]);
 
     path = frontier.deq();
@@ -164,16 +174,16 @@ describe.skip('astar', function() {
     expect(stateRooms(path, agentLocation_vertexId)).to.deep.equal([63, 63, 67, 67]);
     expect(frontier._elements.length).to.equal(10);
     expect(summary(frontier)).to.deep.equal([
-      { comp: 8, cost: 6, dist: 1, p: ['right', 'up', 'right'] },
-      { comp: 10, cost: 8, dist: 1, p: ['right', 'up', 'left', 'left'] },
-      { comp: 10, cost: 8, dist: 1, p: ['right', 'up', 'left', 'right'] },
-      { comp: 10, cost: 4, dist: 3, p: ['right', 'right'] },
-      { comp: 10, cost: 4, dist: 3, p: ['left', 'right'] },
-      { comp: 10, cost: 4, dist: 3, p: ['left', 'left'] },
-      { comp: 10, cost: 4, dist: 3, p: ['right', 'left'] },
-      { comp: 10, cost: 2, dist: 4, p: ['up'] },
-      { comp: 12, cost: 8, dist: 2, p: ['right', 'up', 'left', 'up'] },
-      { comp: 12, cost: 4, dist: 4, p: ['left', 'up'] }
+      { comp: 6.25, cost: 9, dist: 2, p: ['right', 'up', 'right'] },
+      { comp: 6.75, cost: 11, dist: 2, p: ['right', 'up', 'left', 'left'] },
+      { comp: 6.75, cost: 11, dist: 2, p: ['right', 'up', 'left', 'right'] },
+      { comp: 7, cost: 4, dist: 3, p: ['right', 'right'] },
+      { comp: 7, cost: 4, dist: 3, p: ['left', 'right'] },
+      { comp: 7, cost: 4, dist: 3, p: ['left', 'left'] },
+      { comp: 7, cost: 4, dist: 3, p: ['right', 'left'] },
+      { comp: 9.25, cost: 5, dist: 4, p: ['up'] },
+      { comp: 9.5, cost: 14, dist: 3, p: ['right', 'up', 'left', 'up'] },
+      { comp: 9.75, cost: 7, dist: 4, p: ['left', 'up'] }
     ]);
 
     path = frontier.deq();
@@ -183,18 +193,18 @@ describe.skip('astar', function() {
     expect(stateRooms(path, agentLocation_vertexId)).to.deep.equal([63, 63, 67, 67]);
     expect(frontier._elements.length).to.equal(12);
     expect(summary(frontier)).to.deep.equal([
-      { comp: 8, cost: 8, dist: 0, p: ['right', 'up', 'right', 'up'] },
-      { comp: 10, cost: 8, dist: 1, p: ['right', 'up', 'left', 'right'] },
-      { comp: 10, cost: 8, dist: 1, p: ['right', 'up', 'left', 'left'] },
-      { comp: 10, cost: 8, dist: 1, p: ['right', 'up', 'right', 'left'] },
-      { comp: 10, cost: 8, dist: 1, p: ['right', 'up', 'right', 'right'] },
-      { comp: 10, cost: 4, dist: 3, p: ['right', 'left'] },
-      { comp: 10, cost: 4, dist: 3, p: ['left', 'left'] },
-      { comp: 10, cost: 4, dist: 3, p: ['left', 'right'] },
-      { comp: 10, cost: 4, dist: 3, p: ['right', 'right'] },
-      { comp: 10, cost: 2, dist: 4, p: ['up'] },
-      { comp: 12, cost: 8, dist: 2, p: ['right', 'up', 'left', 'up'] },
-      { comp: 12, cost: 4, dist: 4, p: ['left', 'up'] }
+      { comp: 3.5, cost: 14, dist: 0, p: ['right', 'up', 'right', 'up'] },
+      { comp: 6.75, cost: 11, dist: 2, p: ['right', 'up', 'left', 'right'] },
+      { comp: 6.75, cost: 11, dist: 2, p: ['right', 'up', 'left', 'left'] },
+      { comp: 6.75, cost: 11, dist: 2, p: ['right', 'up', 'right', 'left'] },
+      { comp: 6.75, cost: 11, dist: 2, p: ['right', 'up', 'right', 'right'] },
+      { comp: 7, cost: 4, dist: 3, p: ['right', 'left'] },
+      { comp: 7, cost: 4, dist: 3, p: ['left', 'left'] },
+      { comp: 7, cost: 4, dist: 3, p: ['left', 'right'] },
+      { comp: 7, cost: 4, dist: 3, p: ['right', 'right'] },
+      { comp: 9.25, cost: 5, dist: 4, p: ['up'] },
+      { comp: 9.5, cost: 14, dist: 3, p: ['right', 'up', 'left', 'up'] },
+      { comp: 9.75, cost: 7, dist: 4, p: ['left', 'up'] }
     ]);
 
     path = frontier.deq();

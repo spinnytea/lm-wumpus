@@ -4,13 +4,11 @@ var expect = require('chai').expect;
 
 var astar = require('lime/src/planning/algorithms/astar');
 var blueprint = require('lime/src/planning/primitives/blueprint');
-var links = require('lime/src/database/links');
-var number = require('lime/src/planning/primitives/number');
 var Path = require('lime/src/planning/primitives/path');
 var serialplan = require('lime/src/planning/serialplan');
-var subgraph = require('lime/src/database/subgraph');
 
 var context = require('../../../src/server/wumpus/context');
+var wumpus = require('../../../src/server/wumpus/index');
 
 var socket = require('./socket');
 
@@ -21,34 +19,7 @@ var socket = require('./socket');
 
 // copy pasta from index.setup.goal(room targetRoomId)
 function createStates(targetRoomId) {
-  var loc = context.roomLoc[targetRoomId];
-
-  var goal = new subgraph.Subgraph();
-
-  // specify the agent
-  var agentInstance = goal.addVertex(subgraph.matcher.filler);
-  goal.addEdge(
-    goal.addVertex(subgraph.matcher.id, context.idea('instance')),
-    links.list.thought_description,
-    agentInstance);
-  goal.addEdge(agentInstance, links.list.type_of,
-    goal.addVertex(subgraph.matcher.id, context.idea('agent')));
-  var agentLocation = goal.addVertex(subgraph.matcher.discrete, { value: targetRoomId, unit: context.idea('roomDefinition').id }, {transitionable:true});
-  goal.addEdge(agentInstance, links.list.wumpus_sense_agent_loc, agentLocation);
-  goal.addEdge(agentLocation, links.list.wumpus_room_loc_x,
-    goal.addVertex(subgraph.matcher.number, number.cast({ value: number.value(loc.x), unit: context.idea('room_coord').id }), {transitionable:true}));
-  goal.addEdge(agentLocation, links.list.wumpus_room_loc_y,
-    goal.addVertex(subgraph.matcher.number, number.cast({ value: number.value(loc.y), unit: context.idea('room_coord').id }), {transitionable:true}));
-
-  // specify the target room
-  var roomInstance = goal.addVertex(subgraph.matcher.discrete, { value: targetRoomId, unit: context.idea('roomDefinition').id });
-  goal.addEdge(roomInstance, links.list.thought_description.opposite,
-    goal.addVertex(subgraph.matcher.id, context.idea('roomDefinition')));
-  goal.addEdge(roomInstance, links.list.wumpus_room_loc_x,
-    goal.addVertex(subgraph.matcher.number, number.cast({ value: number.value(loc.x), unit: context.idea('room_coord').id })));
-  goal.addEdge(roomInstance, links.list.wumpus_room_loc_y,
-    goal.addVertex(subgraph.matcher.number, number.cast({ value: number.value(loc.y), unit: context.idea('room_coord').id })));
-
+  var goal = wumpus.setup.createGoal.room(targetRoomId).goal;
 
   // get a list of all available actions
   var list = blueprint.list([context.idea('wumpus_world')]).map(blueprint.load);

@@ -3,6 +3,7 @@
 var blueprint = require('lime/src/planning/primitives/blueprint');
 var discrete = require('lime/src/planning/primitives/discrete');
 var links = require('lime/src/database/links');
+var number = require('lime/src/planning/primitives/number');
 var serialplan = require('lime/src/planning/serialplan');
 var subgraph = require('lime/src/database/subgraph');
 
@@ -116,7 +117,7 @@ exports.setup.goal = function(socket) {
   };
 };
 
-var createGoal = {
+var createGoal = exports.setup.createGoal = {
   agent: function() {
     var ctx = {};
     var goal = ctx.goal = new subgraph.Subgraph();
@@ -140,12 +141,21 @@ var createGoal = {
 
     // room location
     ctx.loc = context.roomLoc[roomId];
-    ctx.roomInstance = goal.addVertex(subgraph.matcher.discrete, { value: roomId, unit: context.idea('roomDefinition').id, loc: ctx.loc });
+    ctx.roomInstance = goal.addVertex(subgraph.matcher.discrete, { value: roomId, unit: context.idea('roomDefinition').id });
     goal.addEdge(ctx.roomDefinition, links.list.thought_description, ctx.roomInstance);
+
+    ctx.roomLocX = goal.addVertex(subgraph.matcher.number, number.cast({ value: number.value(ctx.loc.x), unit: context.idea('room_coord').id }));
+    ctx.roomLocY = goal.addVertex(subgraph.matcher.number, number.cast({ value: number.value(ctx.loc.y), unit: context.idea('room_coord').id }));
+    goal.addEdge(ctx.roomInstance, links.list.wumpus_room_loc_x, ctx.roomLocX);
+    goal.addEdge(ctx.roomInstance, links.list.wumpus_room_loc_y, ctx.roomLocY);
 
     // the agent is at that room location
     ctx.agentLocation = goal.addVertex(subgraph.matcher.discrete, ctx.roomInstance, {transitionable:true,matchRef:true});
+    ctx.agentLocX = goal.addVertex(subgraph.matcher.number, ctx.roomLocX, {transitionable:true,matchRef:true});
+    ctx.agentLocY = goal.addVertex(subgraph.matcher.number, ctx.roomLocY, {transitionable:true,matchRef:true});
     goal.addEdge(ctx.agentInstance, links.list.wumpus_sense_agent_loc, ctx.agentLocation);
+    goal.addEdge(ctx.agentLocation, links.list.wumpus_room_loc_x, ctx.agentLocX);
+    goal.addEdge(ctx.agentLocation, links.list.wumpus_room_loc_y, ctx.agentLocY);
 
     return ctx;
   },

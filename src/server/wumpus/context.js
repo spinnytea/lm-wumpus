@@ -438,9 +438,10 @@ function senseAgent(agent) {
   // update agent hasWon
   exports.idea('agentHasWon').update(discrete.cast({value: agent.win, unit: discrete.definitions.list.boolean}));
 
-  // TODO create a function to reset vertex data cache
-  exports.subgraph.vertices[exports.keys.agentDirection].data = undefined;
-  exports.subgraph.vertices[exports.keys.agentLocation].data = undefined;
-  exports.subgraph.vertices[exports.keys.agentHasGold].data = undefined;
-  exports.subgraph.vertices[exports.keys.agentHasWon].data = undefined;
+  exports.subgraph.invalidateCache(
+    exports.keys.agentDirection,
+    exports.keys.agentLocation,
+    exports.keys.agentHasGold,
+    exports.keys.agentHasWon
+  );
 }

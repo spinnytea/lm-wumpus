@@ -6,6 +6,7 @@ var config = require('lime/config');
 var discrete = require('lime/src/planning/primitives/discrete');
 var ideas = require('lime/src/database/ideas');
 var links = require('lime/src/database/links');
+var number = require('lime/src/planning/primitives/number');
 var subgraph = require('lime/src/database/subgraph');
 
 var discreteActuators = require('./actuators/discreteActuators');
@@ -18,12 +19,17 @@ links.create('wumpus_sense_hasGold');
 links.create('wumpus_sense_hasExit');
 links.create('wumpus_sense_hasWon');
 links.create('wumpus_room_door');
+links.create('wumpus_room_loc_x');
+links.create('wumpus_room_loc_y');
 
 // TODO debug astar path expansions with/out this
 // - what do they look like?
 // - it IS better than not using this at all
 // - why does this still take p60/f100 to get to a room?
 discrete.definitions.difference.wumpus_room = function(d1, d2) {
+
+  //if(d1.loc || d2.loc)
+  //  throw new Error('remove loc!');
 
   // if these are not in the same room group (different games) then you can't get between them
   if(d1.unit !== d2.unit)
@@ -36,22 +42,7 @@ discrete.definitions.difference.wumpus_room = function(d1, d2) {
   if(d1.value === d2.value)
     return 0;
 
-  var dx = Math.abs(d1.loc.x-d2.loc.x);
-  if(dx < gameConfig.room.radius)
-    dx = 0;
-  else
-    dx = Math.floor(dx/gameConfig.room.spacing + 0.5);
-
-  var dy = Math.abs(d1.loc.y-d2.loc.y);
-  if(dy < gameConfig.room.radius)
-    dy = 0;
-  else
-    dy = Math.floor(dy/gameConfig.room.spacing + 0.5);
-
-
-  if(dx === 0) return dy;
-  if(dy === 0) return dx;
-  return dx + dy + 1;
+  return 1;
 };
 // these are cached for ease of use in index.js
 // we want them to be stored with the idea (alongside the discrete value)
@@ -96,7 +87,7 @@ exports.setup = function(s, c) {
     observable: 'fully', // partially
     timing: 'static', // dynamic
     agents: 'single', // multi
-    player: 'lemon', // person
+    player: 'lemon' // person
   }))) {
     s.emit('message', 'I don\'t know how to handle this.');
     return;
@@ -124,6 +115,8 @@ var getDiscreteContext = function() {
 
   // context
   exports.keys.wumpus_world = exports.subgraph.addVertex(subgraph.matcher.id, ideas.context('wumpus_world'));
+
+  // actions
   exports.keys.action_left = exports.subgraph.addVertex(subgraph.matcher.exact, {name:'action:left'});
   exports.keys.action_right = exports.subgraph.addVertex(subgraph.matcher.exact, {name:'action:right'});
   exports.keys.action_up = exports.subgraph.addVertex(subgraph.matcher.exact, {name:'action:up'});
@@ -150,6 +143,9 @@ var getDiscreteContext = function() {
   // room type
   exports.keys.room = exports.subgraph.addVertex(subgraph.matcher.exact, {name:'room'});
   exports.subgraph.addEdge(exports.keys.wumpus_world, links.list.context, exports.keys.room);
+  // room coord
+  exports.keys.room_coord = exports.subgraph.addVertex(subgraph.matcher.exact, {name:'room_coord'});
+  exports.subgraph.addEdge(exports.keys.wumpus_world, links.list.context, exports.keys.room_coord);
 
   var results = subgraph.search(exports.subgraph);
   if(results.length === 0) {
@@ -158,6 +154,8 @@ var getDiscreteContext = function() {
     // context
     // TODO relink context directions
     var wumpus_world = ideas.context('wumpus_world');
+
+    // actions
     var action_left = ideas.create({name:'action:left'});
     var action_right = ideas.create({name:'action:right'});
     var action_up = ideas.create({name:'action:up'});
@@ -181,6 +179,9 @@ var getDiscreteContext = function() {
     // room type
     var room = ideas.create({name:'room'});
     wumpus_world.link(links.list.context, room);
+    // room coord
+    var room_coord = ideas.create({name:'room_coord'});
+    wumpus_world.link(links.list.context, room_coord);
 
 
     // create actuators
@@ -194,7 +195,7 @@ var getDiscreteContext = function() {
     // save our the ideas
     [
       wumpus_world, action_left, action_right, action_up, action_grab, action_exit, ideas.context('blueprint'),
-      directions, compass, agent, room,
+      directions, compass, agent, room, room_coord
     ].forEach(ideas.save);
     // now search again
     results = subgraph.search(exports.subgraph);
@@ -240,9 +241,11 @@ exports.sense = function(state) {
     state.rooms.forEach(function(room) {
       exports.roomLoc[room.id] = { x: room.x, y: room.y };
 
-      var roomInstance = ideas.create(discrete.cast({value: room.id, unit: roomDefinition.id, loc: { x: room.x, y: room.y }}));
+      var roomInstance = ideas.create(discrete.cast({value: room.id, unit: roomDefinition.id}));
       roomDefinition.link(links.list.thought_description, roomInstance);
       roomInstance.link(links.list.type_of, exports.idea('room'));
+      roomInstance.link(links.list.wumpus_room_loc_x, ideas.create(number.cast({value:number.value(room.x), unit:exports.idea('room_coord').id})));
+      roomInstance.link(links.list.wumpus_room_loc_y, ideas.create(number.cast({value:number.value(room.y), unit:exports.idea('room_coord').id})));
       var roomHasPit = ideas.create(discrete.cast({value:room.hasPit, unit: discrete.definitions.list.boolean}));
       var roomHasGold = ideas.create(discrete.cast({value:room.hasGold, unit: discrete.definitions.list.boolean}));
       var roomHasExit = ideas.create(discrete.cast({value:room.hasExit, unit: discrete.definitions.list.boolean}));
@@ -253,6 +256,10 @@ exports.sense = function(state) {
       var keys_rI = exports.subgraph.addVertex(subgraph.matcher.id, roomInstance);
       exports.subgraph.addEdge(exports.keys.roomDefinition, links.list.thought_description, keys_rI);
       exports.subgraph.addEdge(keys_rI, links.list.type_of, exports.keys.room);
+      exports.subgraph.addEdge(keys_rI, links.list.wumpus_room_loc_x,
+        exports.subgraph.addVertex(subgraph.matcher.number, {value:number.value(room.x), unit:exports.idea('room_coord').id}));
+      exports.subgraph.addEdge(keys_rI, links.list.wumpus_room_loc_y,
+        exports.subgraph.addVertex(subgraph.matcher.number, {value:number.value(room.y), unit:exports.idea('room_coord').id}));
       exports.subgraph.addEdge(keys_rI, links.list.wumpus_sense_hasPit,
         exports.subgraph.addVertex(subgraph.matcher.id, roomHasPit));
       exports.subgraph.addEdge(keys_rI, links.list.wumpus_sense_hasGold,
@@ -356,24 +363,32 @@ exports.sense = function(state) {
     var agentInstance = ideas.create();
     var agentDirection = ideas.create();
     var agentLocation = ideas.create();
+    var agentLocX = ideas.create();
+    var agentLocY = ideas.create();
     var agentHasGold = ideas.create();
     var agentHasWon = ideas.create();
     instance.link(links.list.thought_description, agentInstance);
     agentInstance.link(links.list.type_of, exports.idea('agent'));
     agentInstance.link(links.list.wumpus_sense_agent_dir, agentDirection);
     agentInstance.link(links.list.wumpus_sense_agent_loc, agentLocation);
+    agentLocation.link(links.list.wumpus_room_loc_x, agentLocX);
+    agentLocation.link(links.list.wumpus_room_loc_y, agentLocY);
     agentInstance.link(links.list.wumpus_sense_hasGold, agentHasGold);
     agentInstance.link(links.list.wumpus_sense_hasWon, agentHasWon);
 
     exports.keys.agentInstance = exports.subgraph.addVertex(subgraph.matcher.filler);
     exports.keys.agentDirection = exports.subgraph.addVertex(subgraph.matcher.id, agentDirection, {transitionable:true});
     exports.keys.agentLocation = exports.subgraph.addVertex(subgraph.matcher.id, agentLocation, {transitionable:true});
+    exports.keys.agentLocX = exports.subgraph.addVertex(subgraph.matcher.id, agentLocX, {transitionable:true});
+    exports.keys.agentLocY = exports.subgraph.addVertex(subgraph.matcher.id, agentLocY, {transitionable:true});
     exports.keys.agentHasGold = exports.subgraph.addVertex(subgraph.matcher.id, agentHasGold, {transitionable:true});
     exports.keys.agentHasWon = exports.subgraph.addVertex(subgraph.matcher.id, agentHasWon, {transitionable:true});
     exports.subgraph.addEdge(exports.keys.instance, links.list.thought_description, exports.keys.agentInstance);
     exports.subgraph.addEdge(exports.keys.agentInstance, links.list.type_of, exports.keys.agent);
     exports.subgraph.addEdge(exports.keys.agentInstance, links.list.wumpus_sense_agent_dir, exports.keys.agentDirection);
     exports.subgraph.addEdge(exports.keys.agentInstance, links.list.wumpus_sense_agent_loc, exports.keys.agentLocation);
+    exports.subgraph.addEdge(exports.keys.agentLocation, links.list.wumpus_room_loc_x, exports.keys.agentLocX);
+    exports.subgraph.addEdge(exports.keys.agentLocation, links.list.wumpus_room_loc_y, exports.keys.agentLocY);
     exports.subgraph.addEdge(exports.keys.agentInstance, links.list.wumpus_sense_hasGold, exports.keys.agentHasGold);
     exports.subgraph.addEdge(exports.keys.agentInstance, links.list.wumpus_sense_hasWon, exports.keys.agentHasWon);
 
@@ -398,7 +413,8 @@ function senseRooms(rooms) {
 
     // configure the rest of the subgraph
     var currentRoom = sg.addVertex(subgraph.matcher.discrete,
-      discrete.cast({value: room.id, unit: exports.idea('roomDefinition').id, loc: { x: room.x, y: room.y }}));
+      discrete.cast({value: room.id, unit: exports.idea('roomDefinition').id}));
+    // XXX I don't need to query the room loc here, right?
     sg.addEdge(currentRoom, links.list.type_of, sg.addVertex(subgraph.matcher.id, exports.idea('room').id));
     sg.addEdge(currentRoom, links.list.wumpus_sense_hasGold, roomHasGold);
     // find
@@ -430,7 +446,9 @@ function senseAgent(agent) {
   exports.idea('agentDirection').update(discrete.cast({value: dir, unit: exports.idea('directions').id}));
 
   // update agent location
-  exports.idea('agentLocation').update(discrete.cast({value: agent.inRoomIds[0], unit: exports.idea('roomDefinition').id, loc: { x: agent.x, y: agent.y }}));
+  exports.idea('agentLocation').update(discrete.cast({value: agent.inRoomIds[0], unit: exports.idea('roomDefinition').id}));
+  exports.idea('agentLocX').update(number.cast({value: number.value(agent.x), unit: exports.idea('room_coord').id}));
+  exports.idea('agentLocY').update(number.cast({value: number.value(agent.y), unit: exports.idea('room_coord').id}));
 
   // update agent hasGold
   exports.idea('agentHasGold').update(discrete.cast({value: agent.hasGold, unit: discrete.definitions.list.boolean}));
@@ -441,6 +459,8 @@ function senseAgent(agent) {
   // TODO create a function to reset vertex data cache
   exports.subgraph.vertices[exports.keys.agentDirection].data = undefined;
   exports.subgraph.vertices[exports.keys.agentLocation].data = undefined;
+  exports.subgraph.vertices[exports.keys.agentLocX].data = undefined;
+  exports.subgraph.vertices[exports.keys.agentLocY].data = undefined;
   exports.subgraph.vertices[exports.keys.agentHasGold].data = undefined;
   exports.subgraph.vertices[exports.keys.agentHasWon].data = undefined;
 }

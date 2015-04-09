@@ -79,7 +79,7 @@ function summary(frontier) {
 
 }
 
-describe('astar', function() {
+describe.skip('astar', function() {
   socket.setup();
 
   it('basic', function() {

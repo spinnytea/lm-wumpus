@@ -70,6 +70,7 @@ exports.setup.goal = function(socket) {
   return function(str) {
 
     var goal;
+    var createGoal = exports.setup.createGoal;
 
     if(str.indexOf('room') === 0) {
       goal = createGoal.room(+str.substring(str.indexOf(' ')+1)).goal;
@@ -116,7 +117,7 @@ exports.setup.goal = function(socket) {
   };
 };
 
-var createGoal = {
+exports.setup.createGoal = {
   agent: function() {
     var ctx = {};
     var goal = ctx.goal = new subgraph.Subgraph();
@@ -135,7 +136,7 @@ var createGoal = {
 
   // the agent needs to be in the location we provide
   room: function(roomId) {
-    var ctx = createGoal.agent();
+    var ctx = exports.setup.createGoal.agent();
     var goal = ctx.goal;
 
     // room location
@@ -151,7 +152,7 @@ var createGoal = {
   },
 
   goto: function(propLink) {
-    var ctx = createGoal.agent();
+    var ctx = exports.setup.createGoal.agent();
     var goal = ctx.goal;
 
     // room with the gold
@@ -169,7 +170,7 @@ var createGoal = {
 
   // the agent needs to have the gold
   gold: function() {
-    var ctx = createGoal.agent();
+    var ctx = exports.setup.createGoal.agent();
     var goal = ctx.goal;
 
     // the agent has the gold
@@ -181,7 +182,7 @@ var createGoal = {
 
   // the agent needs to exit
   win: function() {
-    var ctx = createGoal.agent();
+    var ctx = exports.setup.createGoal.agent();
     var goal = ctx.goal;
 
     ctx.agentHasWon = goal.addVertex(subgraph.matcher.discrete, {value:true, unit: discrete.definitions.list.boolean}, {transitionable:true});

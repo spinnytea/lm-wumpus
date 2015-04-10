@@ -88,10 +88,10 @@ describe('setup', function() {
     // different both
     d2.loc.x = spacing;
     d2.loc.y = spacing;
-    expect(discrete.difference(d1, d2)).to.equal(3);
+    expect(discrete.difference(d1, d2)).to.equal(2);
     d2.loc.x = spacing*5;
     d2.loc.y = spacing*5;
-    expect(discrete.difference(d1, d2)).to.equal(11);
+    expect(discrete.difference(d1, d2)).to.equal(10);
 
     tools.ideas.clean(roomDefinition);
     context.cleanup();

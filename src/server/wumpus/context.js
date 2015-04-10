@@ -57,7 +57,7 @@ discrete.definitions.difference.wumpus_room = function(d1, d2) {
 
   if(dx === 0) return dy;
   if(dy === 0) return dx;
-  return dx + dy + 1;
+  return dx + dy;
 };
 // these are cached for ease of use in index.js
 // we want them to be stored with the idea (alongside the discrete value)

@@ -85,9 +85,9 @@ describe('astar', function() {
 
     expect(frontier._elements.length).to.equal(3);
     expect(summary(frontier)).to.deep.equal([
-      { comp: 8, cost: 2, dist: 3, p: ['left'] },
-      { comp: 8, cost: 2, dist: 3, p: ['right'] },
-      { comp: 10, cost: 2, dist: 4, p: ['up'] }
+      { comp: 7, cost: 3, dist: 2, p: ['left'] },
+      { comp: 7, cost: 3, dist: 2, p: ['right'] },
+      { comp: 8, cost: 2, dist: 3, p: ['up'] }
     ]);
 
     path = frontier.deq();
@@ -97,11 +97,11 @@ describe('astar', function() {
     expect(stateRooms(path, agentLocation_vertexId)).to.deep.equal([63, 63]);
     expect(frontier._elements.length).to.equal(5);
     expect(summary(frontier)).to.deep.equal([
-      { comp: 8, cost: 2, dist: 3, p: ['right'] },
-      { comp: 10, cost: 4, dist: 3, p: ['left', 'left'] },
-      { comp: 10, cost: 4, dist: 3, p: ['left', 'right'] },
-      { comp: 10, cost: 2, dist: 4, p: ['up'] },
-      { comp: 12, cost: 4, dist: 4, p: ['left', 'up'] }
+      { comp: 7, cost: 3, dist: 2, p: ['right'] },
+      { comp: 8, cost: 2, dist: 3, p: ['up'] },
+      { comp: 10, cost: 6, dist: 2, p: ['left', 'left'] },
+      { comp: 10, cost: 6, dist: 2, p: ['left', 'right'] },
+      { comp: 11, cost: 5, dist: 3, p: ['left', 'up'] }
     ]);
 
     path = frontier.deq();
@@ -111,13 +111,13 @@ describe('astar', function() {
     expect(stateRooms(path, agentLocation_vertexId)).to.deep.equal([63, 63]);
     expect(frontier._elements.length).to.equal(7);
     expect(summary(frontier)).to.deep.equal([
-      { comp: 6, cost: 4, dist: 1, p: ['right', 'up'] },
-      { comp: 10, cost: 4, dist: 3, p: ['left', 'right'] },
-      { comp: 10, cost: 4, dist: 3, p: ['right', 'right'] },
-      { comp: 10, cost: 4, dist: 3, p: ['left', 'left'] },
-      { comp: 10, cost: 4, dist: 3, p: ['right', 'left'] },
-      { comp: 10, cost: 2, dist: 4, p: ['up'] },
-      { comp: 12, cost: 4, dist: 4, p: ['left', 'up'] }
+      { comp: 7, cost: 5, dist: 1, p: ['right', 'up'] },
+      { comp: 8, cost: 2, dist: 3, p: ['up'] },
+      { comp: 10, cost: 6, dist: 2, p: ['right', 'right'] },
+      { comp: 10, cost: 6, dist: 2, p: ['left', 'left'] },
+      { comp: 10, cost: 6, dist: 2, p: ['right', 'left'] },
+      { comp: 10, cost: 6, dist: 2, p: ['left', 'right'] },
+      { comp: 11, cost: 5, dist: 3, p: ['left', 'up'] }
     ]);
 
     path = frontier.deq();
@@ -127,33 +127,33 @@ describe('astar', function() {
     expect(stateRooms(path, agentLocation_vertexId)).to.deep.equal([63, 63, 67]);
     expect(frontier._elements.length).to.equal(8);
     expect(summary(frontier)).to.deep.equal([
-      { comp: 8, cost: 6, dist: 1, p: ['right', 'up', 'left'] },
-      { comp: 8, cost: 6, dist: 1, p: ['right', 'up', 'right'] },
-      { comp: 10, cost: 4, dist: 3, p: ['right', 'right'] },
-      { comp: 10, cost: 4, dist: 3, p: ['right', 'left'] },
-      { comp: 10, cost: 4, dist: 3, p: ['left', 'left'] },
-      { comp: 10, cost: 4, dist: 3, p: ['left', 'right'] },
-      { comp: 10, cost: 2, dist: 4, p: ['up'] },
-      { comp: 12, cost: 4, dist: 4, p: ['left', 'up'] }
+      { comp: 8, cost: 2, dist: 3, p: ['up'] },
+      { comp: 10, cost: 8, dist: 1, p: ['right', 'up', 'left'] },
+      { comp: 10, cost: 8, dist: 1, p: ['right', 'up', 'right'] },
+      { comp: 10, cost: 6, dist: 2, p: ['right', 'right'] },
+      { comp: 10, cost: 6, dist: 2, p: ['left', 'right'] },
+      { comp: 10, cost: 6, dist: 2, p: ['right', 'left'] },
+      { comp: 10, cost: 6, dist: 2, p: ['left', 'left'] },
+      { comp: 11, cost: 5, dist: 3, p: ['left', 'up'] }
     ]);
 
     path = frontier.deq();
     astar.units.step(path, frontier);
 
-    expect(actionNames(path)).to.deep.equal(['right', 'up', 'left']); // unlucky
-    expect(stateRooms(path, agentLocation_vertexId)).to.deep.equal([63, 63, 67, 67]);
+    expect(actionNames(path)).to.deep.equal(['up']); // unlucky
+    expect(stateRooms(path, agentLocation_vertexId)).to.deep.equal([63, 65]);
     expect(frontier._elements.length).to.equal(10);
     expect(summary(frontier)).to.deep.equal([
-      { comp: 8, cost: 6, dist: 1, p: ['right', 'up', 'right'] },
-      { comp: 10, cost: 8, dist: 1, p: ['right', 'up', 'left', 'left'] },
-      { comp: 10, cost: 8, dist: 1, p: ['right', 'up', 'left', 'right'] },
-      { comp: 10, cost: 4, dist: 3, p: ['right', 'right'] },
-      { comp: 10, cost: 4, dist: 3, p: ['left', 'right'] },
-      { comp: 10, cost: 4, dist: 3, p: ['left', 'left'] },
-      { comp: 10, cost: 4, dist: 3, p: ['right', 'left'] },
-      { comp: 10, cost: 2, dist: 4, p: ['up'] },
-      { comp: 12, cost: 8, dist: 2, p: ['right', 'up', 'left', 'up'] },
-      { comp: 12, cost: 4, dist: 4, p: ['left', 'up'] }
+      { comp: 10, cost: 8, dist: 1, p: ['right', 'up', 'right'] },
+      { comp: 10, cost: 8, dist: 1, p: ['right', 'up', 'left'] },
+      { comp: 10, cost: 6, dist: 2, p: ['left', 'left'] },
+      { comp: 10, cost: 6, dist: 2, p: ['right', 'left'] },
+      { comp: 10, cost: 6, dist: 2, p: ['left', 'right'] },
+      { comp: 10, cost: 6, dist: 2, p: ['right', 'right'] },
+      { comp: 11, cost: 5, dist: 3, p: ['left', 'up'] },
+      { comp: 11, cost: 5, dist: 3, p: ['up', 'left'] },
+      { comp: 11, cost: 5, dist: 3, p: ['up', 'right'] },
+      { comp: 12, cost: 4, dist: 4, p: ['up', 'up'] }
     ]);
 
     path = frontier.deq();
@@ -163,18 +163,18 @@ describe('astar', function() {
     expect(stateRooms(path, agentLocation_vertexId)).to.deep.equal([63, 63, 67, 67]);
     expect(frontier._elements.length).to.equal(12);
     expect(summary(frontier)).to.deep.equal([
-      { comp: 8, cost: 8, dist: 0, p: ['right', 'up', 'right', 'up'] },
-      { comp: 10, cost: 8, dist: 1, p: ['right', 'up', 'left', 'right'] },
-      { comp: 10, cost: 8, dist: 1, p: ['right', 'up', 'left', 'left'] },
-      { comp: 10, cost: 8, dist: 1, p: ['right', 'up', 'right', 'left'] },
-      { comp: 10, cost: 8, dist: 1, p: ['right', 'up', 'right', 'right'] },
-      { comp: 10, cost: 4, dist: 3, p: ['right', 'left'] },
-      { comp: 10, cost: 4, dist: 3, p: ['left', 'left'] },
-      { comp: 10, cost: 4, dist: 3, p: ['left', 'right'] },
-      { comp: 10, cost: 4, dist: 3, p: ['right', 'right'] },
-      { comp: 10, cost: 2, dist: 4, p: ['up'] },
-      { comp: 12, cost: 8, dist: 2, p: ['right', 'up', 'left', 'up'] },
-      { comp: 12, cost: 4, dist: 4, p: ['left', 'up'] }
+      { comp: 10, cost: 10, dist: 0, p: ['right', 'up', 'right', 'up'] },
+      { comp: 10, cost: 8, dist: 1, p: ['right', 'up', 'left'] },
+      { comp: 10, cost: 6, dist: 2, p: ['left', 'left'] },
+      { comp: 10, cost: 6, dist: 2, p: ['right', 'right'] },
+      { comp: 10, cost: 6, dist: 2, p: ['left', 'right'] },
+      { comp: 10, cost: 6, dist: 2, p: ['right', 'left'] },
+      { comp: 11, cost: 5, dist: 3, p: ['left', 'up'] },
+      { comp: 11, cost: 5, dist: 3, p: ['up', 'left'] },
+      { comp: 11, cost: 5, dist: 3, p: ['up', 'right'] },
+      { comp: 12, cost: 4, dist: 4, p: ['up', 'up'] },
+      { comp: 13, cost: 11, dist: 1, p: ['right', 'up', 'right', 'left'] },
+      { comp: 13, cost: 11, dist: 1, p: ['right', 'up', 'right', 'right'] }
     ]);
 
     path = frontier.deq();
@@ -283,17 +283,27 @@ describe('astar', function() {
     expect(stateRooms(path, vertexId)).to.deep.equal([78, 78, 78, 66, 63, 67]);
     expect(frontier._elements.length).to.equal(11);
 
+    // oh shit
+    path = frontier.deq();
+    expect(actionNames(path)).to.deep.equal(['right', 'right']);
+    path = frontier.deq();
+    expect(actionNames(path)).to.deep.equal(['right', 'left']);
+    path = frontier.deq();
+    expect(actionNames(path)).to.deep.equal(['left', 'right']);
+    // that actually went better than it could have ..... .. . .. . .. ..
+    // what if we have a more open field...
+
     path = frontier.deq();
     astar.units.step(path, frontier);
     expect(actionNames(path)).to.deep.equal(['left', 'left', 'up', 'up', 'up', 'left']);
     expect(stateRooms(path, vertexId)).to.deep.equal([78, 78, 78, 66, 63, 67, 67]);
-    expect(frontier._elements.length).to.equal(13);
+    expect(frontier._elements.length).to.equal(10);
 
     path = frontier.deq();
     astar.units.step(path, frontier);
     expect(actionNames(path)).to.deep.equal(['left', 'left', 'up', 'up', 'up', 'left', 'up']);
     expect(stateRooms(path, vertexId)).to.deep.equal([78, 78, 78, 66, 63, 67, 67, 69]);
-    expect(frontier._elements.length).to.equal(14);
+    expect(frontier._elements.length).to.equal(11);
 
     // the planning is at the goal
     expect(path.last.matches(states.goal)).to.equal(true);

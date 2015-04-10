@@ -30,7 +30,7 @@ exports.turn = function(directions, agent, cycle_value, action_str, actuator_con
 
 
   // change the agent's direction
-  a.transitions.push({ vertex_id: agentDirection, cycle: {value: cycle_value, unit: directions.id} });
+  a.transitions.push({ vertex_id: agentDirection, cycle: {value: cycle_value, unit: directions.id}, cost: 2 });
 
 
   a.action = 'wumpus_known_discrete_'+action_str;

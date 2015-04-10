@@ -1,5 +1,5 @@
 'use strict';
-/* global describe, it, beforeEach */
+/* global describe, it, beforeEach, before */
 var expect = require('chai').expect;
 
 var discrete = require('lime/src/planning/primitives/discrete');
@@ -139,7 +139,7 @@ describe('setup', function() {
 
     describe('actuators', function() {
       var actuatorCallback;
-      beforeEach(function() {
+      before(function() {
         actuatorCallback = server.setup.actuator(socket);
       });
 
@@ -294,7 +294,7 @@ describe('setup', function() {
 
     describe('goal', function() {
       var goalCallback;
-      beforeEach(function() {
+      before(function() {
         goalCallback = server.setup.goal(socket);
       });
 

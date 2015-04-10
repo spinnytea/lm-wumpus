@@ -7,8 +7,8 @@ var blueprint = require('lime/src/planning/primitives/blueprint');
 var Path = require('lime/src/planning/primitives/path');
 var serialplan = require('lime/src/planning/serialplan');
 
+var server = require('../../../src/server/wumpus/index');
 var context = require('../../../src/server/wumpus/context');
-var wumpus = require('../../../src/server/wumpus/index');
 
 var socket = require('./socket');
 
@@ -19,7 +19,7 @@ var socket = require('./socket');
 
 // copy pasta from index.setup.goal(room targetRoomId)
 function createStates(targetRoomId) {
-  var goal = wumpus.setup.createGoal.room(targetRoomId).goal;
+  var goal = server.setup.createGoal.room(targetRoomId).goal;
 
   // get a list of all available actions
   var list = blueprint.list([context.idea('wumpus_world')]).map(blueprint.load);

@@ -4,6 +4,7 @@ var expect = require('chai').expect;
 
 var discrete = require('lime/src/planning/primitives/discrete');
 var links = require('lime/src/database/links');
+var number = require('lime/src/planning/primitives/number');
 var subgraph = require('lime/src/database/subgraph');
 var tools = require('lime/spec/testingTools');
 
@@ -12,6 +13,7 @@ var context = require('../../../src/server/wumpus/context');
 var config = require('../../../src/client/js/wumpus/impl/config');
 
 var socket = require('./socket');
+var spacing = config.room.spacing;
 
 function getRoomProperty(number, link) {
   var sg = new subgraph.Subgraph();
@@ -55,7 +57,6 @@ describe('setup', function() {
 
   it('discrete.definitions.difference.wumpus_room', function() {
     context.setup(socket, config);
-    var spacing = config.room.spacing;
 
     expect(discrete.definitions.difference.wumpus_room).to.be.a('function');
     var roomDefinition = discrete.definitions.create([1, 2], 'wumpus_room');
@@ -188,10 +189,14 @@ describe('setup', function() {
       describe('up', function() {
         it('basic', function() {
           expect(context.idea('agentLocation').data().value).to.equal(63);
+          expect(context.idea('agentLocX').data().value).to.deep.equal(number.value(0));
+          expect(context.idea('agentLocY').data().value).to.deep.equal(number.value(0));
           expect(context.idea('agentDirection').data().value).to.equal('east');
           actuatorCallback('up');
           expect(socket.messages.message).to.equal('actuator:up> potassium');
           expect(context.idea('agentLocation').data().value).to.equal(65);
+          expect(context.idea('agentLocX').data().value).to.deep.equal(number.value(spacing));
+          expect(context.idea('agentLocY').data().value).to.deep.equal(number.value(0));
           expect(context.idea('agentDirection').data().value).to.equal('east');
         });
 

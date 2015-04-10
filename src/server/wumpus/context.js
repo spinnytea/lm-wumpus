@@ -111,6 +111,7 @@ exports.setup = function(s, c) {
   socket = s;
   gameConfig = c;
   getDiscreteContext();
+  exports.idea('room_coord').update({name: 'room_coord', scale: 0});
   s.emit('message', 'Connected');
 };
 
@@ -159,7 +160,7 @@ var getDiscreteContext = function() {
   exports.keys.room = exports.subgraph.addVertex(subgraph.matcher.exact, {name:'room'});
   exports.subgraph.addEdge(exports.keys.wumpus_world, links.list.context, exports.keys.room);
   // room coord
-  exports.keys.room_coord = exports.subgraph.addVertex(subgraph.matcher.exact, {name:'room_coord'});
+  exports.keys.room_coord = exports.subgraph.addVertex(subgraph.matcher.similar, {name:'room_coord'});
   exports.subgraph.addEdge(exports.keys.wumpus_world, links.list.context, exports.keys.room_coord);
 
   var results = subgraph.search(exports.subgraph);
@@ -202,7 +203,7 @@ var getDiscreteContext = function() {
     // create actuators
     discreteActuators.turn(directions, agent, -1, 'left', [wumpus_world, action_left]);
     discreteActuators.turn(directions, agent, 1, 'right', [wumpus_world, action_right]);
-    discreteActuators.forward(directions, agent, room, [wumpus_world, action_up]);
+    discreteActuators.forward(directions, agent, room, room_coord, [wumpus_world, action_up]);
     discreteActuators.grab(agent, room, [wumpus_world, action_grab]);
     discreteActuators.exit(agent, room, [wumpus_world, action_exit]);
 

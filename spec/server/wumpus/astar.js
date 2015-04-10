@@ -71,7 +71,7 @@ describe('astar', function() {
 
     var path = astar.search(states.start, states.goal);
 
-    expect(path).to.be.ok;
+    expect(path).to.not.equal(undefined);
     expect(actionNames(path)).to.deep.equal(['right', 'up', 'right', 'up']);
   });
 

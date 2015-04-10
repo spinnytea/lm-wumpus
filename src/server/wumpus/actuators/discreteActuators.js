@@ -45,7 +45,7 @@ exports.turn = function(directions, agent, cycle_value, action_str, actuator_con
 // @param agent: the agent type idea
 // @param room: the room type idea
 // @param actuator_context: a list of contexts to apply to the idea
-exports.forward = function(directions, agent, room, actuator_context) {
+exports.forward = function(directions, agent, room, room_coord, actuator_context) {
   var a = new actuator.Action();
 
   // the agent is in a room and facing a particular direction
@@ -54,6 +54,8 @@ exports.forward = function(directions, agent, room, actuator_context) {
   // we don't have the roomDefinition at this point
   // besides, we want it to work with any room (not just this game)
   var agentLocation = a.requirements.addVertex(subgraph.matcher.filler, undefined, {transitionable:true});
+  var agentLocX = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id}, {transitionable:true});
+  var agentLocY = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id}, {transitionable:true});
   a.requirements.addEdge(
     agentInstance,
     links.list.type_of,
@@ -61,6 +63,8 @@ exports.forward = function(directions, agent, room, actuator_context) {
   );
   a.requirements.addEdge(agentInstance, links.list.wumpus_sense_agent_dir, agentDirection);
   a.requirements.addEdge(agentInstance, links.list.wumpus_sense_agent_loc, agentLocation);
+  a.requirements.addEdge(agentLocation, links.list.wumpus_room_loc_x, agentLocX);
+  a.requirements.addEdge(agentLocation, links.list.wumpus_room_loc_y, agentLocY);
 
 
   // there must be a door/room in that direction
@@ -76,10 +80,16 @@ exports.forward = function(directions, agent, room, actuator_context) {
   // targetRoom must not have a pit
   var roomHasPit = a.requirements.addVertex(subgraph.matcher.discrete, {value:false, unit: discrete.definitions.list.boolean});
   a.requirements.addEdge(targetRoom, links.list.wumpus_sense_hasPit, roomHasPit, -2);
+  var roomLocX = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id});
+  var roomLocY = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id});
+  a.requirements.addEdge(targetRoom, links.list.wumpus_room_loc_x, roomLocX);
+  a.requirements.addEdge(targetRoom, links.list.wumpus_room_loc_y, roomLocY);
 
 
   // move through the door
   a.transitions.push({ vertex_id: agentLocation, replace_id: targetRoom });
+  a.transitions.push({ vertex_id: agentLocX, replace_id: roomLocX, cost: 0 });
+  a.transitions.push({ vertex_id: agentLocY, replace_id: roomLocY, cost: 0 });
 
 
   a.action = 'wumpus_known_discrete_up';

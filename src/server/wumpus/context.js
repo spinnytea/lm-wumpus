@@ -102,7 +102,7 @@ exports.setup = function(s, c) {
     observable: 'fully', // partially
     timing: 'static', // dynamic
     agents: 'single', // multi
-    player: 'lemon', // person
+    player: 'lemon' // person
   }))) {
     s.emit('message', 'I don\'t know how to handle this.');
     return;

@@ -22,55 +22,6 @@ links.create('wumpus_room_door');
 links.create('wumpus_room_loc_x');
 links.create('wumpus_room_loc_y');
 
-// TODO debug astar path expansions with/out this
-// - what do they look like?
-// - it IS better than not using this at all
-// - why does this still take p60/f100 to get to a room?
-discrete.definitions.difference.wumpus_room = function(d1, d2) {
-
-  // if these are not in the same room group (different games) then you can't get between them
-  if(d1.unit !== d2.unit)
-    return Infinity;
-
-  // if these are the same room, then the distance is 0
-  // this is a short circuit
-  // if the loc is different for some reason,
-  // then... then that must be an error in the loc
-  if(d1.value === d2.value)
-    return 0;
-
-  if(d1.loc || d2.loc)
-    throw new Error('Remove loc from wumpus_room');
-  //if(!(d1.loc && d2.loc))
-  //  throw new Error('Cannot find loc on wumpus_room');
-
-  //var dx = Math.abs(d1.loc.x-d2.loc.x);
-  //if(dx < gameConfig.room.radius)
-  //  dx = 0;
-  //else
-  //  dx = Math.floor(dx/gameConfig.room.spacing + 0.5);
-  //
-  //var dy = Math.abs(d1.loc.y-d2.loc.y);
-  //if(dy < gameConfig.room.radius)
-  //  dy = 0;
-  //else
-  //  dy = Math.floor(dy/gameConfig.room.spacing + 0.5);
-  //
-  //
-  //if(dx === 0) return dy;
-  //if(dy === 0) return dx;
-  return 1;
-};
-// these are cached for ease of use in index.js
-// we want them to be stored with the idea (alongside the discrete value)
-// but there isn't a good way to recover the loc from the roomId
-// - i can build a subgraph and search for the room
-// - that seems ugly
-// - but I guess that's technically accurate
-// TODO specify new agent location based on room
-// - this is breaking and I wanted to get on with discrete.definitions.difference
-exports.roomLoc = {};
-
 // create the actions that we can use
 ['left', 'right', 'up', 'grab', 'exit'].forEach(function(a) {
   actuator.actions['wumpus_known_discrete_'+a] = function() { socket.emit('action', a); };
@@ -242,7 +193,7 @@ exports.sense = function(state) {
     // rooms
     //
     // create a discrete definition with these rooms (room id as the value)
-    var roomDefinition = discrete.definitions.create(state.rooms.map(function(r) { return r.id; }), 'wumpus_room');
+    var roomDefinition = discrete.definitions.create(state.rooms.map(function(r) { return r.id; }));
     instance.link(links.list.context, roomDefinition);
     roomDefinition.link(links.list.thought_description, ideas.create({name:'room def'}));
     exports.keys.roomDefinition = exports.subgraph.addVertex(subgraph.matcher.similar, discrete.definitions.similar);
@@ -257,7 +208,6 @@ exports.sense = function(state) {
     var roomInstances = [];
     var roomKeys = [];
     state.rooms.forEach(function(room) {
-      exports.roomLoc[room.id] = { x: room.x, y: room.y };
 
       var roomInstance = ideas.create(discrete.cast({value: room.id, unit: roomDefinition.id}));
       roomDefinition.link(links.list.thought_description, roomInstance);

@@ -259,8 +259,6 @@ describe('setup', function() {
       });
 
       describe('room', function() {
-        it.skip('specify new agent location based on room (instead of roomId)');
-
         it('63', function() {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentDirection').data().value).to.equal('east');

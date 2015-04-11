@@ -158,7 +158,6 @@ exports.setup.createGoal = {
     var goal = ctx.goal;
 
     // room location
-    ctx.loc = context.roomLoc[roomId];
     ctx.roomInstance = goal.addVertex(subgraph.matcher.discrete, { value: roomId, unit: context.idea('roomDefinition').id });
     goal.addEdge(ctx.roomDefinition, links.list.thought_description, ctx.roomInstance);
     ctx.roomLocX = goal.addVertex(subgraph.matcher.similar, {unit: context.idea('room_coord').id});

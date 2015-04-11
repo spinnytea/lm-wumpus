@@ -53,7 +53,7 @@ describe('setup', function() {
   it.skip('I don\'t know how to handle this. with game params');
 
   describe('server', function() {
-    socket.setup();
+    socket.setup(require('./test_data'));
 
     beforeEach(function() {
       // test room config

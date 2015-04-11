@@ -60,7 +60,7 @@ function summary(frontier) {
 }
 
 describe('astar', function() {
-  socket.setup();
+  socket.setup(require('./test_data'));
 
   describe('basic', function() {
     it('path', function() {

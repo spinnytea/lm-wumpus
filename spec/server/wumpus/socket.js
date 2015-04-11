@@ -12,10 +12,11 @@ exports.messages = {};
 exports.emit = function(room, message) { exports.messages[room] = message; };
 
 // helper method for setting up the integrated environment
-exports.setup = function() {
-  var init_world_model;
+exports.setup = function(init_world_model) {
+  if(!init_world_model)
+    throw new Error('must provide data to test against');
+
   before(function() {
-    init_world_model = require('./test_data');
     context.setup(exports, config);
   });
 

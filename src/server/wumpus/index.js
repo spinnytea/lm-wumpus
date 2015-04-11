@@ -1,5 +1,7 @@
 'use strict';
 
+var _ = require('lodash');
+
 var blueprint = require('lime/src/planning/primitives/blueprint');
 var discrete = require('lime/src/planning/primitives/discrete');
 var links = require('lime/src/database/links');
@@ -82,6 +84,13 @@ exports.setup.goal = function(socket) {
       goal = createGoal.gold().goal;
     } else if(str.indexOf('win') === 0) {
       goal = createGoal.win().goal;
+    } else if(str.indexOf('play') === 0) {
+      goal = [
+        createGoal.goto(links.list.wumpus_sense_hasGold).goal,
+        createGoal.gold().goal,
+        createGoal.goto(links.list.wumpus_sense_hasExit).goal,
+        createGoal.win().goal
+      ];
     } else {
       socket.emit('message', 'goal:'+str+'> not a valid goal');
       return;
@@ -89,11 +98,20 @@ exports.setup.goal = function(socket) {
 
     var list = blueprint.list([context.idea('wumpus_world')]).map(blueprint.load);
     var start = new blueprint.State(context.subgraph, list);
-    goal = new blueprint.State(goal, list);
+    if(_.isArray(goal)) {
+      goal = goal.map(function(g) { return new blueprint.State(g, list); });
 
-    if(start.matches(goal)) {
-      socket.emit('message', 'goal:'+str+'> here\'s the plan: do nothing');
-      return;
+      if(start.matches(_.last(goal))) {
+        socket.emit('message', 'goal:'+str+'> here\'s the plan: do nothing');
+        return;
+      }
+    } else {
+      goal = new blueprint.State(goal, list);
+
+      if(start.matches(goal)) {
+        socket.emit('message', 'goal:'+str+'> here\'s the plan: do nothing');
+        return;
+      }
     }
 
     // TODO save serial plan

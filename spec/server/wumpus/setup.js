@@ -453,8 +453,18 @@ describe('setup', function() {
         expect(context.idea('agentHasWon').data().value).to.equal(true);
       });
 
-      it.skip('play', function() {
-        // first I need to define a target room based on the attribute
+      it('play', function() {
+        expect(context.idea('agentLocation').data().value).to.equal(63);
+        expect(context.idea('agentDirection').data().value).to.equal('east');
+        expect(context.idea('agentHasGold').data().value).to.equal(false);
+        expect(context.idea('agentHasWon').data().value).to.equal(false);
+
+        goalCallback('play');
+
+        expect(context.idea('agentLocation').data().value).to.equal(63);
+        expect(context.idea('agentDirection').data().value).to.equal('north');
+        expect(context.idea('agentHasGold').data().value).to.equal(true);
+        expect(context.idea('agentHasWon').data().value).to.equal(true);
       });
     }); // end goal
   }); // end server

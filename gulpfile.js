@@ -113,7 +113,7 @@ gulp.task('run', [], function() {
 
 gulp.task('mocha', ['server-jshint', 'spec-jshint'], function() {
   return gulp.src(['spec/**/*.js'], {read: false})
-    .pipe(mocha({reporter: reporter, timeout: 4000}));
+    .pipe(mocha({reporter: reporter, timeout: 8000}));
 });
 
 gulp.task('test', [], function() {

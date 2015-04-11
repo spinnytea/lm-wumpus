@@ -87,7 +87,7 @@ exports.forward = function(directions, agent, room, room_coord, actuator_context
 
 
   // move through the door
-  a.transitions.push({ vertex_id: agentLocation, replace_id: targetRoom });
+  a.transitions.push({ vertex_id: agentLocation, replace_id: targetRoom, cost: 0 });
   a.transitions.push({ vertex_id: agentLocX, replace_id: roomLocX, cost: 0 });
   a.transitions.push({ vertex_id: agentLocY, replace_id: roomLocY, cost: 0 });
 

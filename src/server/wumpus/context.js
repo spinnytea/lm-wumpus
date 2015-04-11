@@ -39,25 +39,27 @@ discrete.definitions.difference.wumpus_room = function(d1, d2) {
   if(d1.value === d2.value)
     return 0;
 
-  if(!(d1.loc && d2.loc))
-    throw new Error('Cannot find loc on wumpus_room');
+  if(d1.loc || d2.loc)
+    throw new Error('Remove loc from wumpus_room');
+  //if(!(d1.loc && d2.loc))
+  //  throw new Error('Cannot find loc on wumpus_room');
 
-  var dx = Math.abs(d1.loc.x-d2.loc.x);
-  if(dx < gameConfig.room.radius)
-    dx = 0;
-  else
-    dx = Math.floor(dx/gameConfig.room.spacing + 0.5);
-
-  var dy = Math.abs(d1.loc.y-d2.loc.y);
-  if(dy < gameConfig.room.radius)
-    dy = 0;
-  else
-    dy = Math.floor(dy/gameConfig.room.spacing + 0.5);
-
-
-  if(dx === 0) return dy;
-  if(dy === 0) return dx;
-  return dx + dy;
+  //var dx = Math.abs(d1.loc.x-d2.loc.x);
+  //if(dx < gameConfig.room.radius)
+  //  dx = 0;
+  //else
+  //  dx = Math.floor(dx/gameConfig.room.spacing + 0.5);
+  //
+  //var dy = Math.abs(d1.loc.y-d2.loc.y);
+  //if(dy < gameConfig.room.radius)
+  //  dy = 0;
+  //else
+  //  dy = Math.floor(dy/gameConfig.room.spacing + 0.5);
+  //
+  //
+  //if(dx === 0) return dy;
+  //if(dy === 0) return dx;
+  return 1;
 };
 // these are cached for ease of use in index.js
 // we want them to be stored with the idea (alongside the discrete value)
@@ -111,7 +113,7 @@ exports.setup = function(s, c) {
   socket = s;
   gameConfig = c;
   getDiscreteContext();
-  exports.idea('room_coord').update({name: 'room_coord', scale: 0});
+  exports.idea('room_coord').update({name: 'room_coord', scale: 1/c.room.spacing});
   s.emit('message', 'Connected');
 };
 
@@ -257,7 +259,7 @@ exports.sense = function(state) {
     state.rooms.forEach(function(room) {
       exports.roomLoc[room.id] = { x: room.x, y: room.y };
 
-      var roomInstance = ideas.create(discrete.cast({value: room.id, unit: roomDefinition.id, loc: { x: room.x, y: room.y }}));
+      var roomInstance = ideas.create(discrete.cast({value: room.id, unit: roomDefinition.id}));
       roomDefinition.link(links.list.thought_description, roomInstance);
       roomInstance.link(links.list.type_of, exports.idea('room'));
       roomInstance.link(links.list.wumpus_room_loc_x, ideas.create(number.cast({value: number.value(room.x), unit: exports.idea('room_coord').id})));
@@ -429,7 +431,7 @@ function senseRooms(rooms) {
 
     // configure the rest of the subgraph
     var currentRoom = sg.addVertex(subgraph.matcher.discrete,
-      discrete.cast({value: room.id, unit: exports.idea('roomDefinition').id, loc: { x: room.x, y: room.y }}));
+      discrete.cast({value: room.id, unit: exports.idea('roomDefinition').id}));
     sg.addEdge(currentRoom, links.list.type_of, sg.addVertex(subgraph.matcher.id, exports.idea('room').id));
     sg.addEdge(currentRoom, links.list.wumpus_sense_hasGold, roomHasGold);
     // find
@@ -461,7 +463,7 @@ function senseAgent(agent) {
   exports.idea('agentDirection').update(discrete.cast({value: dir, unit: exports.idea('directions').id}));
 
   // update agent location
-  exports.idea('agentLocation').update(discrete.cast({value: agent.inRoomIds[0], unit: exports.idea('roomDefinition').id, loc: { x: agent.x, y: agent.y }}));
+  exports.idea('agentLocation').update(discrete.cast({value: agent.inRoomIds[0], unit: exports.idea('roomDefinition').id}));
   exports.idea('agentLocX').update(number.cast({value: number.value(agent.x), unit: exports.idea('room_coord').id}));
   exports.idea('agentLocY').update(number.cast({value: number.value(agent.y), unit: exports.idea('room_coord').id}));
 

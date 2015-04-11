@@ -159,7 +159,7 @@ exports.setup.createGoal = {
 
     // room location
     ctx.loc = context.roomLoc[roomId];
-    ctx.roomInstance = goal.addVertex(subgraph.matcher.discrete, { value: roomId, unit: context.idea('roomDefinition').id, loc: ctx.loc });
+    ctx.roomInstance = goal.addVertex(subgraph.matcher.discrete, { value: roomId, unit: context.idea('roomDefinition').id });
     goal.addEdge(ctx.roomDefinition, links.list.thought_description, ctx.roomInstance);
     ctx.roomLocX = goal.addVertex(subgraph.matcher.similar, {unit: context.idea('room_coord').id});
     ctx.roomLocY = goal.addVertex(subgraph.matcher.similar, {unit: context.idea('room_coord').id});
@@ -169,10 +169,10 @@ exports.setup.createGoal = {
     // the agent is at that room location
     ctx.agentLocation = goal.addVertex(subgraph.matcher.discrete, ctx.roomInstance, {transitionable:true,matchRef:true});
     goal.addEdge(ctx.agentInstance, links.list.wumpus_sense_agent_loc, ctx.agentLocation);
-    //ctx.agentLocX = goal.addVertex(subgraph.matcher.number, ctx.roomLocX, {transitionable:true,matchRef:true});
-    //ctx.agentLocY = goal.addVertex(subgraph.matcher.number, ctx.roomLocY, {transitionable:true,matchRef:true});
-    //goal.addEdge(ctx.agentLocation, links.list.wumpus_room_loc_x, ctx.agentLocX);
-    //goal.addEdge(ctx.agentLocation, links.list.wumpus_room_loc_y, ctx.agentLocY);
+    ctx.agentLocX = goal.addVertex(subgraph.matcher.number, ctx.roomLocX, {transitionable:true,matchRef:true});
+    ctx.agentLocY = goal.addVertex(subgraph.matcher.number, ctx.roomLocY, {transitionable:true,matchRef:true});
+    goal.addEdge(ctx.agentLocation, links.list.wumpus_room_loc_x, ctx.agentLocX);
+    goal.addEdge(ctx.agentLocation, links.list.wumpus_room_loc_y, ctx.agentLocY);
 
     return ctx;
   },

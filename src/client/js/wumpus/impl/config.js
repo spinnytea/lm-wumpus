@@ -5,7 +5,7 @@ var agent = exports.agent = {};
 var room = exports.room = {};
 var misc = exports.misc = {
   pit: {},
-  arrow: {},
+  arrow: {}
 };
 
 var chance = exports.chance = {};
@@ -20,8 +20,7 @@ exports.game = {
   observable: 'fully', // partially
   timing: 'static', // dynamic
   agents: 'single', // multi
-  roomCount: 10,
-  player: 'lemon', // person
+  player: 'lemon' // person
 };
 
 // how big are the agents
@@ -36,6 +35,8 @@ agent.torque = Math.PI/40;
 agent.dt_limit = Math.PI/8;
 multi.wumpus_da_limit = 2;
 
+// how many rooms are there?
+room.count = 10;
 // how big the room is
 room.radius = 48;
 Object.defineProperty(room, 'diameter', { get: function() { return room.radius * 2; } });
@@ -64,7 +65,7 @@ grain.continuous.branches = 6;
 // (only applies to dynamic)
 timing.updatesPerSecond = {
   discrete: 2,
-  continuous: 10,
+  continuous: 10
 };
 Object.defineProperty(timing, 'updateDelay', { get: function() { return 1000/timing.updatesPerSecond[exports.game.grain]; } });
 

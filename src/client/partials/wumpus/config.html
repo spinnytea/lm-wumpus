@@ -1,9 +1,15 @@
 <h2>Configuration</h2>
 
 <form class="form-horizontal" role="form">
-<div class="panel panel-default">
-    <div class="panel-heading"><h3>Environment</h3></div>
-    <div class="panel-body" data-ng-show="true">
+<div class="panel panel-default" data-ng-init="showEnvironmentConfig = true">
+    <div class="panel-heading" data-ng-click="showEnvironmentConfig = !showEnvironmentConfig"><h3>
+    <span class="fa fa-fw" data-ng-class="{
+            'fa-chevron-down': showEnvironmentConfig,
+            'fa-chevron-right': !showEnvironmentConfig
+        }"></span>
+        Environment
+    </h3></div>
+    <div class="panel-body" data-ng-show="showEnvironmentConfig">
 
         <div class="form-group">
             <label class="col-sm-2 control-label">Chance</label>
@@ -86,7 +92,7 @@
             <label class="col-sm-2 control-label">Room Count</label>
 
             <div class="col-sm-3">
-                <input class="form-control" type="number" min="4" data-ng-model="config.game.roomCount"/>
+                <input class="form-control" type="number" min="4" data-ng-model="config.room.count"/>
             </div>
             <div class="col-sm-7 form-control-static">
                 how many rooms are in the cave? (defaults to a minimum of 4)
@@ -109,7 +115,7 @@
 
 <div class="panel panel-default" data-ng-init="showAdvancedConfig = false">
     <div class="panel-heading" data-ng-click="showAdvancedConfig = !showAdvancedConfig"><h3>
-        <span class="fa" data-ng-class="{
+        <span class="fa fa-fw" data-ng-class="{
                 'fa-chevron-down': showAdvancedConfig,
                 'fa-chevron-right': !showAdvancedConfig
             }"></span>
@@ -191,7 +197,7 @@
 
 <div class="panel panel-default" data-ng-init="showKeyConfig = false">
     <div class="panel-heading" data-ng-click="showKeyConfig = !showKeyConfig"><h3>
-        <span class="fa" data-ng-class="{
+        <span class="fa fa-fw" data-ng-class="{
                 'fa-chevron-down': showKeyConfig,
                 'fa-chevron-right': !showKeyConfig
             }"></span>

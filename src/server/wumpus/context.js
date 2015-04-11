@@ -44,7 +44,7 @@ exports.setup = function(s, c) {
   console.log('setup');
 
   if(socket) {
-    s.emit('message', 'I can only handle one thing at a time.');
+    s.emit('message', 'I can only deal with one thing at a time.');
     return;
   }
 
@@ -57,7 +57,7 @@ exports.setup = function(s, c) {
     agents: 'single', // multi
     player: 'lemon' // person
   }))) {
-    s.emit('message', 'I don\'t know how to handle this.');
+    s.emit('message', 'I don\'t know how to deal with this.');
     return;
   }
 

@@ -17,11 +17,11 @@ var point_step = 0;
 // (some of the games will be stupid easy, but they will always be solvable)
 // . exit   - first room
 // . wumpus - randomly placed between exit (exclusive) and gold (inclusive)
-// . gold   - placed at roomCount/2
-// . pit    - after gold is placed, generated with some probability (e.g. n/(roomCount/2), where n is a constant number of rooms we'd like to see)
+// . gold   - placed at room.count/2
+// . pit    - after gold is placed, generated with some probability (e.g. n/(roomount/2), where n is a constant number of rooms we'd like to see)
 exports.generate = function() {
   // pull out our arguments
-  var roomCount = Math.max(config.game.roomCount || 0, 4);
+  var roomCount = Math.max(config.room.count || 0, 4);
 
   // the room where the cold will be placed
   var goldRoom = Math.floor(roomCount / 2);
@@ -32,7 +32,7 @@ exports.generate = function() {
   // create a new one on exports
   // the locally scoped name is for ease of access
   cave = exports.cave = new Cave();
-  exports.points = Math.pow(config.game.roomCount, 0.7)*4;
+  exports.points = Math.pow(roomCount, 0.7)*4;
   if(config.game.chance === 'stochastic')
     exports.points += 5;
   if(config.game.observable === 'partially')

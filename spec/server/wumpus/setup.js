@@ -1,6 +1,7 @@
 'use strict';
 /* global describe, it, beforeEach, before */
 var expect = require('chai').expect;
+var _ = require('lodash');
 
 var links = require('lime/src/database/links');
 var number = require('lime/src/planning/primitives/number');
@@ -33,15 +34,29 @@ function getRoomProperty(number, link) {
 
 describe('setup', function() {
   it('context', function() {
+    var CHRONA = 'I don\'t know how to deal with this.';
+
     // invalid config
     context.setup(socket, { game: {} });
-    expect(socket.messages.message).to.equal('I don\'t know how to handle this.');
+    expect(socket.messages.message).to.equal(CHRONA);
+
+    // unsupported config
+    var c = _.cloneDeep(config);
+    c.game.chance = 'stochastic';
+    context.setup(socket, c);
+    expect(socket.messages.message).to.equal(CHRONA);
+    c = _.cloneDeep(config);
+    c.game.grain = 'continuous';
+    context.setup(socket, c);
+    expect(socket.messages.message).to.equal(CHRONA);
+
     // valid config
     context.setup(socket, config);
     expect(socket.messages.message).to.equal('Connected');
+
     // can't connect two
     context.setup(socket, config);
-    expect(socket.messages.message).to.equal('I can only handle one thing at a time.');
+    expect(socket.messages.message).to.equal('I can only deal with one thing at a time.');
 
     // reconnect
     context.cleanup();

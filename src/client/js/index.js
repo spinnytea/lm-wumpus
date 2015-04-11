@@ -38,6 +38,7 @@ angular.module('lime.client', [
     };
   }
 ]).directive('strToNum', [
+  // used for input[type="range"] since they only deal in strings
   function() {
     return {
       require: 'ngModel',

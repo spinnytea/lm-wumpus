@@ -15,6 +15,9 @@ var socket = require('./socket');
 //
 // This is a unit test of astar
 // I just need a very large integrated environment to have enough data for it
+// It is in fact very integration-y, and the results will change a lot
+// But I want some insight into what is actually happening so I can tweak and improve
+// Data thrashing isn't something we can prevent
 //
 
 // copy pasta from index.setup.goal(room targetRoomId)

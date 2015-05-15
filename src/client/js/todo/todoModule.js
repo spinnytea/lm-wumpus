@@ -27,6 +27,7 @@ module.exports = angular.module('lime.client.todo', [])
         { text: 'astar in-depth test: create/solve room', status: 'done' },
         { text: 'server: actuator tests', status: 'done' },
         { text: 'server: goal room', status: 'done' },
+        { text: 'agentLocation -> roomType (use in forward)', status: 'none' },
       ]
     },
     {
@@ -36,6 +37,13 @@ module.exports = angular.module('lime.client.todo', [])
         { text: 'pull current into "basic"', status: 'none' },
         { text: 'finish testing "basic"', status: 'none' },
         { text: 'do hierarchy planning with basic: rooms then turns', status: 'none' },
+      ]
+    },
+    {
+      title: 'Continuous',
+      description: 'Run LM in continuous mode',
+      tasks: [
+        { text: 'feature detection: identify rooms by loc', status: 'none' },
       ]
     },
   ];

@@ -26,6 +26,6 @@ exports.setup = function(init_world_model) {
 
   beforeEach(function() {
     context.sense(init_world_model);
-    context.subgraph.invalidateCache();
+    context.subgraph.deleteData();
   });
 };

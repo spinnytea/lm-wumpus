@@ -37,7 +37,7 @@ exports.keys = {};
 // name -> idea
 // should be same name as used in keys
 // convenience mapping from for subgraph.vertices[keys].idea
-exports.idea = function(name) { return exports.subgraph.vertices[exports.keys[name]].idea; };
+exports.idea = function(name) { return exports.subgraph.getIdea(exports.keys[name]); };
 
 
 exports.setup = function(s, c) {
@@ -390,7 +390,7 @@ function senseRooms(rooms) {
 
     // update the values
     // TODO log when the sensed value differs from the internal value
-    sg.vertices[roomHasGold].idea.update(discrete.cast({value: room.hasGold, unit: discrete.definitions.list.boolean}));
+    sg.getIdea(roomHasGold).update(discrete.cast({value: room.hasGold, unit: discrete.definitions.list.boolean}));
   });
 }
 
@@ -423,7 +423,7 @@ function senseAgent(agent) {
   // update agent hasWon
   exports.idea('agentHasWon').update(discrete.cast({value: agent.win, unit: discrete.definitions.list.boolean}));
 
-  exports.subgraph.invalidateCache(
+  exports.subgraph.deleteData(
     exports.keys.agentDirection,
     exports.keys.agentLocation,
     exports.keys.agentLocX,

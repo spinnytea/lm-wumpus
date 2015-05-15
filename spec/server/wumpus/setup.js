@@ -29,7 +29,7 @@ function getRoomProperty(number, link) {
   var result = subgraph.search(sg);
   expect(result).to.deep.equal([sg]);
 
-  return sg.vertices[targetProperty].data;
+  return sg.getData(targetProperty);
 }
 
 describe('setup', function() {

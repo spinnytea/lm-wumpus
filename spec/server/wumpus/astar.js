@@ -37,7 +37,7 @@ function actionNames(path) {
   return path.actions.map(function(a) { return a.action.substr(22); });
 }
 function stateRooms(path, vertexId) {
-  return path.states.map(function(s) { return s.state.vertices[vertexId].data.value; });
+  return path.states.map(function(s) { return s.state.getData(vertexId).value; });
 }
 function summary(frontier) {
 
@@ -209,7 +209,7 @@ describe('astar', function() {
   it('large step-through', function() {
     var vertexId = context.keys['agentLocation'];
     expect(context.idea('agentLocation').data().value).to.equal(63);
-    expect(context.subgraph.vertices[vertexId].data.value).to.equal(63);
+    expect(context.subgraph.getData(vertexId).value).to.equal(63);
 
     var states = createStates(78);
     var frontier = astar.units.frontier();
@@ -245,14 +245,14 @@ describe('astar', function() {
 
     expect(path.last.matches(states.goal)).to.equal(true);
     expect(context.idea('agentLocation').data().value).to.equal(63);
-    expect(context.subgraph.vertices[vertexId].data.value).to.equal(63);
+    expect(context.subgraph.getData(vertexId).value).to.equal(63);
 
     var sp = new serialplan.Action(path.actions);
     var result = sp.tryTransition(states.start);
     expect(result.length).to.equal(1);
     sp.runBlueprint(states.start, result[0]);
 
-    expect(context.subgraph.vertices[vertexId].data.value).to.equal(78);
+    expect(context.subgraph.getData(vertexId).value).to.equal(78);
     expect(context.idea('agentLocation').data().value).to.equal(78);
     expect(context.idea('agentDirection').data().value).to.equal('north');
 
@@ -330,6 +330,6 @@ describe('astar', function() {
     // the planning is at the goal
     expect(path.last.matches(states.goal)).to.equal(true);
     expect(context.idea('agentLocation').data().value).to.equal(78);
-    expect(context.subgraph.vertices[vertexId].data.value).to.equal(78);
+    expect(context.subgraph.getData(vertexId).value).to.equal(78);
   });
 }); // end astar

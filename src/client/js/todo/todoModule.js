@@ -40,6 +40,14 @@ module.exports = angular.module('lime.client.todo', [])
       ]
     },
     {
+      title: 'Goal Improvements',
+      description: 'Nicities for "goal play"',
+      tasks: [
+        { text: 'allow "goto exit" and "goto gold" to work, even if there is "nothing to do"', status: 'none' },
+        { text: 'if we already have the gold, then skip that part', status: 'none' },
+      ]
+    },
+    {
       title: 'Continuous',
       description: 'Run LM in continuous mode',
       tasks: [

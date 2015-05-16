@@ -5,7 +5,7 @@ var _ = require('lodash');
 var blueprint = require('lime/src/planning/primitives/blueprint');
 var discrete = require('lime/src/planning/primitives/discrete');
 var links = require('lime/src/database/links');
-var serialplan = require('lime/src/planning/serialplan');
+var planner = require('lime/src/planning/planner');
 var subgraph = require('lime/src/database/subgraph');
 
 // TODO refactor this context based on the config it can handle (see context.setup)
@@ -117,7 +117,7 @@ exports.setup.goal = function(socket) {
     // TODO save serial plan
     // - let me run it from the UI
     // - make a delay
-    var sp = serialplan.create(start, goal);
+    var sp = planner.create(start, goal);
 
     if(sp) {
       var result = sp.tryTransition(start);

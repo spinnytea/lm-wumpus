@@ -1,4 +1,5 @@
 'use strict';
+var _ = require('lodash');
 
 // XXX I am managing the data AAALLLLLL wrong
 //  - In many cases, I am writing this under the impression that there "might be multiple instances"
@@ -94,7 +95,34 @@ module.exports = angular.module('lime.client.wumpus', [
         if(config.game.player === 'lemon' && config.game.timing === 'static')
           socket.sense();
 
-        socket.on('context', subgraphData.add);
+
+        socket.on('context', function(sg) {
+          sg = JSON.parse(sg);
+
+          // the format of the data has since been improved
+          // convert the new format into the old one
+          sg.vertices = _.map(sg.match, function(value, key) { return {
+            vertex_id: +key,
+            matcher: value.matcher,
+            matchData: value.data,
+            options: value.options,
+            idea: sg.idea[key],
+            _data: sg.data[key]
+          }; });
+          delete sg.match;
+          delete sg.idea;
+          delete sg.data;
+
+          if(sg.vertices.some(function(v, idx) { return v.vertex_id !== idx; }))
+            throw new Error('vertex id does not match array index ~ fix edges.src and edges.dst');
+
+          sg.edges.forEach(function(value) {
+            value.src = +value.src;
+            value.dst = +value.dst;
+          });
+
+          subgraphData.add(sg);
+        });
         socket.on('context_bak', function(subgraph) {
           subgraph = JSON.parse(subgraph);
 

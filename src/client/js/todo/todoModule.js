@@ -40,11 +40,13 @@ module.exports = angular.module('lime.client.todo', [])
       ]
     },
     {
-      title: 'Goal Improvements',
-      description: 'Nicities for "goal play"',
+      title: 'lm-wumpus general stuff',
+      description: 'These are just some nice-to-haves with lm-wumpus. ' +
+        'None of them are really important now that we have a working prototype, but it wouldn\'t hurt to have them.',
       tasks: [
         { text: 'allow "goto exit" and "goto gold" to work, even if there is "nothing to do"', status: 'none' },
         { text: 'if we already have the gold, then skip that part', status: 'none' },
+        { text: 'update subgraphModule to use the new format; remove "wumpusModule.wumpusSocket.context" backwards conversion', status: 'none' },
       ]
     },
     {

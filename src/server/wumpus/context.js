@@ -159,6 +159,7 @@ var getDiscreteContext = function() {
     discreteActuators.forward(directions, agent, room, room_coord, [wumpus_world, action_up]);
     discreteActuators.grab(agent, room, [wumpus_world, action_grab]);
     discreteActuators.exit(agent, room, [wumpus_world, action_exit]);
+    discreteActuators.adjacentRoomStub(directions, agent, room, room_coord, [wumpus_world]);
 
 
     // save our the ideas

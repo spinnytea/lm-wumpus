@@ -6,6 +6,7 @@ var actuator = require('lime/src/planning/actuator');
 var discrete = require('lime/src/planning/primitives/discrete');
 var ideas = require('lime/src/database/ideas');
 var links = require('lime/src/database/links');
+var stub = require('lime/src/planning/stub');
 var subgraph = require('lime/src/database/subgraph');
 // TODO incorporate points
 // TODO require the agent to be alive to take action; do not disallow moving into a pit
@@ -87,7 +88,7 @@ exports.forward = function(directions, agent, room, room_coord, actuator_context
 
 
   // move through the door
-  a.transitions.push({ vertex_id: agentLocation, replace_id: targetRoom, cost: 0 });
+  a.transitions.push({ vertex_id: agentLocation, replace_id: targetRoom });
   a.transitions.push({ vertex_id: agentLocX, replace_id: roomLocX, cost: 0 });
   a.transitions.push({ vertex_id: agentLocY, replace_id: roomLocY, cost: 0 });
 
@@ -178,6 +179,56 @@ exports.exit = function(agent, room, actuator_context) {
 
 
   a.action = 'wumpus_known_discrete_exit';
+  a.save();
+  actuator_context.forEach(function(ac) {
+    ideas.load(a.idea).link(links.list.context, ac);
+  });
+  ideas.save(a.idea);
+};
+
+
+// @param agent: the agent type idea
+// @param room: the room type idea
+// @param actuator_context: a list of contexts to apply to the idea
+exports.adjacentRoomStub = function(directions, agent, room, room_coord, actuator_context) {
+  var a = new stub.Action();
+
+  // the agent is in a room
+  var agentInstance = a.requirements.addVertex(subgraph.matcher.filler);
+  var agentLocation = a.requirements.addVertex(subgraph.matcher.filler, undefined, {transitionable:true});
+  var agentLocX = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id}, {transitionable:true});
+  var agentLocY = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id}, {transitionable:true});
+  a.requirements.addEdge(
+    agentInstance,
+    links.list.type_of,
+    a.requirements.addVertex(subgraph.matcher.id, agent)
+  );
+  a.requirements.addEdge(agentInstance, links.list.wumpus_sense_agent_loc, agentLocation);
+  a.requirements.addEdge(agentLocation, links.list.wumpus_room_loc_x, agentLocX);
+  a.requirements.addEdge(agentLocation, links.list.wumpus_room_loc_y, agentLocY);
+
+
+  // there is an adjacent room
+  var currentRoom = a.requirements.addVertex(subgraph.matcher.discrete, agentLocation, {matchRef:true});
+  var roomDirection = a.requirements.addVertex(subgraph.matcher.similar, {unit: directions.id});
+  var targetRoom = a.requirements.addVertex(subgraph.matcher.filler);
+  a.requirements.addEdge(currentRoom, links.list.wumpus_room_door, roomDirection);
+  a.requirements.addEdge(roomDirection, links.list.wumpus_room_door, targetRoom, -1);
+  var roomType = a.requirements.addVertex(subgraph.matcher.id, room);
+  a.requirements.addEdge(currentRoom, links.list.type_of, roomType);
+  a.requirements.addEdge(targetRoom, links.list.type_of, roomType, -1);
+  var roomLocX = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id});
+  var roomLocY = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id});
+  a.requirements.addEdge(targetRoom, links.list.wumpus_room_loc_x, roomLocX);
+  a.requirements.addEdge(targetRoom, links.list.wumpus_room_loc_y, roomLocY);
+
+
+  // move through the door
+  a.transitions.push({ vertex_id: agentLocation, replace_id: targetRoom, cost: 0 });
+  a.transitions.push({ vertex_id: agentLocX, replace_id: roomLocX, cost: 0 });
+  a.transitions.push({ vertex_id: agentLocY, replace_id: roomLocY, cost: 0 });
+
+
   a.save();
   actuator_context.forEach(function(ac) {
     ideas.load(a.idea).link(links.list.context, ac);

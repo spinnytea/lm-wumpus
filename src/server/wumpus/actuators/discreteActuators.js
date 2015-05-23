@@ -191,7 +191,7 @@ exports.exit = function(agent, room, actuator_context) {
 // @param room: the room type idea
 // @param actuator_context: a list of contexts to apply to the idea
 exports.adjacentRoomStub = function(directions, agent, room, room_coord, actuator_context) {
-  var a = new stub.Action();
+  var a = new stub.Action('immediate');
 
   // the agent is in a room
   var agentInstance = a.requirements.addVertex(subgraph.matcher.filler);

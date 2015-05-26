@@ -43,7 +43,7 @@ exports.setup.actuator = function(socket) {
     }
 
     // load the actions
-    var list = blueprint.list([context.idea('action_'+str), context.idea('wumpus_world')]).map(blueprint.load);
+    var list = blueprint.list(context.idea('action_'+str)).map(blueprint.load);
     // build a state // TODO should this be in context (probably instead of subgraph)
     var bs = new blueprint.State(context.subgraph, list);
 

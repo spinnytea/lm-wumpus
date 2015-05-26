@@ -308,6 +308,7 @@ describe('setup', function() {
           expect(socket.messages.message).to.equal('goal:room 69> oxygen potassium');
           expect(context.idea('agentLocation').data().value).to.equal(69);
           // up-right-up is shorter than right-up-left-up, so we SHOULD be facing south
+          // but as soon as we start mucking with stubs, this may not be the case
           expect(context.idea('agentDirection').data().value).to.equal('south');
         });
 

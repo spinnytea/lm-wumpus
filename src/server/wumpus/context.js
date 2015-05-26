@@ -154,17 +154,17 @@ var getDiscreteContext = function() {
 
 
     // create actuators
-    discreteActuators.turn(directions, agent, -1, 'left', [wumpus_world, action_left]);
-    discreteActuators.turn(directions, agent, 1, 'right', [wumpus_world, action_right]);
-    discreteActuators.forward(directions, agent, room, room_coord, [wumpus_world, action_up]);
+    var stub_room = discreteActuators.adjacentRoomStub(directions, agent, room, room_coord, [wumpus_world]);
+    discreteActuators.turn(directions, agent, -1, 'left', [stub_room, action_left]);
+    discreteActuators.turn(directions, agent, 1, 'right', [stub_room, action_right]);
+    discreteActuators.forward(directions, agent, room, room_coord, [stub_room, action_up]);
     discreteActuators.grab(agent, room, [wumpus_world, action_grab]);
     discreteActuators.exit(agent, room, [wumpus_world, action_exit]);
-    discreteActuators.adjacentRoomStub(directions, agent, room, room_coord, [wumpus_world]);
 
 
     // save our the ideas
     [
-      wumpus_world, action_left, action_right, action_up, action_grab, action_exit, ideas.context('blueprint'),
+      wumpus_world, stub_room, action_left, action_right, action_up, action_grab, action_exit, ideas.context('blueprint'),
       directions, compass, agent, room, room_coord
     ].forEach(ideas.save);
     // now search again

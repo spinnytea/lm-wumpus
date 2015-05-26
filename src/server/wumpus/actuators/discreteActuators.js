@@ -238,4 +238,6 @@ exports.adjacentRoomStub = function(directions, agent, room, room_coord, actuato
     ideas.load(a.idea).link(links.list.context, ac);
   });
   ideas.save(a.idea);
+
+  return a.idea;
 };

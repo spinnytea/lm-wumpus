@@ -311,7 +311,7 @@ describe('setup', function() {
           expect(context.idea('agentDirection').data().value).to.equal('south');
         });
 
-        it.skip('78', function() {
+        it('78', function() {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentDirection').data().value).to.equal('east');
           goalCallback('room 78');
@@ -320,7 +320,7 @@ describe('setup', function() {
           expect(context.idea('agentDirection').data().value).to.equal('north');
         });
 
-        it.skip('68-78', function() {
+        it('68-78', function() {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentDirection').data().value).to.equal('east');
           goalCallback('room 68');

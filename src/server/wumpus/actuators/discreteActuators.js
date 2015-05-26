@@ -222,6 +222,10 @@ exports.adjacentRoomStub = function(directions, agent, room, room_coord, actuato
   a.requirements.addEdge(targetRoom, links.list.wumpus_room_loc_x, roomLocX);
   a.requirements.addEdge(targetRoom, links.list.wumpus_room_loc_y, roomLocY);
 
+  // targetRoom must not have a pit
+  var roomHasPit = a.requirements.addVertex(subgraph.matcher.discrete, {value:false, unit: discrete.definitions.list.boolean});
+  a.requirements.addEdge(targetRoom, links.list.wumpus_sense_hasPit, roomHasPit, -2);
+
 
   // move through the door
   a.transitions.push({ vertex_id: agentLocation, replace_id: targetRoom, cost: 0 });

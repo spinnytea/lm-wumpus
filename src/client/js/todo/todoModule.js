@@ -27,7 +27,7 @@ module.exports = angular.module('lime.client.todo', [])
         { text: 'astar in-depth test: create/solve room', status: 'done' },
         { text: 'server: actuator tests', status: 'done' },
         { text: 'server: goal room', status: 'done' },
-        { text: 'agentLocation -> roomType (use in forward)', status: 'none' },
+        { text: 'agentLocation -> roomType (use in forward)', status: 'wontfix' },
       ]
     },
     {
@@ -45,8 +45,8 @@ module.exports = angular.module('lime.client.todo', [])
         'None of them are really important now that we have a working prototype, but it wouldn\'t hurt to have them.',
       tasks: [
         { text: 'allow "goto exit" and "goto gold" to work, even if there is "nothing to do"', status: 'none' },
-        { text: 'if we already have the gold, then skip that part', status: 'none' },
-        { text: 'update subgraphModule to use the new format; remove "wumpusModule.wumpusSocket.context" backwards conversion', status: 'none' },
+        { text: 'allow "play" to skip sections, then skip that part', status: 'none' },
+        { text: 'update subgraphModule to use the new subgraph.stringify format; remove the "wumpusModule.wumpusSocket.context" back-conversion', status: 'none' },
       ]
     },
     {
@@ -83,6 +83,7 @@ module.exports = angular.module('lime.client.todo', [])
   '$scope',
   'lime.client.todo.list',
   function($scope, list) {
+    // there isn't really any interactivity to this view
     $scope.list = list;
   }
 ])

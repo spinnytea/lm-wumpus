@@ -335,7 +335,7 @@ describe('setup', function() {
         });
       }); // end room
 
-      describe.skip('goto', function() {
+      describe('goto', function() {
         it('gold', function() {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentDirection').data().value).to.equal('east');
@@ -346,8 +346,6 @@ describe('setup', function() {
           expect(context.idea('agentDirection').data().value).to.equal('west');
           expect(context.idea('agentHasGold').data().value).to.equal(false);
         });
-
-        it.skip('gold step-through');
 
         it('exit', function() {
           expect(context.idea('agentLocation').data().value).to.equal(63);
@@ -365,7 +363,7 @@ describe('setup', function() {
         });
       }); // end goto
 
-      describe.skip('gold', function() {
+      describe('gold', function() {
         it('in the room', function() {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentDirection').data().value).to.equal('east');
@@ -397,9 +395,11 @@ describe('setup', function() {
           expect(context.idea('agentHasGold').data().value).to.equal(true);
           expect(getRoomProperty(68, 'Gold').value).to.equal(false);
         });
+
+        it.skip('gold step-through');
       }); // end gold
 
-      it.skip('win', function() {
+      it('win', function() {
         expect(context.idea('agentLocation').data().value).to.equal(63);
         expect(context.idea('agentDirection').data().value).to.equal('east');
         expect(context.idea('agentHasGold').data().value).to.equal(false);
@@ -422,7 +422,7 @@ describe('setup', function() {
         expect(context.idea('agentHasWon').data().value).to.equal(true);
       });
 
-      it.skip('play', function() {
+      it('play', function() {
         expect(context.idea('agentLocation').data().value).to.equal(63);
         expect(context.idea('agentDirection').data().value).to.equal('east');
         expect(context.idea('agentHasGold').data().value).to.equal(false);

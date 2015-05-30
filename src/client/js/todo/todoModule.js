@@ -12,6 +12,7 @@ module.exports = angular.module('lime.client.todo', [])
       tasks: [
         { text: 'How do we specify these goals independently; is it a list of goals (do x, then do y)?', status: 'done' },
         { text: 'How do we figure what these goals should be (dependency graph? ~ this is a harder problem)? (this is for later)', status: 'wontfix' },
+        { text: 'do hierarchy planning with basic: rooms then turns', status: 'done' },
       ]
     },
     {
@@ -28,15 +29,7 @@ module.exports = angular.module('lime.client.todo', [])
         { text: 'server: actuator tests', status: 'done' },
         { text: 'server: goal room', status: 'done' },
         { text: 'agentLocation -> roomType (use in forward)', status: 'wontfix' },
-      ]
-    },
-    {
-      title: 'Refactor Tests',
-      description: 'Allow for for each of the config types',
-      tasks: [
-        { text: 'pull current into "basic"', status: 'none' },
-        { text: 'finish testing "basic"', status: 'none' },
-        { text: 'do hierarchy planning with basic: rooms then turns', status: 'none' },
+        { text: 'refactor tests', status: 'none' },
       ]
     },
     {
@@ -44,16 +37,43 @@ module.exports = angular.module('lime.client.todo', [])
       description: 'These are just some nice-to-haves with lm-wumpus. ' +
         'None of them are really important now that we have a working prototype, but it wouldn\'t hurt to have them.',
       tasks: [
+        { text: 'add a delay for discrete so we can watch it play - where does this go?', status: 'none' },
+        { text: 'sense: alive, can only take actions when alive; allow up to enter pit; planning should prune this', status: 'none' },
+        { text: 'display the current plan on the UI', status: 'none' },
+        { text: 'make some sprites for the game', status: 'none' },
+        { text: 'fix the context direction', status: 'none' },
         { text: 'allow "goto exit" and "goto gold" to work, even if there is "nothing to do"', status: 'none' },
         { text: 'allow "play" to skip sections, then skip that part', status: 'none' },
         { text: 'update subgraphModule to use the new subgraph.stringify format; remove the "wumpusModule.wumpusSocket.context" back-conversion', status: 'none' },
+        { text: 'address in code TODOs', status: 'none' },
       ]
     },
     {
-      title: 'Continuous',
-      description: 'Run LM in continuous mode',
+      title: 'Grain',
+      description: 'Run LM in grain:continuous mode',
       tasks: [
         { text: 'feature detection: identify rooms by loc', status: 'none' },
+      ]
+    },
+    {
+      title: 'Timing',
+      description: 'Run LM in timing:dynamic mode',
+      tasks: [
+      ]
+    },
+    {
+      title: 'Observable',
+      description: 'Run LM in observable:partially mode',
+      tasks: [
+        { text: 'explore until current goal is found', status: 'none' },
+        { text: 'how do we tell the agent to avoid pits?', status: 'none' },
+      ]
+    },
+    {
+      title: 'Chance',
+      description: 'Run LM in chance:stochastic mode',
+      tasks: [
+        { text: 'check expected state against actual state; replan if mismatch', status: 'none' },
       ]
     },
   ];

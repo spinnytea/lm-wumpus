@@ -68,6 +68,20 @@ exports.setup.actuator = function(socket) {
   };
 };
 
+function planNames(a) {
+  switch(a.constructor.name) {
+    case 'ActuatorAction':
+      return [a.action.substr(22)];
+    case 'SerialAction':
+      return _.reduce(a.plans, function(ret, p) {
+        Array.prototype.push.apply(ret, planNames(p));
+        return ret;
+      }, []);
+    default:
+      return [a.constructor.name];
+  }
+}
+
 exports.setup.goal = function(socket) {
   return function(str) {
 
@@ -114,12 +128,16 @@ exports.setup.goal = function(socket) {
       }
     }
 
+    socket.emit('message', 'goal:'+str+'> planning...');
+
     // TODO save serial plan
     // - let me run it from the UI
     // - make a delay
     var sp = planner.create(start, goal);
 
     if(sp) {
+      socket.emit('plan', planNames(sp));
+
       var result = sp.tryTransition(start);
       if(result.length > 0) {
         sp.runBlueprint(start, result[0]);

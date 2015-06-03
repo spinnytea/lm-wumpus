@@ -236,6 +236,30 @@ module.exports = angular.module('lime.client.wumpus', [
             }
           }
         };
+
+        socket.on('plan', function(planNames) {
+          $scope.the_plan = planNames.map(function(name) {
+            var icon;
+            switch(name) {
+              case 'up':
+                icon = 'fa-long-arrow-right';
+                break;
+              case 'right':
+              case 'left':
+                icon = 'fa-rotate-'+name;
+                break;
+              case 'exit':
+                icon = 'fa-thumbs-o-up';
+                break;
+              case 'grab':
+                icon = 'fa-diamond';
+                break;
+              default:
+                icon = 'fa-question';
+            }
+            return { icon: icon, title: name };
+          });
+        });
       } // end link
     };
   }

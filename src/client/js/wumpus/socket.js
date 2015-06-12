@@ -1,4 +1,6 @@
 'use strict';
+// this is the raw socket connection using socket io
+// we have a wrapper around the api to make it easier for our use case, and to better integrate it into wumpus
 var io = require('socket.io-client');
 
 var config = require('./impl/config');
@@ -27,7 +29,7 @@ exports.connect = function(scope, protocol, host) {
   socket = io(protocol + '://' + host + ':3000/wumpus').connect();
   console.log('connect');
   socket.emit('config', angular.extend({}, config, {
-    chance: undefined, grain: undefined, timing: undefined, multi: undefined,
+    chance: undefined, grain: undefined, timing: undefined, multi: undefined
   }));
 
   exports.on('action', function(which) {

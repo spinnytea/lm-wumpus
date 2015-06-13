@@ -7,6 +7,7 @@
     <tr>
         <td colspan="2">
             <span title="Add" data-ng-click="getContext()" class="text-info fa fa-plus"></span>
+            <span title="Diff" data-ng-click="diffNewContext()" class="text-info fa fa-exchange"></span>
         </td>
     </tr>
     <tr data-ng-repeat="sg in contexts">
@@ -17,6 +18,7 @@
                     data-ng-disabled="sg.diff"
                     data-ng-click="selectSubgraph(sg)"
                     data-ng-class="{'btn-default':!sg.selected, 'btn-primary':sg.selected}">
+                <i class="fa" data-ng-class="selectSubgraphIcon(sg)"></i>
                 {{selectSubgraphText(sg)}}
             </button>
         </td>

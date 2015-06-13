@@ -45,6 +45,10 @@ module.exports = angular.module('lime.client.wumpus', [
     $scope.getContext = function() {
       socket.emit('context', '');
     };
+    $scope.diffNewContext = function() {
+      socket.next.context = 'diff';
+      socket.emit('context', '');
+    };
     $scope.removeContext = function(c) {
       subgraphData.list.splice(subgraphData.list.indexOf(c), 1);
     };
@@ -74,6 +78,16 @@ module.exports = angular.module('lime.client.wumpus', [
         if(subgraphData.list.some(function(d) { return d.selected; }))
           return 'diff';
         return 'select';
+      }
+    };
+    $scope.selectSubgraphIcon = function(sg) {
+      if(sg.diff) {
+      } else if(sg.selected) {
+        return 'fa-search-minus';
+      } else {
+        if(subgraphData.list.some(function(d) { return d.selected; }))
+          return 'fa-exchange';
+        return 'fa-search-plus';
       }
     };
   }
@@ -270,7 +284,7 @@ module.exports = angular.module('lime.client.wumpus', [
             .css('left', left);
         }));
 
-      }, // end link
+      } // end link
     };
   }
 ]) // end wumpusRoom directive

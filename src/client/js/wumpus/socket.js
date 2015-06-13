@@ -79,3 +79,7 @@ exports.sense = function() {
   cave.rooms.forEach(function(room) { room.senses = room.sense(); });
   socket.emit('sense', cave);
 };
+
+exports.next = {
+  context: '' // '', 'skip_message', 'diff'
+};

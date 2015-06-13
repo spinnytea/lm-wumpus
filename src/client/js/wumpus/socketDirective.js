@@ -29,7 +29,10 @@ module.exports = angular.module('lime.client.wumpus.socketDirective', [
 
 
         socket.on('context', function(sg) {
-          processMessage('Got a context.');
+          if(socket.next.context === 'skip_message')
+            socket.next.context = '';
+          else
+            processMessage('Got a context.');
           sg = JSON.parse(sg);
 
           // the format of the data has since been improved
@@ -54,7 +57,18 @@ module.exports = angular.module('lime.client.wumpus.socketDirective', [
             value.dst = +value.dst;
           });
 
-          subgraphData.add(sg);
+          if(socket.next.context === 'diff') {
+            subgraphData.list.some(function(d) {
+              if(d.selected) {
+                subgraphData.add(d.subgraph, subgraphData.diff(d.subgraph, sg));
+                return true;
+              }
+              return false;
+            });
+            socket.next.context = '';
+          } else {
+            subgraphData.add(sg);
+          }
         });
         socket.on('context_bak', function(subgraph) {
           // simplify the subgraph
@@ -152,6 +166,7 @@ module.exports = angular.module('lime.client.wumpus.socketDirective', [
 
           subgraphData.add(subgraphData.remap(subgraph));
         }); // end socket.on context
+        socket.next.context = 'skip_message';
         socket.emit('context');
 
         $scope.message = '';

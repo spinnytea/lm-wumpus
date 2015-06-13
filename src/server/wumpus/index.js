@@ -130,7 +130,7 @@ exports.setup.goal = function(socket) {
 
     socket.emit('message', 'goal:'+str+'> planning...');
 
-    // TODO save serial plan
+    // TODO save serial plan, when it is successful
     // - let me run it from the UI
     // - make a delay
     var sp = planner.create(start, goal);

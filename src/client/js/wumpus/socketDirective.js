@@ -29,6 +29,7 @@ module.exports = angular.module('lime.client.wumpus.socketDirective', [
 
 
         socket.on('context', function(sg) {
+          processMessage('Got a context.');
           sg = JSON.parse(sg);
 
           // the format of the data has since been improved
@@ -152,9 +153,10 @@ module.exports = angular.module('lime.client.wumpus.socketDirective', [
         socket.emit('context');
 
         $scope.message = '';
-        socket.on('message', function(str) {
+        function processMessage(str) {
           $scope.serverMessage = str;
-        });
+        }
+        socket.on('message', processMessage);
         $scope.keyup = function($event) {
           if($event.keyCode === 13) { // enter
             var idx = $scope.message.indexOf(' ');

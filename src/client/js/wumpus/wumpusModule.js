@@ -9,14 +9,13 @@ var config = require('./impl/config');
 var game = require('./impl/game');
 var socket = require('./socket');
 
-// some aesthetics for when the game ends
-// and puts a border between the game area and the HUD
-var GAME_BOX_BORDER = 12;
-
 module.exports = angular.module('lime.client.wumpus', [
   require('./socketDirective').name,
   require('../subgraph/subgraphModule').name
 ])
+// some aesthetics for when the game ends
+// and puts a border between the game area and the HUD
+.constant('lime.client.wumpus.gameBoxBorder', 12)
 .controller('lime.client.wumpus.app', [
   '$scope', 'lime.client.subgraph.data',
   function($scope, subgraphData) {
@@ -77,7 +76,8 @@ module.exports = angular.module('lime.client.wumpus', [
   }
 ]) // end lime.client.wumpus.app controller
 .directive('wumpusInstance', [
-  function() {
+  'lime.client.wumpus.gameBoxBorder',
+  function(GAME_BOX_BORDER) {
     return {
       templateUrl: 'partials/wumpus/instance.html',
       link: function($scope, elem) {
@@ -94,7 +94,7 @@ module.exports = angular.module('lime.client.wumpus', [
               .css('border-radius', config.room.radius);
             var message;
             if(game.cave.agent.win) {
-              message = 'ヾ(⌐■_■)ノ♪' + '<br>You won.';
+              message = 'You won. ~ ' + 'ヾ(⌐■_■)ノ♪';
             } else {
               message = 'You lost. ... ' + '┻━┻ ︵ヽ(`Д´)ﾉ︵ ┻━┻';
             }
@@ -166,10 +166,11 @@ module.exports = angular.module('lime.client.wumpus', [
 ]) // end wumpusInstance directive
 // TODO two directives: wumpusRoom-Human vs wumpusRoomMachine
 .directive('wumpusRoom', [
-  function() {
+  'lime.client.wumpus.gameBoxBorder',
+  function(GAME_BOX_BORDER) {
     return {
       scope: {
-        room: '=wumpusRoom',
+        room: '=wumpusRoom'
       },
       link: function($scope, elem) {
         // static config
@@ -225,10 +226,11 @@ module.exports = angular.module('lime.client.wumpus', [
   }
 ]) // end wumpusRoom directive
 .directive('wumpusAgent', [
-  function() {
+  'lime.client.wumpus.gameBoxBorder',
+  function(GAME_BOX_BORDER) {
     return {
       scope: {
-        agent: '=wumpusAgent',
+        agent: '=wumpusAgent'
       },
       template: '<span></span>',
       link: function($scope, elem) {

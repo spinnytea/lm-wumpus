@@ -4,9 +4,14 @@
 <div data-ng-if="state==='instance'" data-wumpus-instance></div>
 
 <table class="table">
+    <tr>
+        <td colspan="2">
+            <span title="Add" data-ng-click="getContext()" class="text-info fa fa-plus"></span>
+        </td>
+    </tr>
     <tr data-ng-repeat="sg in contexts">
         <td>
-            <span title="Remove" data-ng-click="removeContext(sg)" class="text-danger fa fa-remove"></span>
+            <span title="Remove" data-ng-click="removeContext(sg)" class="text-danger fa fa-times"></span>
             <br>
             <button class="btn btn-xs"
                     data-ng-disabled="sg.diff"

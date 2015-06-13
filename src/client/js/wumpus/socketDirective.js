@@ -57,6 +57,8 @@ module.exports = angular.module('lime.client.wumpus.socketDirective', [
           subgraphData.add(sg);
         });
         socket.on('context_bak', function(subgraph) {
+          // simplify the subgraph
+          // only render rooms and truthy properties
           subgraph = JSON.parse(subgraph);
 
           // build a change set

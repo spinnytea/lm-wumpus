@@ -42,6 +42,9 @@ module.exports = angular.module('lime.client.wumpus', [
     $scope.generateGame();
 
     $scope.contexts = subgraphData.list;
+    $scope.getContext = function() {
+      socket.emit('context', '');
+    };
     $scope.removeContext = function(c) {
       subgraphData.list.splice(subgraphData.list.indexOf(c), 1);
     };

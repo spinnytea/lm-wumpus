@@ -7,10 +7,10 @@ var blueprint = require('lime/src/planning/primitives/blueprint');
 var Path = require('lime/src/planning/primitives/path');
 var serialplan = require('lime/src/planning/serialplan');
 
-var server = require('../../../src/server/wumpus/index');
-var context = require('../../../src/server/wumpus/context');
+var server = require('../../../../src/server/wumpus/index');
+var context = require('../../../../src/server/wumpus/context');
 
-var socket = require('./socket');
+var socket = require('../socket');
 
 //
 // This is a unit test of astar
@@ -86,7 +86,7 @@ function summary(frontier, state_vertexId) {
 }
 
 describe('astar', function() {
-  socket.setup(require('./test_data'));
+  socket.setup(require('../simplest/test_data'));
 
   describe('basic', function() {
     it('path', function() {

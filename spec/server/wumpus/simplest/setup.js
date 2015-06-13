@@ -7,11 +7,11 @@ var links = require('lime/src/database/links');
 var number = require('lime/src/planning/primitives/number');
 var subgraph = require('lime/src/database/subgraph');
 
-var server = require('../../../src/server/wumpus/index');
-var context = require('../../../src/server/wumpus/context');
-var config = require('../../../src/client/js/wumpus/impl/config');
+var server = require('../../../../src/server/wumpus/index');
+var context = require('../../../../src/server/wumpus/context');
+var config = require('../../../../src/client/js/wumpus/impl/config');
 
-var socket = require('./socket');
+var socket = require('../socket');
 var spacing = config.room.spacing;
 
 function getRoomProperty(number, link) {

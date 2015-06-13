@@ -1,3 +1,10 @@
-<input class="form-control" type="text" data-ng-model="message" data-ng-keyup="keyup($event)"/>
+<div class="input-group">
+    <input class="form-control" type="text" data-ng-model="message" data-ng-keyup="keyup($event)"/>
+    <span class="input-group-btn">
+        <button class="btn btn-default" data-ng-click="stock.play()">
+            <i class="fa fa-thumbs-o-up"></i>&nbsp;
+        </button>
+    </span>
+</div>
 <textarea class="form-control" data-ng-model="serverMessage" readonly></textarea>
-<i data-ng-repeat="obj in the_plan" class="fa fa-fw" data-ng-class="obj.icon" title="{{obj.title}}"></i>
+<i data-ng-repeat="obj in the_plan" class="form-control-static fa fa-fw" data-ng-class="obj.icon" title="{{obj.title}}"></i>

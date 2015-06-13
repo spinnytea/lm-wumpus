@@ -435,6 +435,11 @@ describe('setup', function() {
         expect(context.idea('agentHasGold').data().value).to.equal(true);
         expect(context.idea('agentHasWon').data().value).to.equal(true);
       });
+
+      it.skip('goto gold & play', function() {
+        // try and play while we are on the gold
+        // we can generate a plan, but it can't apply it
+      });
     }); // end goal
   }); // end server
 }); // end setup

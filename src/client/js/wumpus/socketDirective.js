@@ -187,6 +187,9 @@ module.exports = angular.module('lime.client.wumpus.socketDirective', [
             }
           }
         };
+        $scope.stock = {
+          play: function() { socket.emit('goal', 'play'); }
+        };
 
         socket.on('plan', function(planNames) {
           $scope.the_plan = planNames.map(function(name) {

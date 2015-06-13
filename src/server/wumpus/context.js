@@ -213,27 +213,27 @@ exports.sense = function(state) {
       var roomInstance = ideas.create(discrete.cast({value: room.id, unit: roomDefinition.id}));
       roomDefinition.link(links.list.thought_description, roomInstance);
       roomInstance.link(links.list.type_of, exports.idea('room'));
-      roomInstance.link(links.list.wumpus_room_loc_x, ideas.create(number.cast({value: number.value(room.x), unit: exports.idea('room_coord').id})));
-      roomInstance.link(links.list.wumpus_room_loc_y, ideas.create(number.cast({value: number.value(room.y), unit: exports.idea('room_coord').id})));
+      roomInstance.link(links.list['wumpus_room_loc_x'], ideas.create(number.cast({value: number.value(room.x), unit: exports.idea('room_coord').id})));
+      roomInstance.link(links.list['wumpus_room_loc_y'], ideas.create(number.cast({value: number.value(room.y), unit: exports.idea('room_coord').id})));
       var roomHasPit = ideas.create(discrete.cast({value:room.hasPit, unit: discrete.definitions.list.boolean}));
       var roomHasGold = ideas.create(discrete.cast({value:room.hasGold, unit: discrete.definitions.list.boolean}));
       var roomHasExit = ideas.create(discrete.cast({value:room.hasExit, unit: discrete.definitions.list.boolean}));
-      roomInstance.link(links.list.wumpus_sense_hasPit, roomHasPit);
-      roomInstance.link(links.list.wumpus_sense_hasGold, roomHasGold);
-      roomInstance.link(links.list.wumpus_sense_hasExit, roomHasExit);
+      roomInstance.link(links.list['wumpus_sense_hasPit'], roomHasPit);
+      roomInstance.link(links.list['wumpus_sense_hasGold'], roomHasGold);
+      roomInstance.link(links.list['wumpus_sense_hasExit'], roomHasExit);
 
       var keys_rI = exports.subgraph.addVertex(subgraph.matcher.id, roomInstance);
       exports.subgraph.addEdge(exports.keys.roomDefinition, links.list.thought_description, keys_rI);
       exports.subgraph.addEdge(keys_rI, links.list.type_of, exports.keys.room);
-      exports.subgraph.addEdge(keys_rI, links.list.wumpus_room_loc_x,
+      exports.subgraph.addEdge(keys_rI, links.list['wumpus_room_loc_x'],
         exports.subgraph.addVertex(subgraph.matcher.number, number.cast({value: number.value(room.x), unit: exports.idea('room_coord').id})), -1);
-      exports.subgraph.addEdge(keys_rI, links.list.wumpus_room_loc_y,
+      exports.subgraph.addEdge(keys_rI, links.list['wumpus_room_loc_y'],
         exports.subgraph.addVertex(subgraph.matcher.number, number.cast({value: number.value(room.y), unit: exports.idea('room_coord').id})), -1);
-      exports.subgraph.addEdge(keys_rI, links.list.wumpus_sense_hasPit,
+      exports.subgraph.addEdge(keys_rI, links.list['wumpus_sense_hasPit'],
         exports.subgraph.addVertex(subgraph.matcher.id, roomHasPit));
-      exports.subgraph.addEdge(keys_rI, links.list.wumpus_sense_hasGold,
+      exports.subgraph.addEdge(keys_rI, links.list['wumpus_sense_hasGold'],
         exports.subgraph.addVertex(subgraph.matcher.id, roomHasGold, {transitionable:true}));
-      exports.subgraph.addEdge(keys_rI, links.list.wumpus_sense_hasExit,
+      exports.subgraph.addEdge(keys_rI, links.list['wumpus_sense_hasExit'],
         exports.subgraph.addVertex(subgraph.matcher.id, roomHasExit));
 
       // link rooms together (check existing rooms)
@@ -250,17 +250,17 @@ exports.sense = function(state) {
             // if the agent is in r2 and goes south, then the agent is in room
             south = ideas.create(discrete.cast({value: 'south', unit: exports.idea('directions').id }));
             north = ideas.create(discrete.cast({value: 'north', unit: exports.idea('directions').id }));
-            roomInstances[i].link(links.list.wumpus_room_door, south);
-            south.link(links.list.wumpus_room_door, roomInstance);
-            roomInstance.link(links.list.wumpus_room_door, north);
-            north.link(links.list.wumpus_room_door, roomInstances[i]);
+            roomInstances[i].link(links.list['wumpus_room_door'], south);
+            south.link(links.list['wumpus_room_door'], roomInstance);
+            roomInstance.link(links.list['wumpus_room_door'], north);
+            north.link(links.list['wumpus_room_door'], roomInstances[i]);
 
             south = exports.subgraph.addVertex(subgraph.matcher.id, south);
             north = exports.subgraph.addVertex(subgraph.matcher.id, north);
-            exports.subgraph.addEdge(roomKeys[i], links.list.wumpus_room_door, south);
-            exports.subgraph.addEdge(south, links.list.wumpus_room_door, keys_rI);
-            exports.subgraph.addEdge(keys_rI, links.list.wumpus_room_door, north);
-            exports.subgraph.addEdge(north, links.list.wumpus_room_door, roomKeys[i]);
+            exports.subgraph.addEdge(roomKeys[i], links.list['wumpus_room_door'], south);
+            exports.subgraph.addEdge(south, links.list['wumpus_room_door'], keys_rI);
+            exports.subgraph.addEdge(keys_rI, links.list['wumpus_room_door'], north);
+            exports.subgraph.addEdge(north, links.list['wumpus_room_door'], roomKeys[i]);
           }
           if(Math.abs(r2.y-room.y - gameConfig.room.spacing) < ERROR_RANGE) {
             // r2 > room
@@ -268,17 +268,17 @@ exports.sense = function(state) {
             // if the agent is in room and goes south, then the agent is in r2
             north = ideas.create(discrete.cast({value: 'north', unit: exports.idea('directions').id }));
             south = ideas.create(discrete.cast({value: 'south', unit: exports.idea('directions').id }));
-            roomInstances[i].link(links.list.wumpus_room_door, north);
-            north.link(links.list.wumpus_room_door, roomInstance);
-            roomInstance.link(links.list.wumpus_room_door, south);
-            south.link(links.list.wumpus_room_door, roomInstances[i]);
+            roomInstances[i].link(links.list['wumpus_room_door'], north);
+            north.link(links.list['wumpus_room_door'], roomInstance);
+            roomInstance.link(links.list['wumpus_room_door'], south);
+            south.link(links.list['wumpus_room_door'], roomInstances[i]);
 
             north = exports.subgraph.addVertex(subgraph.matcher.id, north);
             south = exports.subgraph.addVertex(subgraph.matcher.id, south);
-            exports.subgraph.addEdge(roomKeys[i], links.list.wumpus_room_door, north);
-            exports.subgraph.addEdge(north, links.list.wumpus_room_door, keys_rI);
-            exports.subgraph.addEdge(keys_rI, links.list.wumpus_room_door, south);
-            exports.subgraph.addEdge(south, links.list.wumpus_room_door, roomKeys[i]);
+            exports.subgraph.addEdge(roomKeys[i], links.list['wumpus_room_door'], north);
+            exports.subgraph.addEdge(north, links.list['wumpus_room_door'], keys_rI);
+            exports.subgraph.addEdge(keys_rI, links.list['wumpus_room_door'], south);
+            exports.subgraph.addEdge(south, links.list['wumpus_room_door'], roomKeys[i]);
           }
         } else if(Math.abs(room.y-r2.y) < ERROR_RANGE) {
           // check east/west
@@ -288,17 +288,17 @@ exports.sense = function(state) {
             // if the agent is in r2 and goes east, then the agent is in room
             east = ideas.create(discrete.cast({value: 'east', unit: exports.idea('directions').id }));
             west = ideas.create(discrete.cast({value: 'west', unit: exports.idea('directions').id }));
-            roomInstances[i].link(links.list.wumpus_room_door, east);
-            east.link(links.list.wumpus_room_door, roomInstance);
-            roomInstance.link(links.list.wumpus_room_door, west);
-            west.link(links.list.wumpus_room_door, roomInstances[i]);
+            roomInstances[i].link(links.list['wumpus_room_door'], east);
+            east.link(links.list['wumpus_room_door'], roomInstance);
+            roomInstance.link(links.list['wumpus_room_door'], west);
+            west.link(links.list['wumpus_room_door'], roomInstances[i]);
 
             east = exports.subgraph.addVertex(subgraph.matcher.id, east);
             west = exports.subgraph.addVertex(subgraph.matcher.id, west);
-            exports.subgraph.addEdge(roomKeys[i], links.list.wumpus_room_door, east);
-            exports.subgraph.addEdge(east, links.list.wumpus_room_door, keys_rI);
-            exports.subgraph.addEdge(keys_rI, links.list.wumpus_room_door, west);
-            exports.subgraph.addEdge(west, links.list.wumpus_room_door, roomKeys[i]);
+            exports.subgraph.addEdge(roomKeys[i], links.list['wumpus_room_door'], east);
+            exports.subgraph.addEdge(east, links.list['wumpus_room_door'], keys_rI);
+            exports.subgraph.addEdge(keys_rI, links.list['wumpus_room_door'], west);
+            exports.subgraph.addEdge(west, links.list['wumpus_room_door'], roomKeys[i]);
           }
           if(Math.abs(r2.x-room.x - gameConfig.room.spacing) < ERROR_RANGE) {
             // r2 > room
@@ -306,17 +306,17 @@ exports.sense = function(state) {
             // if the agent is in room and goes east, then the agent is in r2
             west = ideas.create(discrete.cast({value: 'west', unit: exports.idea('directions').id }));
             east = ideas.create(discrete.cast({value: 'east', unit: exports.idea('directions').id }));
-            roomInstances[i].link(links.list.wumpus_room_door, west);
-            west.link(links.list.wumpus_room_door, roomInstance);
-            roomInstance.link(links.list.wumpus_room_door, east);
-            east.link(links.list.wumpus_room_door, roomInstances[i]);
+            roomInstances[i].link(links.list['wumpus_room_door'], west);
+            west.link(links.list['wumpus_room_door'], roomInstance);
+            roomInstance.link(links.list['wumpus_room_door'], east);
+            east.link(links.list['wumpus_room_door'], roomInstances[i]);
 
             west = exports.subgraph.addVertex(subgraph.matcher.id, west);
             east = exports.subgraph.addVertex(subgraph.matcher.id, east);
-            exports.subgraph.addEdge(roomKeys[i], links.list.wumpus_room_door, west);
-            exports.subgraph.addEdge(west, links.list.wumpus_room_door, keys_rI);
-            exports.subgraph.addEdge(keys_rI, links.list.wumpus_room_door, east);
-            exports.subgraph.addEdge(east, links.list.wumpus_room_door, roomKeys[i]);
+            exports.subgraph.addEdge(roomKeys[i], links.list['wumpus_room_door'], west);
+            exports.subgraph.addEdge(west, links.list['wumpus_room_door'], keys_rI);
+            exports.subgraph.addEdge(keys_rI, links.list['wumpus_room_door'], east);
+            exports.subgraph.addEdge(east, links.list['wumpus_room_door'], roomKeys[i]);
           }
         }
       }
@@ -338,12 +338,12 @@ exports.sense = function(state) {
     var agentHasWon = ideas.create();
     instance.link(links.list.thought_description, agentInstance);
     agentInstance.link(links.list.type_of, exports.idea('agent'));
-    agentInstance.link(links.list.wumpus_sense_agent_dir, agentDirection);
-    agentInstance.link(links.list.wumpus_sense_agent_loc, agentLocation);
-    agentLocation.link(links.list.wumpus_room_loc_x, agentLocX);
-    agentLocation.link(links.list.wumpus_room_loc_y, agentLocY);
-    agentInstance.link(links.list.wumpus_sense_hasGold, agentHasGold);
-    agentInstance.link(links.list.wumpus_sense_hasWon, agentHasWon);
+    agentInstance.link(links.list['wumpus_sense_agent_dir'], agentDirection);
+    agentInstance.link(links.list['wumpus_sense_agent_loc'], agentLocation);
+    agentLocation.link(links.list['wumpus_room_loc_x'], agentLocX);
+    agentLocation.link(links.list['wumpus_room_loc_y'], agentLocY);
+    agentInstance.link(links.list['wumpus_sense_hasGold'], agentHasGold);
+    agentInstance.link(links.list['wumpus_sense_hasWon'], agentHasWon);
 
     exports.keys.agentInstance = exports.subgraph.addVertex(subgraph.matcher.filler);
     exports.keys.agentDirection = exports.subgraph.addVertex(subgraph.matcher.id, agentDirection, {transitionable:true});
@@ -354,12 +354,12 @@ exports.sense = function(state) {
     exports.keys.agentHasWon = exports.subgraph.addVertex(subgraph.matcher.id, agentHasWon, {transitionable:true});
     exports.subgraph.addEdge(exports.keys.instance, links.list.thought_description, exports.keys.agentInstance);
     exports.subgraph.addEdge(exports.keys.agentInstance, links.list.type_of, exports.keys.agent);
-    exports.subgraph.addEdge(exports.keys.agentInstance, links.list.wumpus_sense_agent_dir, exports.keys.agentDirection);
-    exports.subgraph.addEdge(exports.keys.agentInstance, links.list.wumpus_sense_agent_loc, exports.keys.agentLocation);
-    exports.subgraph.addEdge(exports.keys.agentLocation, links.list.wumpus_room_loc_x, exports.keys.agentLocX);
-    exports.subgraph.addEdge(exports.keys.agentLocation, links.list.wumpus_room_loc_y, exports.keys.agentLocY);
-    exports.subgraph.addEdge(exports.keys.agentInstance, links.list.wumpus_sense_hasGold, exports.keys.agentHasGold);
-    exports.subgraph.addEdge(exports.keys.agentInstance, links.list.wumpus_sense_hasWon, exports.keys.agentHasWon);
+    exports.subgraph.addEdge(exports.keys.agentInstance, links.list['wumpus_sense_agent_dir'], exports.keys.agentDirection);
+    exports.subgraph.addEdge(exports.keys.agentInstance, links.list['wumpus_sense_agent_loc'], exports.keys.agentLocation);
+    exports.subgraph.addEdge(exports.keys.agentLocation, links.list['wumpus_room_loc_x'], exports.keys.agentLocX);
+    exports.subgraph.addEdge(exports.keys.agentLocation, links.list['wumpus_room_loc_y'], exports.keys.agentLocY);
+    exports.subgraph.addEdge(exports.keys.agentInstance, links.list['wumpus_sense_hasGold'], exports.keys.agentHasGold);
+    exports.subgraph.addEdge(exports.keys.agentInstance, links.list['wumpus_sense_hasWon'], exports.keys.agentHasWon);
 
 
     config.save();
@@ -384,7 +384,7 @@ function senseRooms(rooms) {
     var currentRoom = sg.addVertex(subgraph.matcher.discrete,
       discrete.cast({value: room.id, unit: exports.idea('roomDefinition').id}));
     sg.addEdge(currentRoom, links.list.type_of, sg.addVertex(subgraph.matcher.id, exports.idea('room').id));
-    sg.addEdge(currentRoom, links.list.wumpus_sense_hasGold, roomHasGold);
+    sg.addEdge(currentRoom, links.list['wumpus_sense_hasGold'], roomHasGold);
     // find
     subgraph.search(sg);
     if(!sg.concrete) throw new Error('Cannot find room');

@@ -91,15 +91,15 @@ var getDiscreteContext = function() {
   exports.keys.action_up = exports.subgraph.addVertex(subgraph.matcher.exact, {name:'action:up'});
   exports.keys.action_grab = exports.subgraph.addVertex(subgraph.matcher.exact, {name:'action:grab'});
   exports.keys.action_exit = exports.subgraph.addVertex(subgraph.matcher.exact, {name:'action:exit'});
-  exports.subgraph.addEdge(exports.keys.wumpus_world, links.list.thought_description, exports.keys.action_left);
-  exports.subgraph.addEdge(exports.keys.wumpus_world, links.list.thought_description, exports.keys.action_right);
-  exports.subgraph.addEdge(exports.keys.wumpus_world, links.list.thought_description, exports.keys.action_up);
-  exports.subgraph.addEdge(exports.keys.wumpus_world, links.list.thought_description, exports.keys.action_grab);
-  exports.subgraph.addEdge(exports.keys.wumpus_world, links.list.thought_description, exports.keys.action_exit);
+  exports.subgraph.addEdge(exports.keys.action_left, links.list.thought_description, exports.keys.wumpus_world);
+  exports.subgraph.addEdge(exports.keys.action_right, links.list.thought_description, exports.keys.wumpus_world);
+  exports.subgraph.addEdge(exports.keys.action_up, links.list.thought_description, exports.keys.wumpus_world);
+  exports.subgraph.addEdge(exports.keys.action_grab, links.list.thought_description, exports.keys.wumpus_world);
+  exports.subgraph.addEdge(exports.keys.action_exit, links.list.thought_description, exports.keys.wumpus_world);
 
   // directions
   exports.keys.directions = exports.subgraph.addVertex(subgraph.matcher.similar, discrete.definitions.similar);
-  exports.subgraph.addEdge(exports.keys.wumpus_world, links.list.context, exports.keys.directions);
+  exports.subgraph.addEdge(exports.keys.directions, links.list.context, exports.keys.wumpus_world);
   exports.subgraph.addEdge(
     exports.keys.directions,
     links.list.thought_description,
@@ -108,20 +108,19 @@ var getDiscreteContext = function() {
 
   // agent type
   exports.keys.agent = exports.subgraph.addVertex(subgraph.matcher.exact, {name:'agent'});
-  exports.subgraph.addEdge(exports.keys.wumpus_world, links.list.context, exports.keys.agent);
+  exports.subgraph.addEdge(exports.keys.agent, links.list.context, exports.keys.wumpus_world);
   // room type
   exports.keys.room = exports.subgraph.addVertex(subgraph.matcher.exact, {name:'room'});
-  exports.subgraph.addEdge(exports.keys.wumpus_world, links.list.context, exports.keys.room);
+  exports.subgraph.addEdge(exports.keys.room, links.list.context, exports.keys.wumpus_world);
   // room coord
   exports.keys.room_coord = exports.subgraph.addVertex(subgraph.matcher.similar, {name:'room_coord'});
-  exports.subgraph.addEdge(exports.keys.wumpus_world, links.list.context, exports.keys.room_coord);
+  exports.subgraph.addEdge(exports.keys.room_coord, links.list.context, exports.keys.wumpus_world);
 
   var results = subgraph.search(exports.subgraph);
   if(results.length === 0) {
     console.log('create discrete context');
 
     // context
-    // TODO relink context directions
     var wumpus_world = ideas.context('wumpus_world');
 
     // actions
@@ -130,27 +129,27 @@ var getDiscreteContext = function() {
     var action_up = ideas.create({name:'action:up'});
     var action_grab = ideas.create({name:'action:grab'});
     var action_exit = ideas.create({name:'action:exit'});
-    wumpus_world.link(links.list.thought_description, action_left);
-    wumpus_world.link(links.list.thought_description, action_right);
-    wumpus_world.link(links.list.thought_description, action_up);
-    wumpus_world.link(links.list.thought_description, action_grab);
-    wumpus_world.link(links.list.thought_description, action_exit);
+    action_left.link(links.list.thought_description, wumpus_world);
+    action_right.link(links.list.thought_description, wumpus_world);
+    action_up.link(links.list.thought_description, wumpus_world);
+    action_grab.link(links.list.thought_description, wumpus_world);
+    action_exit.link(links.list.thought_description, wumpus_world);
 
     // directions
     var directions = discrete.definitions.create(['east', 'south', 'west', 'north'], 'cycle');
     var compass = ideas.create({name:'compass'});
-    wumpus_world.link(links.list.context, directions);
+    directions.link(links.list.context, wumpus_world);
     directions.link(links.list.thought_description, compass);
 
     // agent type
     var agent = ideas.create({name:'agent'});
-    wumpus_world.link(links.list.context, agent);
+    agent.link(links.list.context, wumpus_world);
     // room type
     var room = ideas.create({name:'room'});
-    wumpus_world.link(links.list.context, room);
+    room.link(links.list.context, wumpus_world);
     // room coord
     var room_coord = ideas.create({name:'room_coord'});
-    wumpus_world.link(links.list.context, room_coord);
+    room_coord.link(links.list.context, wumpus_world);
 
 
     // create actuators
@@ -195,10 +194,10 @@ exports.sense = function(state) {
     //
     // create a discrete definition with these rooms (room id as the value)
     var roomDefinition = discrete.definitions.create(state.rooms.map(function(r) { return r.id; }));
-    instance.link(links.list.context, roomDefinition);
+    roomDefinition.link(links.list.context, instance);
     roomDefinition.link(links.list.thought_description, ideas.create({name:'room def'}));
     exports.keys.roomDefinition = exports.subgraph.addVertex(subgraph.matcher.similar, discrete.definitions.similar);
-    exports.subgraph.addEdge(exports.keys.instance, links.list.context, exports.keys.roomDefinition);
+    exports.subgraph.addEdge(exports.keys.roomDefinition, links.list.context, exports.keys.instance);
     exports.subgraph.addEdge(
       exports.keys.roomDefinition,
       links.list.thought_description,

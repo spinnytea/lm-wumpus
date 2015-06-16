@@ -1,7 +1,6 @@
 'use strict';
 // this is the visual representation of a socket connect
 // it won't react to EVERYTHING, but it renders the communication that makes sense
-var _ = require('lodash');
 
 var config = require('./impl/config');
 var socket = require('./socket');
@@ -34,23 +33,7 @@ module.exports = angular.module('lime.client.wumpus.socketDirective', [
           else
             processMessage('Got a context.');
           sg = JSON.parse(sg);
-
-          // the format of the data has since been improved
-          // convert the new format into the old one
-          sg.vertices = _.map(sg.match, function(value, key) { return {
-            vertex_id: +key,
-            matcher: value.matcher,
-            matchData: value.data,
-            options: value.options,
-            idea: sg.idea[key],
-            _data: sg.data[key]
-          }; });
-          delete sg.match;
-          delete sg.idea;
-          delete sg.data;
-
-          if(sg.vertices.some(function(v, idx) { return v.vertex_id !== idx; }))
-            throw new Error('vertex id does not match array index ~ fix edges.src and edges.dst');
+          sg.colors = {};
 
           sg.edges.forEach(function(value) {
             value.src = +value.src;
@@ -69,7 +52,7 @@ module.exports = angular.module('lime.client.wumpus.socketDirective', [
           } else {
             subgraphData.add(sg);
           }
-        });
+        }); // end socket.on context
         socket.on('context_bak', function(subgraph) {
           // simplify the subgraph
           // only render rooms and truthy properties
@@ -165,7 +148,7 @@ module.exports = angular.module('lime.client.wumpus.socketDirective', [
           Array.prototype.push.apply(subgraph.edges, addE);
 
           subgraphData.add(subgraphData.remap(subgraph));
-        }); // end socket.on context
+        }); // end socket.on context_bak
         socket.next.context = 'skip_message';
         socket.emit('context');
 

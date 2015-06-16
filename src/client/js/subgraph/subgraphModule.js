@@ -7,51 +7,63 @@ module.exports = angular.module('lime.client.subgraph', [])
   var instance = {};
   instance.list = [];
 
-  function buildName(vertex) {
-    if(vertex._data)
-      return JSON.stringify(vertex._data);
+  function buildName(subgraph, idx) {
+    if(subgraph.data[idx])
+      return JSON.stringify(subgraph.data[idx]);
     else
-      return vertex.matcher + '(' + JSON.stringify(vertex.matchData) + ')';
+      return subgraph.match[idx].match + '(' + JSON.stringify(subgraph.match[idx].data) + ')';
+  }
+
+  function buildNodes(subgraph, diff) {
+    var ret = [];
+    var idx;
+    var type;
+
+    while(ret.length < subgraph.vertexCount) {
+      idx = ret.length;
+
+      var name = buildName(subgraph, idx);
+      if(diff && diff.data[idx]) {
+        name = 'before: ' + name + '\nafter: ' + buildName(diff, idx);
+      }
+
+      type = undefined;
+      if(subgraph.edges.some(function(e) { return e.dst === idx && e.link === 'context'; })) {
+        type = 'context';
+      } else if(subgraph.match[idx].data && subgraph.match[idx].data.name) {
+        type = 'named';
+      }
+
+      ret.push({
+        name: name,
+        color: typeColor[type] || subgraph.color[idx] || '#7f7f7f',
+        opacity: (diff && !diff.data[idx])?0.3:1
+      });
+    }
+
+    return ret;
   }
 
   // parse subgraph.stringify
   instance.add = function(subgraph, diff) {
     if(typeof subgraph === 'string')
       subgraph = JSON.parse(subgraph);
+    subgraph.color = subgraph.color || {};
 
-    // TODO determine some basic groups
-    // - context link?
     instance.list.push({
       selected: (instance.list.length === 0),
       subgraph: subgraph,
       diff: diff,
 
-      nodes: subgraph.vertices.map(function(vertex) {
-        var name = buildName(vertex);
-        if(diff && diff.vertices[vertex.vertex_id]) {
-          name = 'before: ' + name +
-            '\nafter: ' + buildName(diff.vertices[vertex.vertex_id]);
-        }
-
-        var type;
-        if((vertex.matchData && vertex.matchData.name) ||
-            subgraph.edges.some(function(e) { return e.dst === vertex.vertex_id && e.link === 'context'; }))
-          type = 'context';
-
-        return {
-          name: name,
-          color: typeColor[type] || vertex.color || '#7f7f7f',
-          opacity: (diff && !diff.vertices[vertex.vertex_id])?0.3:1,
-        };
-      }),
+      nodes: buildNodes(subgraph, diff),
       links: subgraph.edges.map(function(edge, idx) {
         return {
           source: edge.src,
           target: edge.dst,
           value: 2,
-          opacity: (diff && !diff.edges[idx])?0.3:1,
+          opacity: (diff && !diff.edges[idx])?0.3:1
         };
-      }),
+      })
     });
   }; // end add
 
@@ -91,12 +103,12 @@ module.exports = angular.module('lime.client.subgraph', [])
   //
   // assumption: v[] and e[] line up
   instance.diff = function(sg_a, sg_b) {
-    var diff = { vertices: {}, edges: {} };
+    var diff = { data: {}, edges: {} };
     var i;
 
-    for(i=0; i<sg_a.vertices.length; i++)
-      if(!angular.equals(sg_a.vertices[i], sg_b.vertices[i]))
-        diff.vertices[i] = sg_b.vertices[i];
+    for(i=0; i<sg_a.vertexCount; i++)
+      if(!angular.equals(sg_a.data[i], sg_b.data[i]))
+        diff.data[i] = sg_b.data[i];
     for(i=0; i<sg_a.edges.length; i++)
       if(!angular.equals(sg_a.edges[i], sg_b.edges[i]))
         diff.edges[i] = sg_b.edges[i];
@@ -131,6 +143,7 @@ var width = 960;
 var height = 500;
 var typeColor = {
   context: '#ff7f0e',
+  named: '#2ca02c'
 };
 
 function buildGraph(graph, elem) {

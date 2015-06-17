@@ -10,6 +10,7 @@ var stub = require('lime/src/planning/stub');
 var subgraph = require('lime/src/database/subgraph');
 // TODO incorporate points
 // TODO require the agent to be alive to take action; do not disallow moving into a pit
+// TODO optimize the nodes to expand to minimize branching (pay attention to rooms)
 
 // @param directions: the directions unit idea
 // @param agent: the agent type idea
@@ -17,17 +18,15 @@ var subgraph = require('lime/src/database/subgraph');
 // @param action_str: 'left' or 'right'
 // @param actuator_context: a list of contexts to apply to the idea
 exports.turn = function(directions, agent, cycle_value, action_str, actuator_context) {
+  // the agent is alive
   // the agent has a direction
-  // (literally, that's the only requirement)
   var a = new actuator.Action();
   var agentInstance = a.requirements.addVertex(subgraph.matcher.filler);
+  var agentHasAlive = a.requirements.addVertex(subgraph.matcher.discrete, {value:true, unit: discrete.definitions.list.boolean});
   var agentDirection = a.requirements.addVertex(subgraph.matcher.similar, {unit: directions.id}, {transitionable:true});
-  a.requirements.addEdge(
-    agentInstance,
-    links.list.type_of,
-    a.requirements.addVertex(subgraph.matcher.id, agent)
-  );
-  a.requirements.addEdge(agentInstance, links.list.wumpus_sense_agent_dir, agentDirection);
+  a.requirements.addEdge(agentInstance, links.list.type_of, a.requirements.addVertex(subgraph.matcher.id, agent), 5);
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasAlive'], agentHasAlive, -2);
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_dir'], agentDirection);
 
 
   // change the agent's direction
@@ -49,24 +48,22 @@ exports.turn = function(directions, agent, cycle_value, action_str, actuator_con
 exports.forward = function(directions, agent, room, room_coord, actuator_context) {
   var a = new actuator.Action();
 
+  // the agent is alive
   // the agent is in a room and facing a particular direction
   var agentInstance = a.requirements.addVertex(subgraph.matcher.filler);
+  var agentHasAlive = a.requirements.addVertex(subgraph.matcher.discrete, {value:true, unit: discrete.definitions.list.boolean});
   var agentDirection = a.requirements.addVertex(subgraph.matcher.similar, {unit: directions.id});
   // we don't have the roomDefinition at this point
   // besides, we want it to work with any room (not just this game)
   var agentLocation = a.requirements.addVertex(subgraph.matcher.filler, undefined, {transitionable:true});
   var agentLocX = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id}, {transitionable:true});
   var agentLocY = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id}, {transitionable:true});
-  a.requirements.addEdge(
-    agentInstance,
-    links.list.type_of,
-    a.requirements.addVertex(subgraph.matcher.id, agent)
-  );
-  a.requirements.addEdge(agentInstance, links.list.wumpus_sense_agent_dir, agentDirection);
-  a.requirements.addEdge(agentInstance, links.list.wumpus_sense_agent_loc, agentLocation);
-  a.requirements.addEdge(agentLocation, links.list.wumpus_room_loc_x, agentLocX);
-  a.requirements.addEdge(agentLocation, links.list.wumpus_room_loc_y, agentLocY);
-
+  a.requirements.addEdge(agentInstance, links.list.type_of, a.requirements.addVertex(subgraph.matcher.id, agent), 5);
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasAlive'], agentHasAlive, -2);
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_dir'], agentDirection);
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_loc'], agentLocation);
+  a.requirements.addEdge(agentLocation, links.list['wumpus_room_loc_x'], agentLocX);
+  a.requirements.addEdge(agentLocation, links.list['wumpus_room_loc_y'], agentLocY);
 
   // there must be a door/room in that direction
   var currentRoom = a.requirements.addVertex(subgraph.matcher.discrete, agentLocation, {matchRef:true});
@@ -78,9 +75,9 @@ exports.forward = function(directions, agent, room, room_coord, actuator_context
   a.requirements.addEdge(currentRoom, links.list.type_of, roomType);
   // consider this link at a lower priority (find the target room last)
   a.requirements.addEdge(targetRoom, links.list.type_of, roomType, -1);
-  // targetRoom must not have a pit
-  var roomHasPit = a.requirements.addVertex(subgraph.matcher.discrete, {value:false, unit: discrete.definitions.list.boolean});
-  a.requirements.addEdge(targetRoom, links.list.wumpus_sense_hasPit, roomHasPit, -2);
+  //// targetRoom must not have a pit
+  //var roomHasPit = a.requirements.addVertex(subgraph.matcher.discrete, {value:false, unit: discrete.definitions.list.boolean});
+  //a.requirements.addEdge(targetRoom, links.list.wumpus_sense_hasPit, roomHasPit, -2);
   var roomLocX = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id});
   var roomLocY = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id});
   a.requirements.addEdge(targetRoom, links.list.wumpus_room_loc_x, roomLocX);
@@ -108,19 +105,17 @@ exports.forward = function(directions, agent, room, room_coord, actuator_context
 exports.grab = function(agent, room, actuator_context) {
   var a = new actuator.Action();
 
+  // the agent is alive
   // the agent is in a room
   // the agent does not have gold
   var agentInstance = a.requirements.addVertex(subgraph.matcher.filler);
+  var agentHasAlive = a.requirements.addVertex(subgraph.matcher.discrete, {value:true, unit: discrete.definitions.list.boolean});
   var agentLocation = a.requirements.addVertex(subgraph.matcher.filler);
   var agentHasGold = a.requirements.addVertex(subgraph.matcher.discrete, {value:false, unit: discrete.definitions.list.boolean}, {transitionable:true});
-  a.requirements.addEdge(
-    agentInstance,
-    links.list.type_of,
-    a.requirements.addVertex(subgraph.matcher.id, agent),
-    5
-  );
-  a.requirements.addEdge(agentInstance, links.list.wumpus_sense_agent_loc, agentLocation, 4);
-  a.requirements.addEdge(agentInstance, links.list.wumpus_sense_hasGold, agentHasGold, 4);
+  a.requirements.addEdge(agentInstance, links.list.type_of, a.requirements.addVertex(subgraph.matcher.id, agent), 5);
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasAlive'], agentHasAlive, -2);
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_loc'], agentLocation, 4);
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasGold'], agentHasGold, 4);
 
   // that room has gold
   var currentRoom = a.requirements.addVertex(subgraph.matcher.discrete, agentLocation, {matchRef:true});
@@ -150,21 +145,19 @@ exports.grab = function(agent, room, actuator_context) {
 exports.exit = function(agent, room, actuator_context) {
   var a = new actuator.Action();
 
+  // the agent is alive
   // the agent is in a room
   // the agent has gold
   var agentInstance = a.requirements.addVertex(subgraph.matcher.filler);
+  var agentHasAlive = a.requirements.addVertex(subgraph.matcher.discrete, {value:true, unit: discrete.definitions.list.boolean});
   var agentLocation = a.requirements.addVertex(subgraph.matcher.filler);
   var agentHasGold = a.requirements.addVertex(subgraph.matcher.discrete, {value:true, unit: discrete.definitions.list.boolean}, {transitionable:true});
   var agentHasWon = a.requirements.addVertex(subgraph.matcher.discrete, {value:false, unit: discrete.definitions.list.boolean}, {transitionable:true});
-  a.requirements.addEdge(
-    agentInstance,
-    links.list.type_of,
-    a.requirements.addVertex(subgraph.matcher.id, agent),
-    5
-  );
-  a.requirements.addEdge(agentInstance, links.list.wumpus_sense_agent_loc, agentLocation, 4);
-  a.requirements.addEdge(agentInstance, links.list.wumpus_sense_hasGold, agentHasGold, 4);
-  a.requirements.addEdge(agentInstance, links.list.wumpus_sense_hasWon, agentHasWon, 4);
+  a.requirements.addEdge(agentInstance, links.list.type_of, a.requirements.addVertex(subgraph.matcher.id, agent), 5);
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasAlive'], agentHasAlive, -2);
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_loc'], agentLocation, 4);
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasGold'], agentHasGold, 4);
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasWon'], agentHasWon, 4);
 
   // that room has an exit
   var currentRoom = a.requirements.addVertex(subgraph.matcher.discrete, agentLocation, {matchRef:true});
@@ -193,20 +186,18 @@ exports.exit = function(agent, room, actuator_context) {
 exports.adjacentRoomStub = function(directions, agent, room, room_coord, actuator_context) {
   var a = new stub.Action('immediate');
 
+  // the agent is alive
   // the agent is in a room
   var agentInstance = a.requirements.addVertex(subgraph.matcher.filler);
+  var agentHasAlive = a.requirements.addVertex(subgraph.matcher.discrete, {value:true, unit: discrete.definitions.list.boolean});
   var agentLocation = a.requirements.addVertex(subgraph.matcher.filler, undefined, {transitionable:true});
   var agentLocX = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id}, {transitionable:true});
   var agentLocY = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id}, {transitionable:true});
-  a.requirements.addEdge(
-    agentInstance,
-    links.list.type_of,
-    a.requirements.addVertex(subgraph.matcher.id, agent)
-  );
-  a.requirements.addEdge(agentInstance, links.list.wumpus_sense_agent_loc, agentLocation);
-  a.requirements.addEdge(agentLocation, links.list.wumpus_room_loc_x, agentLocX);
-  a.requirements.addEdge(agentLocation, links.list.wumpus_room_loc_y, agentLocY);
-
+  a.requirements.addEdge(agentInstance, links.list.type_of, a.requirements.addVertex(subgraph.matcher.id, agent), 5);
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasAlive'], agentHasAlive, -2);
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_loc'], agentLocation);
+  a.requirements.addEdge(agentLocation, links.list['wumpus_room_loc_x'], agentLocX);
+  a.requirements.addEdge(agentLocation, links.list['wumpus_room_loc_y'], agentLocY);
 
   // there is an adjacent room
   var currentRoom = a.requirements.addVertex(subgraph.matcher.discrete, agentLocation, {matchRef:true});
@@ -221,10 +212,6 @@ exports.adjacentRoomStub = function(directions, agent, room, room_coord, actuato
   var roomLocY = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id});
   a.requirements.addEdge(targetRoom, links.list.wumpus_room_loc_x, roomLocX);
   a.requirements.addEdge(targetRoom, links.list.wumpus_room_loc_y, roomLocY);
-
-  // targetRoom must not have a pit
-  var roomHasPit = a.requirements.addVertex(subgraph.matcher.discrete, {value:false, unit: discrete.definitions.list.boolean});
-  a.requirements.addEdge(targetRoom, links.list.wumpus_sense_hasPit, roomHasPit, -2);
 
 
   // move through the door

@@ -170,7 +170,12 @@ describe('setup', function() {
           expect(context.idea('agentDirection').data().value).to.equal('east');
         });
 
-        it('cannot go into a pit', function() {
+        it.skip('cannot go into a pit', function() {
+          // we CAN go into a pit
+          // it's just that, now we die
+          // and can't do anything else afterwards
+          //
+          // TODO so test that instead
           expect(context.idea('agentLocation').data().value).to.equal(63);
           actuatorCallback('left');
           actuatorCallback('up');

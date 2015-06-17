@@ -18,6 +18,7 @@ links.create('wumpus_sense_hasPit');
 links.create('wumpus_sense_hasGold');
 links.create('wumpus_sense_hasExit');
 links.create('wumpus_sense_hasWon');
+links.create('wumpus_sense_hasAlive');
 links.create('wumpus_room_door');
 links.create('wumpus_room_loc_x');
 links.create('wumpus_room_loc_y');
@@ -335,6 +336,7 @@ exports.sense = function(state) {
     var agentLocY = ideas.create();
     var agentHasGold = ideas.create();
     var agentHasWon = ideas.create();
+    var agentHasAlive = ideas.create();
     instance.link(links.list.thought_description, agentInstance);
     agentInstance.link(links.list.type_of, exports.idea('agent'));
     agentInstance.link(links.list['wumpus_sense_agent_dir'], agentDirection);
@@ -343,6 +345,7 @@ exports.sense = function(state) {
     agentLocation.link(links.list['wumpus_room_loc_y'], agentLocY);
     agentInstance.link(links.list['wumpus_sense_hasGold'], agentHasGold);
     agentInstance.link(links.list['wumpus_sense_hasWon'], agentHasWon);
+    agentInstance.link(links.list['wumpus_sense_hasAlive'], agentHasAlive);
 
     exports.keys.agentInstance = exports.subgraph.addVertex(subgraph.matcher.filler);
     exports.keys.agentDirection = exports.subgraph.addVertex(subgraph.matcher.id, agentDirection, {transitionable:true});
@@ -351,6 +354,7 @@ exports.sense = function(state) {
     exports.keys.agentLocY = exports.subgraph.addVertex(subgraph.matcher.id, agentLocY, {transitionable:true});
     exports.keys.agentHasGold = exports.subgraph.addVertex(subgraph.matcher.id, agentHasGold, {transitionable:true});
     exports.keys.agentHasWon = exports.subgraph.addVertex(subgraph.matcher.id, agentHasWon, {transitionable:true});
+    exports.keys.agentHasAlive = exports.subgraph.addVertex(subgraph.matcher.id, agentHasAlive, {transitionable:true});
     exports.subgraph.addEdge(exports.keys.instance, links.list.thought_description, exports.keys.agentInstance);
     exports.subgraph.addEdge(exports.keys.agentInstance, links.list.type_of, exports.keys.agent);
     exports.subgraph.addEdge(exports.keys.agentInstance, links.list['wumpus_sense_agent_dir'], exports.keys.agentDirection);
@@ -359,6 +363,7 @@ exports.sense = function(state) {
     exports.subgraph.addEdge(exports.keys.agentLocation, links.list['wumpus_room_loc_y'], exports.keys.agentLocY);
     exports.subgraph.addEdge(exports.keys.agentInstance, links.list['wumpus_sense_hasGold'], exports.keys.agentHasGold);
     exports.subgraph.addEdge(exports.keys.agentInstance, links.list['wumpus_sense_hasWon'], exports.keys.agentHasWon);
+    exports.subgraph.addEdge(exports.keys.agentInstance, links.list['wumpus_sense_hasAlive'], exports.keys.agentHasAlive);
 
 
     config.save();
@@ -417,11 +422,10 @@ function senseAgent(agent) {
   exports.idea('agentLocX').update(number.cast({value: number.value(agent.x), unit: exports.idea('room_coord').id}));
   exports.idea('agentLocY').update(number.cast({value: number.value(agent.y), unit: exports.idea('room_coord').id}));
 
-  // update agent hasGold
+  // update agent bool props
   exports.idea('agentHasGold').update(discrete.cast({value: agent.hasGold, unit: discrete.definitions.list.boolean}));
-
-  // update agent hasWon
   exports.idea('agentHasWon').update(discrete.cast({value: agent.win, unit: discrete.definitions.list.boolean}));
+  exports.idea('agentHasAlive').update(discrete.cast({value: agent.alive, unit: discrete.definitions.list.boolean}));
 
   exports.subgraph.deleteData(
     exports.keys.agentDirection,
@@ -429,6 +433,7 @@ function senseAgent(agent) {
     exports.keys.agentLocX,
     exports.keys.agentLocY,
     exports.keys.agentHasGold,
-    exports.keys.agentHasWon
+    exports.keys.agentHasWon,
+    exports.keys.agentHasAlive
   );
 }

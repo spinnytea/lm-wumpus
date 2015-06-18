@@ -19,6 +19,7 @@ exports.game = {
   grain: 'discrete', // continuous
   observable: 'fully', // partially
   timing: 'static', // dynamic
+  apriori: 'known', // unknown
   agents: 'single', // multi
   player: 'lemon' // person
 };

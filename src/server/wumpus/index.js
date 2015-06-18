@@ -25,7 +25,7 @@ exports.setup = function(io) {
     // --
     // later, lemon will send these command itself
     socket.on('command', function(str) { socket.emit('action', str); socket.emit('message', 'echo'); });
-    socket.on('context', function() { socket.emit('context', subgraph.stringify(context.subgraph, true)); });
+    socket.on('context', function() { if(context.subgraph) socket.emit('context', subgraph.stringify(context.subgraph, true)); });
 
     // take some action based on a message from the client
     socket.on('actuator', exports.setup.actuator(socket));

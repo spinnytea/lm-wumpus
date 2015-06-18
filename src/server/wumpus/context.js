@@ -56,6 +56,7 @@ exports.setup = function(s, c) {
     observable: 'fully', // partially
     timing: 'static', // dynamic
     agents: 'single', // multi
+    apriori: 'known', // unknown
     player: 'lemon' // person
   }))) {
     s.emit('message', 'I don\'t know how to deal with this.');

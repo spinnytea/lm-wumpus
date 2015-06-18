@@ -170,12 +170,7 @@ describe('setup', function() {
           expect(context.idea('agentDirection').data().value).to.equal('east');
         });
 
-        it.skip('cannot go into a pit', function() {
-          // we CAN go into a pit
-          // it's just that, now we die
-          // and can't do anything else afterwards
-          //
-          // TODO so test that instead
+        it('going to a pit results in no available actions', function() {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           actuatorCallback('left');
           actuatorCallback('up');
@@ -183,10 +178,26 @@ describe('setup', function() {
           expect(socket.messages.message).to.equal('actuator:left> potassium');
           expect(context.idea('agentDirection').data().value).to.equal('west');
           expect(context.idea('agentLocation').data().value).to.equal(66);
+          expect(context.idea('agentHasAlive').data().value).to.equal(true);
           actuatorCallback('up');
-          expect(socket.messages.message).to.equal('actuator:up> could not apply');
+          expect(socket.messages.message).to.equal('actuator:up> potassium');
           expect(context.idea('agentDirection').data().value).to.equal('west');
-          expect(context.idea('agentLocation').data().value).to.equal(66);
+          expect(context.idea('agentLocation').data().value).to.equal(76);
+          expect(getRoomProperty(76, 'Pit').value).to.equal(true);
+
+          // so here's the trick
+          // once we reach the goal, we stop; there is no thinking ahead
+          // so the agent seems alive
+          expect(context.idea('agentHasAlive').data().value).to.equal(true);
+          // but our next steps... they will kill us
+
+          var goalCallback = server.setup.goal(socket);
+          goalCallback('room 66');
+          expect(socket.messages.message).to.equal('goal:room 66> could not find a path');
+          goalCallback('goto gold');
+          expect(socket.messages.message).to.equal('goal:goto gold> could not find a path');
+          // we can ask for anything here, because it will fail immediately
+          // the first thing we will evaluate is that we died, and then no actions are available
         });
       }); // end up
 

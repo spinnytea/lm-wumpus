@@ -92,11 +92,13 @@ var getDiscreteContext = function() {
   exports.keys.action_up = exports.subgraph.addVertex(subgraph.matcher.exact, {name:'action:up'});
   exports.keys.action_grab = exports.subgraph.addVertex(subgraph.matcher.exact, {name:'action:grab'});
   exports.keys.action_exit = exports.subgraph.addVertex(subgraph.matcher.exact, {name:'action:exit'});
+  exports.keys.action_CaeActions = exports.subgraph.addVertex(subgraph.matcher.exact, {name:'action:CaeActions'});
   exports.subgraph.addEdge(exports.keys.action_left, links.list.thought_description, exports.keys.wumpus_world);
   exports.subgraph.addEdge(exports.keys.action_right, links.list.thought_description, exports.keys.wumpus_world);
   exports.subgraph.addEdge(exports.keys.action_up, links.list.thought_description, exports.keys.wumpus_world);
   exports.subgraph.addEdge(exports.keys.action_grab, links.list.thought_description, exports.keys.wumpus_world);
   exports.subgraph.addEdge(exports.keys.action_exit, links.list.thought_description, exports.keys.wumpus_world);
+  exports.subgraph.addEdge(exports.keys.action_CaeActions, links.list.thought_description, exports.keys.wumpus_world);
 
   // directions
   exports.keys.directions = exports.subgraph.addVertex(subgraph.matcher.similar, discrete.definitions.similar);
@@ -130,11 +132,13 @@ var getDiscreteContext = function() {
     var action_up = ideas.create({name:'action:up'});
     var action_grab = ideas.create({name:'action:grab'});
     var action_exit = ideas.create({name:'action:exit'});
+    var action_CaeActions = ideas.create({name:'action:CaeActions'});
     action_left.link(links.list.thought_description, wumpus_world);
     action_right.link(links.list.thought_description, wumpus_world);
     action_up.link(links.list.thought_description, wumpus_world);
     action_grab.link(links.list.thought_description, wumpus_world);
     action_exit.link(links.list.thought_description, wumpus_world);
+    action_CaeActions.link(links.list.thought_description, wumpus_world);
 
     // directions
     var directions = discrete.definitions.create(['east', 'south', 'west', 'north'], 'cycle');
@@ -160,11 +164,12 @@ var getDiscreteContext = function() {
     discreteActuators.forward(directions, agent, room, room_coord, [stub_room, action_up]);
     discreteActuators.grab(agent, room, [wumpus_world, action_grab]);
     discreteActuators.exit(agent, room, [wumpus_world, action_exit]);
+    discreteActuators.deathByPit(agent, room, [wumpus_world, action_CaeActions]);
 
 
     // save our the ideas
     [
-      wumpus_world, stub_room, action_left, action_right, action_up, action_grab, action_exit, ideas.context('blueprint'),
+      wumpus_world, stub_room, action_left, action_right, action_up, action_grab, action_exit, action_CaeActions, ideas.context('blueprint'),
       directions, compass, agent, room, room_coord
     ].forEach(ideas.save);
     // now search again

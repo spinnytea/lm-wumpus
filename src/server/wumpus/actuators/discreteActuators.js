@@ -228,3 +228,37 @@ exports.adjacentRoomStub = function(directions, agent, room, room_coord, actuato
 
   return a.idea;
 };
+
+exports.deathByPit = function(agent, room, actuator_context) {
+  var a = new actuator.Action();
+  a.causeAndEffect = true;
+
+  // the agent is alive
+  // the agent is in a room
+  var agentInstance = a.requirements.addVertex(subgraph.matcher.filler);
+  var agentHasAlive = a.requirements.addVertex(subgraph.matcher.discrete, {value:true, unit: discrete.definitions.list.boolean}, {transitionable:true});
+  var agentLocation = a.requirements.addVertex(subgraph.matcher.filler);
+  a.requirements.addEdge(agentInstance, links.list.type_of, a.requirements.addVertex(subgraph.matcher.id, agent), 5);
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasAlive'], agentHasAlive, -2);
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_loc'], agentLocation);
+
+  // that room has a pit
+  var currentRoom = a.requirements.addVertex(subgraph.matcher.discrete, agentLocation, {matchRef:true});
+  var roomType = a.requirements.addVertex(subgraph.matcher.id, room);
+  var roomHasPit = a.requirements.addVertex(subgraph.matcher.discrete, {value:true, unit: discrete.definitions.list.boolean});
+  a.requirements.addEdge(currentRoom, links.list.type_of, roomType, 2);
+  a.requirements.addEdge(currentRoom, links.list.wumpus_sense_hasPit, roomHasPit, 1);
+
+
+  // the agent has died
+  a.transitions.push({ vertex_id: agentHasAlive, replace: {value:false, unit: discrete.definitions.list.boolean} });
+
+
+  a.save();
+  actuator_context.forEach(function(ac) {
+    ideas.load(a.idea).link(links.list.context, ac);
+  });
+  ideas.save(a.idea);
+
+  return a.idea;
+};

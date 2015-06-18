@@ -10,7 +10,8 @@ var context = require('../../../../src/server/wumpus/context');
 
 var socket = require('../socket');
 
-var ITERATION_COUNT = 100;
+var TEST_BLOCK_ITERATIONS = 3;
+var TEST_UNIT_ITERATIONS = 100;
 
 // okay, this isn't REALLY a benchmark
 // but it's intended for me to test the actuators
@@ -18,13 +19,12 @@ var ITERATION_COUNT = 100;
 // and the usual tests are more about making sure it's function, and complete, here I can focus on one task multiple times
 
 describe.only('benchmark', function () {
-  socket.setup(require('./test_data'));
+  socket.setup(require('./test_data_large'));
 
   beforeEach(function() {
     // test room config
     expect(context.idea('agentDirection').data().value).to.equal('east');
-    expect(context.idea('agentLocation').data().value).to.equal(63);
-    expect(context.idea('agentHasGold').data().value).to.equal(false);
+    expect(context.idea('agentLocation').data().value).to.equal(1306);
   });
 
   describe('actuators', function() {
@@ -33,20 +33,22 @@ describe.only('benchmark', function () {
       actuatorCallback = server.setup.actuator(socket);
     });
 
-    it('left', function() {
-      var i;
-      for(i=0; i<ITERATION_COUNT; i++) {
-        actuatorCallback('left');
-        expect(socket.messages.message).to.equal('actuator:left> potassium');
-      }
-    });
+    for(var b=0; b<TEST_BLOCK_ITERATIONS; b++) {
+      it('left (' + b + ')', function() {
+        var i;
+        for(i=0; i<TEST_UNIT_ITERATIONS; i++) {
+          actuatorCallback('left');
+          expect(socket.messages.message).to.equal('actuator:left> potassium');
+        }
+      });
 
-    it('right', function() {
-      var i;
-      for(i=0; i<ITERATION_COUNT; i++) {
-        actuatorCallback('right');
-        expect(socket.messages.message).to.equal('actuator:right> potassium');
-      }
-    });
+      it('right (' + b + ')', function() {
+        var i;
+        for(i=0; i<TEST_UNIT_ITERATIONS; i++) {
+          actuatorCallback('right');
+          expect(socket.messages.message).to.equal('actuator:right> potassium');
+        }
+      });
+    }
   }); // end actuators
 }); // end benchmark

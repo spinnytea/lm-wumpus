@@ -2,7 +2,6 @@
 /* global describe, it, beforeEach, before */
 // TODO instead of opting into/out of benchmarking, we should make another gulp task
 describe.only = function() {};
-
 var expect = require('chai').expect;
 
 var server = require('../../../../src/server/wumpus/index');
@@ -34,8 +33,8 @@ describe.only('benchmark', function () {
     });
 
     for(var b=0; b<TEST_BLOCK_ITERATIONS; b++) {
+      var i;
       it('left (' + b + ')', function() {
-        var i;
         for(i=0; i<TEST_UNIT_ITERATIONS; i++) {
           actuatorCallback('left');
           expect(socket.messages.message).to.equal('actuator:left> potassium');
@@ -43,10 +42,29 @@ describe.only('benchmark', function () {
       });
 
       it('right (' + b + ')', function() {
-        var i;
         for(i=0; i<TEST_UNIT_ITERATIONS; i++) {
           actuatorCallback('right');
           expect(socket.messages.message).to.equal('actuator:right> potassium');
+        }
+      });
+
+      it('up (' + b + ')', function() {
+        actuatorCallback('right');
+        actuatorCallback('right');
+        var agentLocation = context.idea('agentLocation');
+
+        for(i=0; i<TEST_UNIT_ITERATIONS; i++) {
+
+          // we do need to reset sometimes
+          // this will slow down our iterations, but it needs to be done
+          if(agentLocation.data().value === 1339) {
+            var data = agentLocation.data();
+            agentLocation.update({ value: 1306, unit: data.unit });
+            context.subgraph.deleteData(context.keys.agentLocation);
+          }
+
+          actuatorCallback('up');
+          expect(socket.messages.message).to.equal('actuator:up> potassium');
         }
       });
     }

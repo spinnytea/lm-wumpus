@@ -58,36 +58,32 @@ exports.forward = function(directions, agent, room, room_coord, actuator_context
   var agentLocation = a.requirements.addVertex(subgraph.matcher.filler, undefined, {transitionable:true});
   var agentLocX = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id}, {transitionable:true});
   var agentLocY = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id}, {transitionable:true});
-  a.requirements.addEdge(agentInstance, links.list.type_of, a.requirements.addVertex(subgraph.matcher.id, agent), 5);
-  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasAlive'], agentHasAlive, -2);
-  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_dir'], agentDirection);
-  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_loc'], agentLocation);
-  a.requirements.addEdge(agentLocation, links.list['wumpus_room_loc_x'], agentLocX);
-  a.requirements.addEdge(agentLocation, links.list['wumpus_room_loc_y'], agentLocY);
+  a.requirements.addEdge(agentInstance, links.list.type_of, a.requirements.addVertex(subgraph.matcher.id, agent), 6);
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasAlive'], agentHasAlive, 5);
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_dir'], agentDirection, 5);
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_loc'], agentLocation, 5);
+  a.requirements.addEdge(agentLocation, links.list['wumpus_room_loc_x'], agentLocX, 4);
+  a.requirements.addEdge(agentLocation, links.list['wumpus_room_loc_y'], agentLocY, 4);
 
   // there must be a door/room in that direction
   var currentRoom = a.requirements.addVertex(subgraph.matcher.discrete, agentLocation, {matchRef:true});
   var roomDirection = a.requirements.addVertex(subgraph.matcher.discrete, agentDirection, {matchRef:true});
   var targetRoom = a.requirements.addVertex(subgraph.matcher.filler);
-  a.requirements.addEdge(currentRoom, links.list.wumpus_room_door, roomDirection);
-  a.requirements.addEdge(roomDirection, links.list.wumpus_room_door, targetRoom, -1);
   var roomType = a.requirements.addVertex(subgraph.matcher.id, room);
-  a.requirements.addEdge(currentRoom, links.list.type_of, roomType);
-  // consider this link at a lower priority (find the target room last)
-  a.requirements.addEdge(targetRoom, links.list.type_of, roomType, -1);
-  //// targetRoom must not have a pit
-  //var roomHasPit = a.requirements.addVertex(subgraph.matcher.discrete, {value:false, unit: discrete.definitions.list.boolean});
-  //a.requirements.addEdge(targetRoom, links.list.wumpus_sense_hasPit, roomHasPit, -2);
-  var roomLocX = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id});
-  var roomLocY = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id});
-  a.requirements.addEdge(targetRoom, links.list.wumpus_room_loc_x, roomLocX);
-  a.requirements.addEdge(targetRoom, links.list.wumpus_room_loc_y, roomLocY);
+  var targetRoomLocX = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id});
+  var targetRoomLocY = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id});
+  a.requirements.addEdge(currentRoom, links.list.wumpus_room_door, roomDirection, 3);
+  a.requirements.addEdge(roomDirection, links.list.wumpus_room_door, targetRoom, 1);
+  a.requirements.addEdge(currentRoom, links.list.type_of, roomType, 2);
+  a.requirements.addEdge(targetRoom, links.list.type_of, roomType, 0);
+  a.requirements.addEdge(targetRoom, links.list.wumpus_room_loc_x, targetRoomLocX, 0);
+  a.requirements.addEdge(targetRoom, links.list.wumpus_room_loc_y, targetRoomLocY, 0);
 
 
   // move through the door
   a.transitions.push({ vertex_id: agentLocation, replace_id: targetRoom });
-  a.transitions.push({ vertex_id: agentLocX, replace_id: roomLocX, cost: 0 });
-  a.transitions.push({ vertex_id: agentLocY, replace_id: roomLocY, cost: 0 });
+  a.transitions.push({ vertex_id: agentLocX, replace_id: targetRoomLocX, cost: 0 });
+  a.transitions.push({ vertex_id: agentLocY, replace_id: targetRoomLocY, cost: 0 });
 
 
   a.action = 'wumpus_known_discrete_up';

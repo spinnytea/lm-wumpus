@@ -21,12 +21,13 @@ var point_step = 0;
 // . pit    - after gold is placed, generated with some probability (e.g. n/(roomount/2), where n is a constant number of rooms we'd like to see)
 exports.generate = function() {
   // pull out our arguments
-  var roomCount = Math.max(config.room.count || 0, 4);
+  var roomCount = Math.max(config.room.count || 0, 5);
 
   // the room where the cold will be placed
   var goldRoom = Math.floor(roomCount / 2);
   // if the wumpus has not been placed by the time we get to the gold, we need to place it then
   var placedWumpus = false;
+  var secondGoldPlaced = false;
 
   // we are ultimately building this as the game object
   // create a new one on exports
@@ -108,7 +109,10 @@ exports.generate = function() {
       }
       room.hasGold = true;
     } else if(cave.rooms.length > goldRoom) {
-      if(Math.random() < config.misc.pit.probability)
+      if(!secondGoldPlaced && (cave.rooms.length+1 === roomCount || Math.random() < config.misc.pit.probability)) {
+        room.hasGold = true;
+        secondGoldPlaced = true;
+      } else if(Math.random() < config.misc.pit.probability)
         room.hasPit = true;
     }
 

@@ -69,4 +69,9 @@ describe.only('benchmark', function () {
       });
     }
   }); // end actuators
+
+  it.skip('subgraph.match', function() {
+    // how long does it take to perform a subgraph.match?
+    // how long does it take if we supply a vertexMap?
+  });
 }); // end benchmark

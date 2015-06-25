@@ -7,6 +7,7 @@ var discrete = require('lime/src/planning/primitives/discrete');
 var ideas = require('lime/src/database/ideas');
 var links = require('lime/src/database/links');
 var number = require('lime/src/planning/primitives/number');
+var scheduler = require('lime/src/planning/scheduler');
 var subgraph = require('lime/src/database/subgraph');
 
 var discreteActuators = require('./actuators/discreteActuators');
@@ -379,6 +380,8 @@ exports.sense = function(state) {
 
   senseRooms(state.rooms);
   senseAgent(state.agent);
+
+  scheduler.check();
 };
 
 function senseRooms(rooms) {

@@ -375,5 +375,10 @@ Agent.prototype.update = function() {
     this.y = that.y;
 
     this.updateRooms(inRooms);
+
+    if(config.game.grain === 'discrete') {
+      this.x = this.inRooms[0].x;
+      this.y = this.inRooms[0].y;
+    }
   }
 };

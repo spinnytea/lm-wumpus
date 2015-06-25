@@ -140,10 +140,16 @@ exports.setup.goal = function(socket) {
 
       var result = sp.tryTransition(start);
       if(result.length > 0) {
-        sp.runBlueprint(start, result[0]);
         if(result.length > 1)
           console.log('more than one result?? ('+result.length+')');
-        socket.emit('message', 'goal:'+str+'> oxygen potassium');
+
+        socket.emit('message', 'goal:'+str+'> let\'s give this plan a shot');
+        sp.scheduleBlueprint(start, result[0]).then(function() {
+          socket.emit('message', 'goal:'+str+'> oxygen potassium');
+        }, function() {
+          socket.emit('message', 'goal:'+str+'> plan failed en route');
+        });
+
       } else {
         socket.emit('message', 'goal:'+str+'> could not apply the path ...?');
       }

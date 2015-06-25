@@ -50,7 +50,7 @@ exports.connect = function(scope, protocol, host) {
     if(keyCode) {
       game.keydown({ keyCode: keyCode, preventDefault: angular.noop });
       if(config.game.timing === 'static')
-        exports.sense();
+        setTimeout(exports.sense, config.timing.updateDelay);
     }
   });
 

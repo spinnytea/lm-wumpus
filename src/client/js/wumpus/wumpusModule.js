@@ -111,6 +111,8 @@ module.exports = angular.module('lime.client.wumpus', [
               .css('border-radius', config.room.radius);
             var message;
             if(game.cave.agent.win) {
+              // TODO if you die from unintended action, then table flips you
+              // 'ノ┬─┬ノ ︵ ( \o°o)\'
               message = 'You won. ~ ' + 'ヾ(⌐■_■)ノ♪';
             } else {
               message = 'You lost. ... ' + '┻━┻ ︵ヽ(`Д´)ﾉ︵ ┻━┻';

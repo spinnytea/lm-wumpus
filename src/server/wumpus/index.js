@@ -99,12 +99,14 @@ exports.setup.goal = function(socket) {
     } else if(str.indexOf('win') === 0) {
       goal = createGoal.win().goal;
     } else if(str.indexOf('play') === 0) {
-      goal = [
-        createGoal.goto(links.list.wumpus_sense_hasGold).goal,
-        createGoal.gold().goal,
-        createGoal.goto(links.list.wumpus_sense_hasExit).goal,
-        createGoal.win().goal
-      ];
+      goal = [];
+      // if has gold, don't go get it
+      if(!context.idea('agentHasGold').data().value) {
+        goal.push(createGoal.goto(links.list.wumpus_sense_hasGold).goal);
+        goal.push(createGoal.gold().goal);
+      }
+      goal.push(createGoal.goto(links.list.wumpus_sense_hasExit).goal);
+      goal.push(createGoal.win().goal);
     } else {
       socket.emit('message', 'goal:'+str+'> not a valid goal');
       return;

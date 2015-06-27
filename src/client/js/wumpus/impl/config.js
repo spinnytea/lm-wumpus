@@ -17,6 +17,7 @@ exports.game = {
   // XXX enumerate lists of available options? (so we don't have magic strings)
   chance: 'deterministic', // stochastic
   grain: 'discrete', // continuous
+  noise: 0,
   observable: 'fully', // partially
   timing: 'static', // dynamic
   apriori: 'known', // unknown

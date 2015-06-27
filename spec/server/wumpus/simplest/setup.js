@@ -509,9 +509,25 @@ describe('setup', function() {
         }).finally(done).catch(done);
       });
 
-      it.skip('goto gold & play', function() {
-        // try and play while we are on the gold
+      it('goto gold & play', function(done) {
+        // this was a bugfix test
+        //
         // we can generate a plan, but it can't apply it
+        goalCallback('goto gold');
+
+        checkUntilSuccess().then(function() {
+          expect(context.idea('agentLocation').data().value).to.equal(68);
+          expect(context.idea('agentHasGold').data().value).to.equal(false);
+          expect(context.idea('agentHasWon').data().value).to.equal(false);
+
+          goalCallback('play');
+
+          return checkUntilSuccess().then(function() {
+            expect(context.idea('agentLocation').data().value).to.equal(63);
+            expect(context.idea('agentHasGold').data().value).to.equal(true);
+            expect(context.idea('agentHasWon').data().value).to.equal(true);
+          });
+        }).finally(done).catch(done);
       });
     }); // end goal
   }); // end server

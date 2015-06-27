@@ -5,6 +5,7 @@ var _ = require('lodash');
 
 var links = require('lime/src/database/links');
 var number = require('lime/src/planning/primitives/number');
+var scheduler = require('lime/src/planning/scheduler');
 var subgraph = require('lime/src/database/subgraph');
 
 var server = require('../../../../src/server/wumpus/index');
@@ -30,6 +31,18 @@ function getRoomProperty(number, link) {
   expect(result).to.deep.equal([sg]);
 
   return sg.getData(targetProperty);
+}
+
+// this will keep rolling the scheduler until the goal reports success
+// - alt: finish when lm gets to the goal
+// TODO why does the message take longer show up than the location
+// - does it have to do with serial plans in the layer?
+function checkUntilSuccess() {
+  return scheduler.check().then(function() {
+    if(socket.messages.message.indexOf('potassium') !== -1)
+      return undefined;
+    return checkUntilSuccess();
+  });
 }
 
 describe('setup', function() {
@@ -299,146 +312,188 @@ describe('setup', function() {
           expect(context.idea('agentDirection').data().value).to.equal('east');
         });
 
-        it('65', function() {
+        it('65', function(done) {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentDirection').data().value).to.equal('east');
           goalCallback('room 65');
-          expect(socket.messages.message).to.equal('goal:room 65> oxygen potassium');
-          expect(context.idea('agentLocation').data().value).to.equal(65);
-          expect(context.idea('agentDirection').data().value).to.equal('east');
+
+          checkUntilSuccess().then(function() {
+            expect(socket.messages.message).to.equal('goal:room 65> oxygen potassium');
+            expect(context.idea('agentLocation').data().value).to.equal(65);
+            expect(context.idea('agentDirection').data().value).to.equal('east');
+          }).finally(done).catch(done);
         });
 
-        it('73', function() {
+        it('73', function(done) {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentDirection').data().value).to.equal('east');
           goalCallback('room 73');
-          expect(socket.messages.message).to.equal('goal:room 73> oxygen potassium');
-          expect(context.idea('agentLocation').data().value).to.equal(73);
-          expect(context.idea('agentDirection').data().value).to.equal('east');
+
+          checkUntilSuccess().then(function() {
+            expect(socket.messages.message).to.equal('goal:room 73> oxygen potassium');
+            expect(context.idea('agentLocation').data().value).to.equal(73);
+            expect(context.idea('agentDirection').data().value).to.equal('east');
+          }).finally(done).catch(done);
         });
 
-        it('69', function() {
+        it('69', function(done) {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentDirection').data().value).to.equal('east');
           goalCallback('room 69');
-          expect(socket.messages.message).to.equal('goal:room 69> oxygen potassium');
-          expect(context.idea('agentLocation').data().value).to.equal(69);
-          // up-right-up is shorter than right-up-left-up, so we SHOULD be facing south
-          // but as soon as we start mucking with stubs, this may not be the case
-          expect(context.idea('agentDirection').data().value).to.equal('south');
+
+          checkUntilSuccess().then(function() {
+            expect(socket.messages.message).to.equal('goal:room 69> oxygen potassium');
+            expect(context.idea('agentLocation').data().value).to.equal(69);
+            // up-right-up is shorter than right-up-left-up, so we SHOULD be facing south
+            // but as soon as we start mucking with stubs, this may not be the case
+            expect(context.idea('agentDirection').data().value).to.equal('south');
+          }).finally(done).catch(done);
         });
 
-        it('78', function() {
+        it('78', function(done) {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentDirection').data().value).to.equal('east');
           goalCallback('room 78');
-          expect(socket.messages.message).to.equal('goal:room 78> oxygen potassium');
-          expect(context.idea('agentLocation').data().value).to.equal(78);
-          expect(context.idea('agentDirection').data().value).to.equal('north');
+
+          checkUntilSuccess().then(function() {
+            expect(socket.messages.message).to.equal('goal:room 78> oxygen potassium');
+            expect(context.idea('agentLocation').data().value).to.equal(78);
+            expect(context.idea('agentDirection').data().value).to.equal('north');
+          }).finally(done).catch(done);
         });
 
-        it('68-78', function() {
+        it('68-78', function(done) {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentDirection').data().value).to.equal('east');
           goalCallback('room 68');
-          expect(socket.messages.message).to.equal('goal:room 68> oxygen potassium');
-          expect(context.idea('agentLocation').data().value).to.equal(68);
-          expect(context.idea('agentDirection').data().value).to.equal('west');
-          goalCallback('room 78');
-          expect(socket.messages.message).to.equal('goal:room 78> oxygen potassium');
-          expect(context.idea('agentLocation').data().value).to.equal(78);
-          expect(context.idea('agentDirection').data().value).to.equal('north');
+
+          checkUntilSuccess().then(function() {
+            expect(socket.messages.message).to.equal('goal:room 68> oxygen potassium');
+            expect(context.idea('agentLocation').data().value).to.equal(68);
+            expect(context.idea('agentDirection').data().value).to.equal('west');
+            goalCallback('room 78');
+
+            return checkUntilSuccess().then(function() {
+              expect(socket.messages.message).to.equal('goal:room 78> oxygen potassium');
+              expect(context.idea('agentLocation').data().value).to.equal(78);
+              expect(context.idea('agentDirection').data().value).to.equal('north');
+            });
+          }).finally(done).catch(done);
         });
       }); // end room
 
       describe('goto', function() {
-        it('gold', function() {
+        it('gold', function(done) {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentDirection').data().value).to.equal('east');
           expect(context.idea('agentHasGold').data().value).to.equal(false);
           goalCallback('goto gold');
-          expect(socket.messages.message).to.equal('goal:goto gold> oxygen potassium');
-          expect(context.idea('agentLocation').data().value).to.equal(68);
-          expect(context.idea('agentDirection').data().value).to.equal('west');
-          expect(context.idea('agentHasGold').data().value).to.equal(false);
+
+          checkUntilSuccess().then(function() {
+            expect(socket.messages.message).to.equal('goal:goto gold> oxygen potassium');
+            expect(context.idea('agentLocation').data().value).to.equal(68);
+            expect(context.idea('agentDirection').data().value).to.equal('west');
+            expect(context.idea('agentHasGold').data().value).to.equal(false);
+          }).finally(done).catch(done);
         });
 
-        it('exit', function() {
+        it('exit', function(done) {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentDirection').data().value).to.equal('east');
           expect(context.idea('agentHasGold').data().value).to.equal(false);
           goalCallback('room 78');
-          expect(socket.messages.message).to.equal('goal:room 78> oxygen potassium');
-          expect(context.idea('agentLocation').data().value).to.equal(78);
-          expect(context.idea('agentDirection').data().value).to.equal('north');
-          goalCallback('goto exit');
-          expect(socket.messages.message).to.equal('goal:goto exit> oxygen potassium');
-          expect(context.idea('agentLocation').data().value).to.equal(63);
-          expect(context.idea('agentDirection').data().value).to.equal('south');
-          expect(context.idea('agentHasGold').data().value).to.equal(false);
+
+          checkUntilSuccess().then(function() {
+            expect(socket.messages.message).to.equal('goal:room 78> oxygen potassium');
+            expect(context.idea('agentLocation').data().value).to.equal(78);
+            expect(context.idea('agentDirection').data().value).to.equal('north');
+            goalCallback('goto exit');
+
+            return checkUntilSuccess().then(function() {
+              expect(socket.messages.message).to.equal('goal:goto exit> oxygen potassium');
+              expect(context.idea('agentLocation').data().value).to.equal(63);
+              expect(context.idea('agentDirection').data().value).to.equal('south');
+              expect(context.idea('agentHasGold').data().value).to.equal(false);
+            });
+          }).finally(done).catch(done);
         });
       }); // end goto
 
       describe('gold', function() {
-        it('in the room', function() {
+        it('in the room', function(done) {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentDirection').data().value).to.equal('east');
           expect(context.idea('agentHasGold').data().value).to.equal(false);
           expect(getRoomProperty(68, 'Gold').value).to.equal(true);
           goalCallback('room 68');
-          expect(context.idea('agentLocation').data().value).to.equal(68);
+          checkUntilSuccess().then(function() {
+            expect(context.idea('agentLocation').data().value).to.equal(68);
 
-          // pick up the gold
-          goalCallback('gold');
-          expect(socket.messages.message).to.equal('goal:gold> oxygen potassium');
+            // pick up the gold
+            goalCallback('gold');
 
-          expect(context.idea('agentHasGold').data().value).to.equal(true);
-          expect(getRoomProperty(68, 'Gold').value).to.equal(false);
+            return checkUntilSuccess().then(function() {
+              expect(socket.messages.message).to.equal('goal:gold> oxygen potassium');
+              expect(context.idea('agentHasGold').data().value).to.equal(true);
+              expect(getRoomProperty(68, 'Gold').value).to.equal(false);
+            });
+          }).finally(done).catch(done);
         });
 
-        it('near the room', function() {
+        it('near the room', function(done) {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentDirection').data().value).to.equal('east');
           expect(context.idea('agentHasGold').data().value).to.equal(false);
           expect(getRoomProperty(68, 'Gold').value).to.equal(true);
           goalCallback('room 67');
-          expect(context.idea('agentLocation').data().value).to.equal(67);
+          checkUntilSuccess().then(function() {
+            expect(context.idea('agentLocation').data().value).to.equal(67);
 
-          // pick up the gold
-          goalCallback('gold');
-          expect(socket.messages.message).to.equal('goal:gold> oxygen potassium');
+            // pick up the gold
+            goalCallback('gold');
 
-          expect(context.idea('agentHasGold').data().value).to.equal(true);
-          expect(getRoomProperty(68, 'Gold').value).to.equal(false);
+            return checkUntilSuccess().then(function() {
+              expect(socket.messages.message).to.equal('goal:gold> oxygen potassium');
+              expect(context.idea('agentHasGold').data().value).to.equal(true);
+              expect(getRoomProperty(68, 'Gold').value).to.equal(false);
+            });
+          }).finally(done).catch(done);
         });
 
         it.skip('gold step-through');
       }); // end gold
 
-      it('win', function() {
+      it('win', function(done) {
         expect(context.idea('agentLocation').data().value).to.equal(63);
         expect(context.idea('agentDirection').data().value).to.equal('east');
         expect(context.idea('agentHasGold').data().value).to.equal(false);
         expect(context.idea('agentHasWon').data().value).to.equal(false);
 
-        goalCallback('room 68');
-        expect(socket.messages.message).to.equal('goal:room 68> oxygen potassium');
-        goalCallback('gold');
-        expect(socket.messages.message).to.equal('goal:gold> oxygen potassium');
-        goalCallback('room 63');
-        expect(socket.messages.message).to.equal('goal:room 63> oxygen potassium');
+        //goalCallback('room 68');
+        //expect(socket.messages.message).to.equal('goal:room 68> oxygen potassium');
+        //goalCallback('gold');
+        //expect(socket.messages.message).to.equal('goal:gold> oxygen potassium');
+        //goalCallback('room 63');
+        //expect(socket.messages.message).to.equal('goal:room 63> oxygen potassium');
+
+        // just create the gold for this test
+        var data = context.idea('agentHasGold').data();
+        data.value = true;
+        context.idea('agentHasGold').update(data);
 
         expect(context.idea('agentLocation').data().value).to.equal(63);
         expect(context.idea('agentHasGold').data().value).to.equal(true);
 
         // exit
         goalCallback('win');
-        expect(socket.messages.message).to.equal('goal:win> oxygen potassium');
 
-        expect(context.idea('agentHasWon').data().value).to.equal(true);
+        checkUntilSuccess().then(function() {
+          expect(socket.messages.message).to.equal('goal:win> oxygen potassium');
+          expect(context.idea('agentHasWon').data().value).to.equal(true);
+        }).finally(done).catch(done);
       });
 
-      it('play', function() {
+      it('play', function(done) {
         expect(context.idea('agentLocation').data().value).to.equal(63);
         expect(context.idea('agentDirection').data().value).to.equal('east');
         expect(context.idea('agentHasGold').data().value).to.equal(false);
@@ -446,10 +501,12 @@ describe('setup', function() {
 
         goalCallback('play');
 
-        expect(context.idea('agentLocation').data().value).to.equal(63);
-        expect(context.idea('agentDirection').data().value).to.equal('north');
-        expect(context.idea('agentHasGold').data().value).to.equal(true);
-        expect(context.idea('agentHasWon').data().value).to.equal(true);
+        checkUntilSuccess().then(function() {
+          expect(context.idea('agentLocation').data().value).to.equal(63);
+          expect(context.idea('agentDirection').data().value).to.equal('north');
+          expect(context.idea('agentHasGold').data().value).to.equal(true);
+          expect(context.idea('agentHasWon').data().value).to.equal(true);
+        }).finally(done).catch(done);
       });
 
       it.skip('goto gold & play', function() {

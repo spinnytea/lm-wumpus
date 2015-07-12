@@ -2,7 +2,7 @@
 var _ = require('lodash');
 
 var actuator = require('lime/src/planning/actuator');
-var config = require('lime/config');
+var config = require('lime/src/config');
 var discrete = require('lime/src/planning/primitives/discrete');
 var ideas = require('lime/src/database/ideas');
 var links = require('lime/src/database/links');

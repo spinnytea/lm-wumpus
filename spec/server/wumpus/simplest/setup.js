@@ -41,7 +41,7 @@ function checkUntilSuccess() {
   return scheduler.check().then(function() {
     if(socket.messages.message.indexOf('potassium') !== -1)
       return undefined;
-    return checkUntilSuccess();
+    return setTimeout(checkUntilSuccess, 0);
   });
 }
 

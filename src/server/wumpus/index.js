@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+var Promise = require('bluebird');
 
 var blueprint = require('lime/src/planning/primitives/blueprint');
 var discrete = require('lime/src/planning/primitives/discrete');
@@ -109,7 +110,7 @@ exports.setup.goal = function(socket) {
       goal.push(createGoal.win().goal);
     } else {
       socket.emit('message', 'goal:'+str+'> not a valid goal');
-      return;
+      return Promise.reject();
     }
 
     var list = blueprint.list([context.idea('wumpus_world')]).map(blueprint.load);
@@ -119,14 +120,14 @@ exports.setup.goal = function(socket) {
 
       if(start.matches(_.last(goal))) {
         socket.emit('message', 'goal:'+str+'> here\'s the plan: do nothing');
-        return;
+        return Promise.resolve();
       }
     } else {
       goal = new blueprint.State(goal, list);
 
       if(start.matches(goal)) {
         socket.emit('message', 'goal:'+str+'> here\'s the plan: do nothing');
-        return;
+        return Promise.resolve();
       }
     }
 
@@ -146,7 +147,7 @@ exports.setup.goal = function(socket) {
           console.log('more than one result?? ('+result.length+')');
 
         socket.emit('message', 'goal:'+str+'> let\'s give this plan a shot');
-        sp.scheduleBlueprint(start, result[0]).then(function() {
+        return sp.scheduleBlueprint(start, result[0]).then(function() {
           socket.emit('message', 'goal:'+str+'> oxygen potassium');
         }, function() {
           socket.emit('message', 'goal:'+str+'> plan failed en route');
@@ -154,9 +155,11 @@ exports.setup.goal = function(socket) {
 
       } else {
         socket.emit('message', 'goal:'+str+'> could not apply the path ...?');
+        return Promise.reject();
       }
     } else {
       socket.emit('message', 'goal:'+str+'> could not find a path');
+      return Promise.reject();
     }
   };
 };

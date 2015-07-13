@@ -24,6 +24,7 @@
     "touch": "0.0.3"
   },
   "dependencies": {
+    "bluebird": "^2.9.33",
     "express": "^4.10.2",
     "lodash": "^2.4.1",
     "q": "^1.0.1",

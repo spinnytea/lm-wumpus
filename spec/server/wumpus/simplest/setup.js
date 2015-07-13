@@ -444,7 +444,7 @@ describe('setup', function() {
       }); // end goto
 
       describe('gold', function() {
-        it.skip('in the room', function(done) {
+        it('in the room', function(done) {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentDirection').data().value).to.equal('east');
           expect(context.idea('agentHasGold').data().value).to.equal(false);
@@ -467,7 +467,7 @@ describe('setup', function() {
           checkUntilSuccess();
         });
 
-        it.skip('near the room', function(done) {
+        it('near the room', function(done) {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentDirection').data().value).to.equal('east');
           expect(context.idea('agentHasGold').data().value).to.equal(false);
@@ -494,7 +494,7 @@ describe('setup', function() {
         it.skip('gold step-through');
       }); // end gold
 
-      it.skip('win', function(done) {
+      it('win', function(done) {
         expect(context.idea('agentLocation').data().value).to.equal(63);
         expect(context.idea('agentDirection').data().value).to.equal('east');
         expect(context.idea('agentHasGold').data().value).to.equal(false);
@@ -524,7 +524,7 @@ describe('setup', function() {
         checkUntilSuccess();
       });
 
-      it.skip('play', function(done) {
+      it('play', function(done) {
         expect(context.idea('agentLocation').data().value).to.equal(63);
         expect(context.idea('agentDirection').data().value).to.equal('east');
         expect(context.idea('agentHasGold').data().value).to.equal(false);
@@ -540,7 +540,7 @@ describe('setup', function() {
         checkUntilSuccess();
       });
 
-      it.skip('goto gold & play', function(done) {
+      it('goto gold & play', function(done) {
         // this was a bugfix test
         //
         // we can generate a plan, but it can't apply it

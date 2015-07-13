@@ -15,14 +15,14 @@ var multi = exports.multi = {};
 exports.game = {
   // if these are changed while a game is running... the results will be unpredictable
   // XXX enumerate lists of available options? (so we don't have magic strings)
-  chance: 'deterministic', // stochastic
-  grain: 'discrete', // continuous
-  noise: 0,
-  observable: 'fully', // partially
-  timing: 'static', // dynamic
-  apriori: 'known', // unknown
-  agents: 'single', // multi
-  player: 'lemon' // person
+  chance: 'deterministic', // deterministic, stochastic
+  grain: 'discrete', // discrete, continuous
+  noise: 0, // TODO
+  observable: 'fully', // fully, partially
+  timing: 'static', // static, dynamic
+  apriori: 'known', // known, unknown
+  agents: 'single', // single, multi
+  player: 'lemon' // lemon, person
 };
 
 // how big are the agents

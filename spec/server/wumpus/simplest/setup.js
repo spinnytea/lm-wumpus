@@ -34,15 +34,20 @@ function getRoomProperty(number, link) {
 }
 
 // this will keep rolling the scheduler until the goal reports success
-// - alt: finish when lm gets to the goal
-// TODO why does the message take longer show up than the location
-// - does it have to do with serial plans in the layer?
+// - alt desc: finish when lm gets to the goal
 function checkUntilSuccess() {
-  return scheduler.check().then(function() {
+  scheduler.check().then(function() {
     if(socket.messages.message.indexOf('potassium') !== -1)
       return undefined;
-    return setTimeout(checkUntilSuccess, 0);
+    // set timeout will keep us from infinite looping should something go wrong
+    // if this happens, mocha will timeout (test too long)
+    setTimeout(checkUntilSuccess, 0);
   });
+}
+
+function agentState() {
+  return ['agentLocation', 'agentDirection', 'agentHasGold', 'agentHasWon', 'agentHasAlive']
+    .map(function(str) { return context.idea(str).data().value; });
 }
 
 describe('setup', function() {
@@ -87,9 +92,7 @@ describe('setup', function() {
       // test room config
       expect(getRoomProperty(63, 'Exit').value).to.equal(true);
       expect(getRoomProperty(68, 'Gold').value).to.equal(true);
-      expect(context.idea('agentDirection').data().value).to.equal('east');
-      expect(context.idea('agentLocation').data().value).to.equal(63);
-      expect(context.idea('agentHasGold').data().value).to.equal(false);
+      expect(agentState()).to.deep.equal([63, 'east', false, false, true]);
     });
 
     describe('helper functions', function() {

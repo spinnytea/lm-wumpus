@@ -52,7 +52,7 @@ exports.setup = function(s, c) {
 
   // for now, we only know how to handle the basics
   if(!_.isEqual(c.game, _.merge(_.cloneDeep(c.game), {
-    chance: 'deterministic', // stochastic
+    //chance: 'deterministic', // stochastic (this has been relaxed and is part of the core)
     grain: 'discrete', // continuous
     observable: 'fully', // partially
     timing: 'static', // dynamic

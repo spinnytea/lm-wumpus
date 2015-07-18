@@ -15,7 +15,7 @@ var multi = exports.multi = {};
 exports.game = {
   // if these are changed while a game is running... the results will be unpredictable
   // XXX enumerate lists of available options? (so we don't have magic strings)
-  chance: 'deterministic', // deterministic, stochastic
+  chance: 'stochastic', // deterministic, stochastic
   grain: 'discrete', // discrete, continuous
   noise: 0, // TODO
   observable: 'fully', // fully, partially

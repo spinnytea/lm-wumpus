@@ -60,8 +60,9 @@ describe('setup', function() {
 
     // unsupported config
     var c = _.cloneDeep(config);
-    c.game.chance = 'stochastic';
-    context.setup(socket, c);
+    //c.game.chance = 'stochastic'; // oh! but it can!
+    c.game.apriori = 'unknown';
+      context.setup(socket, c);
     expect(socket.messages.message).to.equal(CHRONA);
     c = _.cloneDeep(config);
     c.game.grain = 'continuous';

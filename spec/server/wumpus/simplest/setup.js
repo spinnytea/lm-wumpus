@@ -37,8 +37,8 @@ function getRoomProperty(number, link) {
 // - alt desc: finish when lm gets to the goal
 function checkUntilSuccess() {
   scheduler.check().then(function() {
-    if(socket.messages.message.indexOf('potassium') !== -1)
-      return undefined;
+    if(socket.messages.message.indexOf('potassium') !== -1) return;
+    if(socket.messages.message.indexOf('failed') !== -1) return;
     // set timeout will keep us from infinite looping should something go wrong
     // if this happens, mocha will timeout (test too long)
     setTimeout(checkUntilSuccess, 0);

@@ -39,7 +39,8 @@ module.exports = angular.module('lime.client.todo', [])
       tasks: [
         { text: 'add a delay for discrete so we can watch it play - where does this go?', status: 'done' },
         { text: 'sense: alive, can only take actions when alive; allow up to enter pit; planning should prune this', status: 'done' },
-        { text: 'display the current plan on the UI', status: 'inprogress', comment: 'Needs to include fail/re-plan, needs to be more dynamic' },
+        { text: 'display the current plan on the UI', status: 'inprogress',
+          description: 'Needs to include fail/re-plan, needs to be more dynamic, allow plan to be canceled.' },
         { text: 'make some sprites for the game', status: 'none' },
         { text: 'fix the context direction', status: 'done' },
         { text: 'allow "goto exit" and "goto gold" to work, even if there is "nothing to do"', status: 'done' },
@@ -75,6 +76,8 @@ module.exports = angular.module('lime.client.todo', [])
       tasks: [
         { text: 'explore until current goal is found', status: 'none' },
         { text: 'how do we teach the agent to avoid pits?', status: 'none' },
+        { text: 'navigate to nearest "unexplored room"', status: 'none',
+          description: 'this is how the maze game wanders the state space' },
       ]
     },
     {

@@ -5,7 +5,7 @@
     <ul>
         <li ng-repeat="task in item.tasks">
             <span class="fa fa-fw" data-ng-class="task.icon" title="{{task.title}}"></span> {{task.text}}
-            <div data-ng-if="task.comment"><span class="fa fa-fw"></span> {{task.comment}}</div>
+            <span data-ng-if="task.description">- {{task.description}}</span>
         </li>
     </ul>
 </section>

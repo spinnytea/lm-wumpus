@@ -46,6 +46,14 @@ module.exports = angular.module('lime.client.todo', [])
         { text: 'allow "play" to skip sections, then skip that part', status: 'done' },
         { text: 'update subgraphModule to use the new subgraph.stringify format; remove the "wumpusModule.wumpusSocket.context" back-conversion', status: 'done' },
         { text: 'address in code TODOs', status: 'none' },
+        { text: 'make wumpus/config a thing, so we can go there directly', status: 'none' },
+      ]
+    },
+    {
+      title: 'Chance',
+      description: 'Run LM in chance:stochastic mode',
+      tasks: [
+        { text: 'check expected state against actual state; replan if mismatch', status: 'done' },
       ]
     },
     {
@@ -56,8 +64,8 @@ module.exports = angular.module('lime.client.todo', [])
       ]
     },
     {
-      title: 'Timing',
-      description: 'Run LM in timing:dynamic mode',
+      title: 'Noise',
+      description: 'Run LM with noise. That is, the values the sensors report aren\'t always perfect.',
       tasks: [
       ]
     },
@@ -70,10 +78,9 @@ module.exports = angular.module('lime.client.todo', [])
       ]
     },
     {
-      title: 'Chance',
-      description: 'Run LM in chance:stochastic mode',
+      title: 'Timing',
+      description: 'Run LM in timing:dynamic mode',
       tasks: [
-        { text: 'check expected state against actual state; replan if mismatch', status: 'none' },
       ]
     },
   ];

@@ -3,6 +3,9 @@
     <header><h2>{{item.title}}</h2></header>
     <div>{{item.description}}</div>
     <ul>
-        <li ng-repeat="task in item.tasks"><span class="fa fa-fw" data-ng-class="task.icon"></span> {{task.text}}</li>
+        <li ng-repeat="task in item.tasks">
+            <span class="fa fa-fw" data-ng-class="task.icon" title="{{task.title}}"></span> {{task.text}}
+            <div data-ng-if="task.comment"><span class="fa fa-fw"></span> {{task.comment}}</div>
+        </li>
     </ul>
 </section>

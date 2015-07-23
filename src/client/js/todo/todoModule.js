@@ -11,7 +11,7 @@ module.exports = angular.module('lime.client.todo', [])
       'Likewise, we don\'t astar to have to plan the WHOLE thing at once, we want to solve each step independently.',
       tasks: [
         { text: 'How do we specify these goals independently; is it a list of goals (do x, then do y)?', status: 'done' },
-        { text: 'How do we figure what these goals should be (dependency graph? ~ this is a harder problem)? (this is for later)', status: 'wontfix' },
+        { text: 'How do we figure what these goals should be (dependency graph? ~ this is a harder problem)? (this is for later)', status: 'future' },
         { text: 'do hierarchy planning with basic: rooms then turns', status: 'done' },
       ]
     },
@@ -29,7 +29,7 @@ module.exports = angular.module('lime.client.todo', [])
         { text: 'server: actuator tests', status: 'done' },
         { text: 'server: goal room', status: 'done' },
         { text: 'agentLocation -> roomType (use in forward)', status: 'wontfix' },
-        { text: 'refactor tests', status: 'none' },
+        { text: 'refactor tests', status: 'inprogress' },
       ]
     },
     {
@@ -37,14 +37,14 @@ module.exports = angular.module('lime.client.todo', [])
       description: 'These are just some nice-to-haves with lm-wumpus. ' +
         'None of them are really important now that we have a working prototype, but it wouldn\'t hurt to have them.',
       tasks: [
-        { text: 'add a delay for discrete so we can watch it play - where does this go?', status: 'none' },
-        { text: 'sense: alive, can only take actions when alive; allow up to enter pit; planning should prune this', status: 'none' },
-        { text: 'display the current plan on the UI', status: 'none' },
+        { text: 'add a delay for discrete so we can watch it play - where does this go?', status: 'done' },
+        { text: 'sense: alive, can only take actions when alive; allow up to enter pit; planning should prune this', status: 'done' },
+        { text: 'display the current plan on the UI', status: 'inprogress', comment: 'Needs to include fail/re-plan, needs to be more dynamic' },
         { text: 'make some sprites for the game', status: 'none' },
-        { text: 'fix the context direction', status: 'none' },
-        { text: 'allow "goto exit" and "goto gold" to work, even if there is "nothing to do"', status: 'none' },
-        { text: 'allow "play" to skip sections, then skip that part', status: 'none' },
-        { text: 'update subgraphModule to use the new subgraph.stringify format; remove the "wumpusModule.wumpusSocket.context" back-conversion', status: 'none' },
+        { text: 'fix the context direction', status: 'done' },
+        { text: 'allow "goto exit" and "goto gold" to work, even if there is "nothing to do"', status: 'done' },
+        { text: 'allow "play" to skip sections, then skip that part', status: 'done' },
+        { text: 'update subgraphModule to use the new subgraph.stringify format; remove the "wumpusModule.wumpusSocket.context" back-conversion', status: 'done' },
         { text: 'address in code TODOs', status: 'none' },
       ]
     },
@@ -66,7 +66,7 @@ module.exports = angular.module('lime.client.todo', [])
       description: 'Run LM in observable:partially mode',
       tasks: [
         { text: 'explore until current goal is found', status: 'none' },
-        { text: 'how do we tell the agent to avoid pits?', status: 'none' },
+        { text: 'how do we teach the agent to avoid pits?', status: 'none' },
       ]
     },
     {
@@ -83,15 +83,23 @@ module.exports = angular.module('lime.client.todo', [])
       switch(task.status) {
         case 'none':
           task.icon = 'fa-circle-o';
+          task.title = 'Recorded';
           break;
         case 'inprogress':
           task.icon = 'fa-spinner fa-spin';
+          task.title = 'In Progress';
           break;
         case 'wontfix':
           task.icon = 'fa-times';
+          task.title = 'Won\'t Fix';
+          break;
+        case 'future':
+          task.icon = 'fa-share';
+          task.title = 'Some Day...';
           break;
         case 'done':
           task.icon = 'fa-check';
+          task.title = 'Done';
           break;
       }
     });

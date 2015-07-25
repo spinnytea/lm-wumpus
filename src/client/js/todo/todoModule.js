@@ -76,6 +76,7 @@ module.exports = angular.module('lime.client.todo', [])
       tasks: [
         { text: 'explore until current goal is found', status: 'none' },
         { text: 'how do we teach the agent to avoid pits?', status: 'none' },
+        { text: 'how do we teach the agent that the gold glitters', status: 'none' },
         { text: 'navigate to nearest "unexplored room"', status: 'none',
           description: 'this is how the maze game wanders the state space' },
       ]

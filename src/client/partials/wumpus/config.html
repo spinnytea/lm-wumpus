@@ -33,23 +33,12 @@
                 digital vs analog; move in chunks vs move via velocity (w/ noop)
             </div>
         </div>
-        <div class="form-group" data-ng-disabled="true">
-            <label class="col-sm-2 control-label">Noise</label>
-
-            <div class="col-sm-2 radio form-control-static">
-                <input type="range" min="0" step="0.01" max="1" data-str-to-num data-ng-model="config.game.noise"/>
-            </div>
-            <div class="col-sm-1 form-control-static">{{config.game.noise | number: 2}}</div>
-            <div class="col-sm-7 form-control-static">
-                can the senses be trusted? add some randomness to all the values <i>(not implemented yet)</i>
-            </div>
-        </div>
         <div class="form-group">
             <label class="col-sm-2 control-label">Observable</label>
 
             <div class="col-sm-3 radio form-control-static">
-                <label><input type="radio" value="fully" data-ng-model="config.game.observable">Fully</label>
-                <label><input type="radio" value="partially" data-ng-model="config.game.observable">Partially</label>
+                <label><input type="radio" value="fully" data-ng-model="config.game.observable"/>Fully</label>
+                <label><input type="radio" value="partially" data-ng-model="config.game.observable"/>Partially</label>
             </div>
             <div class="col-sm-7 form-control-static">
                 fog of war; you remember where you were with some probability
@@ -59,8 +48,8 @@
             <label class="col-sm-2 control-label">Timing</label>
 
             <div class="col-sm-3 radio form-control-static">
-                <label><input type="radio" value="static" data-ng-model="config.game.timing">Static</label>
-                <label><input type="radio" value="dynamic" data-ng-model="config.game.timing">Dynamic</label>
+                <label><input type="radio" value="static" data-ng-model="config.game.timing"/>Static</label>
+                <label><input type="radio" value="dynamic" data-ng-model="config.game.timing"/>Dynamic</label>
             </div>
             <div class="col-sm-7 form-control-static">
                 the world moves without you; or only updates when you tell it to
@@ -70,8 +59,8 @@
             <label class="col-sm-2 control-label">Agents</label>
 
             <div class="col-sm-3 radio form-control-static">
-                <label><input type="radio" value="single" data-ng-model="config.game.agents">Single</label>
-                <label><input type="radio" value="multi" data-ng-model="config.game.agents">Multi</label>
+                <label><input type="radio" value="single" data-ng-model="config.game.agents"/>Single</label>
+                <label><input type="radio" value="multi" data-ng-model="config.game.agents"/>Multi</label>
             </div>
             <div class="col-sm-7 form-control-static">
                 are you alone, or do you have to battle/coop with others (is there a wumpus?)
@@ -81,8 +70,8 @@
             <label class="col-sm-2 control-label">A Priori</label>
 
             <div class="col-sm-3 radio form-control-static">
-                <label><input type="radio" value="known" data-ng-model="config.game.apriori">Known</label>
-                <label><input type="radio" value="unknown" data-ng-model="config.game.apriori">Unknown</label>
+                <label><input type="radio" value="known" data-ng-model="config.game.apriori"/>Known</label>
+                <label><input type="radio" value="unknown" data-ng-model="config.game.apriori"/>Unknown</label>
             </div>
             <div class="col-sm-7 form-control-static">
                 how much do you know about the world before you start?
@@ -92,8 +81,8 @@
             <label class="col-sm-2 control-label">Statefulness</label>
 
             <div class="col-sm-3 radio form-control-static">
-                <label><input type="radio" disabled><strike>Episodic</strike></label>
-                <label><input type="radio" checked disabled>Sequential</label>
+                <label><input type="radio" disabled/><strike>Episodic</strike></label>
+                <label><input type="radio" checked disabled/>Sequential</label>
             </div>
             <div class="col-sm-7 form-control-static">
                 are decision related? sorting marbles vs solving a maze (a maze is sequential by definition)
@@ -113,11 +102,47 @@
             <label class="col-sm-2 control-label">Player</label>
 
             <div class="col-sm-3 radio form-control-static">
-                <label><input type="radio" value="person" data-ng-model="config.game.player">Person</label>
-                <label><input type="radio" value="lemon" data-ng-model="config.game.player">Lemon</label>
+                <label><input type="radio" value="person" data-ng-model="config.game.player"/>Person</label>
+                <label><input type="radio" value="lemon" data-ng-model="config.game.player"/>Lemon</label>
             </div>
             <div class="col-sm-7 form-control-static">
                 who is playing the game? a person or the lm?
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="panel panel-default" data-ng-init="showComplicationsConfig = false">
+    <div class="panel-heading" data-ng-click="showComplicationsConfig = !showComplicationsConfig"><h3>
+    <span class="fa fa-fw" data-ng-class="{
+            'fa-chevron-down': showComplicationsConfig,
+            'fa-chevron-right': !showComplicationsConfig
+        }"></span>
+        Complications
+    </h3></div>
+    <div class="panel-body" data-ng-show="showComplicationsConfig">
+
+        <div class="form-group" data-ng-disabled="true">
+            <label class="col-sm-2 control-label">Noise</label>
+
+            <div class="col-sm-2 form-control-static">
+                <input type="range" min="0" step="0.01" max="1" data-str-to-num data-ng-model="config.game.complications.noise" disabled/>
+            </div>
+            <div class="col-sm-1 form-control-static">{{config.game.complications.noise | number: 2}}</div>
+            <div class="col-sm-7 form-control-static">
+                can the senses be trusted? add some randomness to all the values <i>(not implemented yet)</i>
+            </div>
+        </div>
+        <div class="form-group" data-ng-disabled="true">
+            <label class="col-sm-2 control-label">Changing Environment</label>
+
+            <div class="col-sm-3 form-control-static">
+                <input type="checkbox" data-ng-model="config.game.complications.environment_change" disabled/>
+                {{config.game.complications.environment_change?'Yes':'No'}}
+            </div>
+            <div class="col-sm-7 form-control-static">
+                does the environment change? (can the exit/gold/wumpus/pits move nearby) <i>(not implemented yet)</i>
             </div>
         </div>
 

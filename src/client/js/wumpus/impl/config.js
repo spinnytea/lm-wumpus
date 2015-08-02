@@ -17,7 +17,6 @@ exports.game = {
   // XXX enumerate lists of available options? (so we don't have magic strings)
   chance: 'stochastic', // deterministic, stochastic
   grain: 'discrete', // discrete, continuous
-  noise: 0, // TODO
   observable: 'fully', // fully, partially
   timing: 'static', // static, dynamic
   apriori: 'known', // known, unknown
@@ -25,9 +24,16 @@ exports.game = {
   player: 'lemon' // lemon, person
 };
 
+// TODO implement complications
+// - namespace exports.game to exports.game.peas (e.g. config.game.chance -> config.game.peas.chance)
+exports.game.complications = {
+  noise: 0,
+  environment_change: false // once we have 'partially observable' done
+};
+
 // how big are the agents
 agent.radius = 12;
-Object.defineProperty(agent, 'diameter', { get: function() { return agent.radius * 2; } });
+Object.defineProperty(agent, 'diameter', { get: function() { return agent.radius * 2; }, enumerable: true });
 
 // XXX config based on refresh rate; something like "turns per second"
 // XXX apply force based on update interval
@@ -41,7 +47,7 @@ multi.wumpus_da_limit = 2;
 room.count = 10;
 // how big the room is
 room.radius = 48;
-Object.defineProperty(room, 'diameter', { get: function() { return room.radius * 2; } });
+Object.defineProperty(room, 'diameter', { get: function() { return room.radius * 2; }, enumerable: true });
 // how far away to place the rooms from each other
 // this needs to be smaller than the diameter. This also means that the agent might be in two rooms at once
 // Note: for discrete to work, this number needs to terminate
@@ -69,5 +75,5 @@ timing.updatesPerSecond = {
   discrete: 2,
   continuous: 10
 };
-Object.defineProperty(timing, 'updateDelay', { get: function() { return 1000/timing.updatesPerSecond[exports.game.grain]; } });
+Object.defineProperty(timing, 'updateDelay', { get: function() { return 1000/timing.updatesPerSecond[exports.game.grain]; }, enumerable: true });
 

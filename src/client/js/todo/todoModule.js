@@ -65,12 +65,6 @@ module.exports = angular.module('lime.client.todo', [])
       ]
     },
     {
-      title: 'Noise',
-      description: 'Run LM with noise. That is, the values the sensors report aren\'t always perfect.',
-      tasks: [
-      ]
-    },
-    {
       title: 'Observable',
       description: 'Run LM in observable:partially mode',
       tasks: [
@@ -85,6 +79,15 @@ module.exports = angular.module('lime.client.todo', [])
       title: 'Timing',
       description: 'Run LM in timing:dynamic mode',
       tasks: [
+      ]
+    },
+    {
+      title: 'Complications',
+      description: 'Work in other types of complications that are environment simplifications',
+      tasks: [
+        { text: 'Sensor Noise: The values the sensors report aren\'t always perfect.', status: 'none' },
+        { text: 'Changing Environment: The environment doesn\'t always stay the same; rooms change/pits move/wumpus moves', status: 'none',
+          description: 'after you\'ve finished with a partially observable world' },
       ]
     },
   ];

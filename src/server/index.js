@@ -15,3 +15,5 @@ var io = require('socket.io')(server);
 server.listen(3000);
 
 require('./wumpus/index.js').setup(io.of('/wumpus'));
+
+app.use('/rest/todo', require('./todo/rest.js').setup(express.Router()));

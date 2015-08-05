@@ -1,9 +1,11 @@
 'use strict';
+var bodyParser = require('body-parser');
 var express = require('express');
 var path = require('path');
 var touch = require('touch');
 
 var app = express();
+app.use(bodyParser.json());
 app.use('/vendor', express.static(path.join(__dirname, '..', '..', 'vendor')));
 app.use(express.static(path.join(__dirname, '..', 'client')));
 app.listen(8888, function() {

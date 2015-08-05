@@ -15,15 +15,20 @@ module.exports = angular.module('lime.client.todo.taskDirective', [])
         $scope.formData = angular.copy(ngModelController.$modelValue);
       };
     },
-    controller: ['$scope',
+    controller: ['$scope', '$http',
       Controller]
   };
 }]);
 
-function Controller($scope) {
+function Controller($scope, $http) {
   $scope.formData = {
     id: undefined,
     name: '',
     description: '',
   };
+
+  $scope.statuses = [];
+  $http.get('/rest/todo/statuses').success(function(data) {
+    $scope.statuses = data.list;
+  });
 }

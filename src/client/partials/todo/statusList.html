@@ -1,0 +1,53 @@
+<h1>Statuses</h1>
+
+<table class="table">
+    <thead><tr>
+        <th>Icon</th>
+        <th>Name</th>
+        <th>Description</th>
+    </tr></thead>
+    <tbody>
+        <tr ng-repeat="status in statuses">
+            <td><i ng-class="status.icon"></i></td>
+            <td>{{status.name}}</td>
+            <td>{{status.description}}</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="panel panel-default">
+    <div class="panel-heading"><h3 class="panel-title">Create Status</h3></div>
+    <div class="panel-body form-horizontal" ng-form="'statusForm'">
+        <div class="form-group">
+            <label class="col-sm-4 control-label" for="icon">Icon</label>
+            <div class="col-sm-7">
+                <input class="form-control" id="icon" name="icon" data-ng-model="formData.icon" />
+            </div>
+            <div class="col-sm-1 form-control-static">
+                <i ng-class="formData.icon"></i>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-4 control-label" for="statusName">Name</label>
+            <div class="col-sm-8">
+                <input class="form-control" id="statusName" name="statusName" data-ng-model="formData.name" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-4 control-label" for="description">Description</label>
+            <div class="col-sm-8">
+                <textarea class="form-control" id="description" name="description" data-ng-model="formData.description"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-4 col-sm-8">
+                <button class="btn btn-primary" ng-click="create()">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button class="btn btn-default" ng-click="goHome()">Back</button>

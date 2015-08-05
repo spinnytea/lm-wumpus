@@ -14,6 +14,9 @@ module.exports = angular.module('lime.client.todo', [
     }).when('/todo/list', {
       templateUrl: 'partials/todo/list.html',
       controller: 'lime.client.todo.displaylist',
+    }).when('/todo/statuses', {
+      templateUrl: 'partials/todo/statusList.html',
+      controller: 'lime.client.todo.statusList',
     }).when('/todo/tasks/create', {
       templateUrl: 'partials/todo/createTask.html',
       controller: 'lime.client.todo.createTask',
@@ -169,6 +172,32 @@ module.exports = angular.module('lime.client.todo', [
     $http.get('/rest/todo/tasks/count').success(function(data) {
       $scope.taskCount = data.count;
     });
+  }
+])
+.controller('lime.client.todo.statusList', [
+  '$scope',
+  '$http',
+  '$location',
+  function($scope, $http, $location) {
+    $scope.goHome = function() {
+      $location.path('/todo');
+    };
+
+    $scope.statuses = [];
+    function getStatus() {
+      $http.get('/rest/todo/statuses').success(function(data) {
+        $scope.statuses = data.list;
+      });
+    }
+    getStatus();
+
+    $scope.formData = {};
+
+    $scope.create = function() {
+      $http.post('/rest/todo/statuses', $scope.formData).success(function() {
+        getStatus();
+      });
+    };
   }
 ])
 .controller('lime.client.todo.createTask', [

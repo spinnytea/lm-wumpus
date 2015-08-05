@@ -16,10 +16,6 @@ angular.module('lime.client', [
       templateUrl: 'partials/subgraph/example.html',
       controller: 'lime.client.subgraph.example',
     })
-    .when('/todo', {
-      templateUrl: 'partials/todo/list.html',
-      controller: 'lime.client.todo.displaylist',
-    })
     ;
   }
 ]).controller('contentController', [

@@ -1,7 +1,22 @@
 'use strict';
 // I should just use a bug tracker or something
 
-module.exports = angular.module('lime.client.todo', [])
+module.exports = angular.module('lime.client.todo', [
+  require('./taskDirective').name,
+  'ngRoute'
+])
+.config([
+  '$routeProvider',
+  function($routeProvider) {
+    $routeProvider.when('/todo', {
+      templateUrl: 'partials/todo/list.html',
+      controller: 'lime.client.todo.displaylist',
+    }).when('/todo/tasks/create', {
+      templateUrl: 'partials/todo/createTask.html',
+      controller: 'lime.client.todo.createTask',
+    });
+  }
+])
 .factory('lime.client.todo.list', function() {
   var list = [
     {
@@ -137,6 +152,12 @@ module.exports = angular.module('lime.client.todo', [])
   function($scope, list) {
     // there isn't really any interactivity to this view
     $scope.list = list;
+  }
+])
+.controller('lime.client.todo.createTask', [
+  '$scope',
+  function($scope) {
+    $scope.taskObject = {};
   }
 ])
 ;

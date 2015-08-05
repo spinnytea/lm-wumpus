@@ -28,4 +28,3 @@ exports.rest = function(router) {
 
   return router;
 };
-

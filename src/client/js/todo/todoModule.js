@@ -173,9 +173,17 @@ module.exports = angular.module('lime.client.todo', [
 ])
 .controller('lime.client.todo.createTask', [
   '$scope',
+  '$http',
   '$location',
-  function($scope, $location) {
+  function($scope, $http, $location) {
     $scope.nested = { taskObject: {} };
+    $scope.createError = false;
+
+    $scope.create = function() {
+      $http.post('/rest/todo/tasks', $scope.nested.taskObject).success($scope.goHome).error(function(data, status) {
+        $scope.createError = status;
+      });
+    };
 
     $scope.goHome = function() {
       $location.path('/todo');

@@ -18,6 +18,8 @@ module.exports = angular.module('lime.client.todo.taskDirective', [])
 
 function Controller($scope) {
   $scope.formData = {
-    name: ''
+    id: undefined,
+    name: '',
+    description: '',
   };
 }

@@ -29,7 +29,7 @@
  * General UI Tweaks
  */
 
-[disabled] {
+[disabled]:not('.btn') {
   font-style: italic;
   color: #aaa;
 }

@@ -5,18 +5,22 @@
         <th>Icon</th>
         <th>Name</th>
         <th>Description</th>
+        <th>Actions</th>
     </tr></thead>
     <tbody>
         <tr ng-repeat="status in statuses">
             <td><i ng-class="status.icon"></i></td>
             <td>{{status.name}}</td>
             <td>{{status.description}}</td>
+            <td>
+                <i class="fa fa-pencil" title="Edit" ng-click="edit(status)"></i>
+            </td>
         </tr>
     </tbody>
 </table>
 
-<div class="panel panel-default">
-    <div class="panel-heading"><h3 class="panel-title">Create Status</h3></div>
+<div class="panel" ng-class="isEdit()?'panel-info':'panel-default'">
+    <div class="panel-heading"><h3 class="panel-title">{{isEdit()?'Edit':'Create'}} Status</h3></div>
     <div class="panel-body form-horizontal" ng-form="'statusForm'">
         <div class="form-group">
             <label class="col-sm-4 control-label" for="icon">Icon</label>
@@ -44,7 +48,9 @@
 
         <div class="form-group">
             <div class="col-sm-offset-4 col-sm-8">
-                <button class="btn btn-primary" ng-click="create()">Create</button>
+                <button data-ng-hide="isEdit()" class="btn btn-primary" ng-click="create()">Create</button>
+                <button data-ng-show="isEdit()" class="btn btn-primary" ng-click="save()">Save</button>
+                <button data-ng-show="isEdit()" class="btn btn-default" ng-click="cancelEdit()">Cancel</button>
             </div>
         </div>
     </div>

@@ -193,8 +193,21 @@ module.exports = angular.module('lime.client.todo', [
 
     $scope.formData = {};
 
+    $scope.edit = function(status) {
+      $scope.formData = angular.copy(status);
+    };
+    $scope.isEdit = function() { return $scope.formData.id !== undefined; };
+    $scope.cancelEdit = function() { $scope.formData = {}; };
+    $scope.save = function() {
+      $http.put('/rest/todo/statuses/' + $scope.formData.id, $scope.formData).success(function() {
+        $scope.formData = {};
+        getStatus();
+      });
+    };
+
     $scope.create = function() {
       $http.post('/rest/todo/statuses', $scope.formData).success(function() {
+        $scope.formData = {};
         getStatus();
       });
     };

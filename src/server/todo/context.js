@@ -1,4 +1,5 @@
 'use strict';
+var config = require('lime/src/config');
 var ideas = require('lime/src/database/ideas');
 var links = require('lime/src/database/links');
 
@@ -14,6 +15,7 @@ var lwt_status = ideas.context('lm_wumpus_todo__status');
 ensureContext(lwt_task);
 ensureContext(lwt_status);
 [lm_wumpus_todo, lwt_task, lwt_status].forEach(ideas.save);
+config.save();
 
 // marks a dependency between tasks
 // task --depends_on--> task
@@ -37,7 +39,7 @@ exports.rest = function(router) {
     list = list.map(function(idea) { return idea.data(); });
     res.json({ list: list });
   });
-  router.post('/statuses', function(req) {
+  router.post('/statuses', function(req, res) {
     var data = req.body;
     var idea = ideas.create();
     data.id = idea.id;
@@ -45,6 +47,19 @@ exports.rest = function(router) {
     idea.link(links.list.type_of, lwt_status);
     ideas.save(idea);
     ideas.save(lwt_status);
+    config.save();
+
+    res.json(data);
+  });
+  router.put('/statuses/:id', function(req, res) {
+    // assumption: req.body.id === req.params.id
+    var data = req.body;
+    var idea = ideas.load(data.id);
+    idea.update(data);
+    ideas.save(idea);
+    config.save();
+
+    res.json(data);
   });
 
   return router;

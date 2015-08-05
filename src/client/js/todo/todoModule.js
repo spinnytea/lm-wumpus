@@ -175,7 +175,7 @@ module.exports = angular.module('lime.client.todo', [
   '$scope',
   '$location',
   function($scope, $location) {
-    $scope.taskObject = {};
+    $scope.nested = { taskObject: {} };
 
     $scope.goHome = function() {
       $location.path('/todo');

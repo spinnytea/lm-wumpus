@@ -8,8 +8,12 @@ module.exports = angular.module('lime.client.todo.taskDirective', [])
     scope: true,
     templateUrl: 'partials/todo/task.html',
     link: function($scope, elem, attr, ngModelController) {
-      void(ngModelController);
-      // TODO hook up $render and $setViewValue
+      $scope.$on('$destroy', $scope.$watch('formData', function(data) {
+        ngModelController.$setViewValue(angular.copy(data));
+      }, true));
+      ngModelController.$render = function() {
+        $scope.formData = angular.copy(ngModelController.$modelValue);
+      };
     },
     controller: ['$scope',
       Controller]

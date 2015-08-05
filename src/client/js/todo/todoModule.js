@@ -159,8 +159,16 @@ module.exports = angular.module('lime.client.todo', [
 ])
 .controller('lime.client.todo.home', [
   '$scope',
-  function($scope) {
-    void($scope);
+  '$http',
+  function($scope, $http) {
+    $scope.taskCount = 'unknown';
+
+    //
+    // init
+    //
+    $http.get('/rest/todo/tasks/count').success(function(data) {
+      $scope.taskCount = data.count;
+    });
   }
 ])
 .controller('lime.client.todo.createTask', [

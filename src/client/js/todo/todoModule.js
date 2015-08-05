@@ -9,6 +9,9 @@ module.exports = angular.module('lime.client.todo', [
   '$routeProvider',
   function($routeProvider) {
     $routeProvider.when('/todo', {
+      templateUrl: 'partials/todo/home.html',
+      controller: 'lime.client.todo.home',
+    }).when('/todo/list', {
       templateUrl: 'partials/todo/list.html',
       controller: 'lime.client.todo.displaylist',
     }).when('/todo/tasks/create', {
@@ -154,10 +157,21 @@ module.exports = angular.module('lime.client.todo', [
     $scope.list = list;
   }
 ])
-.controller('lime.client.todo.createTask', [
+.controller('lime.client.todo.home', [
   '$scope',
   function($scope) {
+    void($scope);
+  }
+])
+.controller('lime.client.todo.createTask', [
+  '$scope',
+  '$location',
+  function($scope, $location) {
     $scope.taskObject = {};
+
+    $scope.goHome = function() {
+      $location.path('/todo');
+    };
   }
 ])
 ;

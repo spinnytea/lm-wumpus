@@ -16,4 +16,4 @@ server.listen(3000);
 
 require('./wumpus/index.js').setup(io.of('/wumpus'));
 
-app.use('/rest/todo', require('./todo/rest.js').setup(express.Router()));
+app.use('/rest/todo', require('./todo/context.js').rest(express.Router()));

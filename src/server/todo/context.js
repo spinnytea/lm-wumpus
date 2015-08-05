@@ -13,17 +13,19 @@ if(!lwt_task.link(links.list.context).some(function(proxy) { return proxy.id ===
 // task --depends_on--> task
 links.create('lm_wumpus_todo__depends_on');
 
+exports.ideas = {
+  lm_wumpus_todo: lm_wumpus_todo,
+  lwt_task: lwt_task
+};
 
-exports.setup = function(router) {
-  // (e.g. http://localhost:3000/rest/todo/tasks/count)
-  router.get('/tasks/count', function(req, res) {
-    res.json({ count: taskCount() });
-  });
+
+//
+// this MUST be defined last
+// we are playing a tricky game with circular dependencies
+//
+exports.rest = function(router) {
+  require('./rest/tasks').rest(router);
 
   return router;
 };
 
-function taskCount() {
-  // for now, no arguments
-  return lwt_task.link(links.list.type_of.opposite).length;
-}

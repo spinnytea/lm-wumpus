@@ -51,6 +51,16 @@ module.exports = angular.module('lime.client.todo', [])
       ]
     },
     {
+      title: 'Experience',
+      description: 'You\'ve started thinking about it, start playing with it! Start with something simple like "turn left"',
+      tasks: [
+        { text: 'save experience', status: 'none', description: 'state -> action -> state' },
+        { text: 'carve out a logic cycle', status: 'none', description: 'start with a separate entry point' },
+        { text: 'recall experience', status: 'none' },
+        { text: 'do science on experience', status: 'none', description: 'what mattered, what didn\'t' },
+      ]
+    },
+    {
       title: 'Chance',
       description: 'Run LM in chance:stochastic mode',
       tasks: [

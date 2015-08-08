@@ -24,11 +24,17 @@ function Controller($scope, $http) {
   $scope.formData = {
     id: undefined,
     name: '',
+    type: undefined,
+    status: undefined,
     description: '',
   };
 
   $scope.statuses = [];
   $http.get('/rest/todo/statuses').success(function(data) {
     $scope.statuses = data.list;
+  });
+  $scope.types = [];
+  $http.get('/rest/todo/types').success(function(data) {
+    $scope.types = data.list;
   });
 }

@@ -7,9 +7,10 @@
     </div>
 
     <div class="form-group">
-        <label class="col-sm-4 control-label" for="description">Description</label>
+        <label class="col-sm-4 control-label" for="type">Type</label>
         <div class="col-sm-8">
-            <textarea class="form-control" id="description" name="description" data-ng-model="formData.description"></textarea>
+            <select class="form-control" id="type" name="type" data-ng-model="formData.type"
+                    ng-options="item.id as item.name for item in types"></select>
         </div>
     </div>
 
@@ -18,6 +19,13 @@
         <div class="col-sm-8">
             <select class="form-control" id="status" name="status" data-ng-model="formData.status"
                     ng-options="item.id as item.name for item in statuses"></select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-4 control-label" for="description">Description</label>
+        <div class="col-sm-8">
+            <textarea class="form-control" id="description" name="description" data-ng-model="formData.description"></textarea>
         </div>
     </div>
 </div>

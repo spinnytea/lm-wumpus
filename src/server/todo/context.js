@@ -38,7 +38,7 @@ exports.rest = function(router) {
 
   require('./rest/tasks').rest(router);
   enums.rest(router, 'statuses', lwt_status);
-  enums.rest(router, 'type', lwt_type);
+  enums.rest(router, 'types', lwt_type);
 
   return router;
 };

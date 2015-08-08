@@ -14,10 +14,9 @@ module.exports = angular.module('lime.client.todo', [
     }).when('/todo/list', {
       templateUrl: 'partials/todo/list.html',
       controller: 'lime.client.todo.displaylist',
-    }).when('/todo/statuses', {
+    }).when('/todo/enums/:name', {
       templateUrl: 'partials/todo/enumList.html',
       controller: 'lime.client.todo.enumList',
-      resolve: { ctrlConfig: function() { return { path: 'statuses', label: 'Status' }; } },
     }).when('/todo/tasks/create', {
       templateUrl: 'partials/todo/createTask.html',
       controller: 'lime.client.todo.createTask',
@@ -179,10 +178,10 @@ module.exports = angular.module('lime.client.todo', [
   '$scope',
   '$http',
   '$location',
-  'ctrlConfig',
-  function($scope, $http, $location, ctrlConfig) {
-    var root = '/rest/todo/' + ctrlConfig.path;
-    $scope.label = ctrlConfig.label;
+  '$routeParams',
+  function($scope, $http, $location, $routeParams) {
+    var root = '/rest/todo/' + $routeParams.name;
+    $scope.label = $routeParams.name;
 
     $scope.goHome = function() {
       $location.path('/todo');

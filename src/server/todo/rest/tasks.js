@@ -1,4 +1,5 @@
 'use strict';
+var config = require('lime/src/config');
 var ideas = require('lime/src/database/ideas');
 var links = require('lime/src/database/links');
 
@@ -8,6 +9,20 @@ exports.rest = function(router) {
   // (e.g. http://localhost:3000/rest/todo/tasks/count)
   router.get('/tasks/count', function(req, res) {
     res.json({ count: taskCount() });
+  });
+
+  // CREATE task
+  router.post('/tasks', function(req, res) {
+    var data = req.body;
+    var idea = ideas.create();
+    data.id = idea.id;
+    idea.update(data);
+    idea.link(links.list.type_of, lwt_task);
+    ideas.save(idea);
+    ideas.save(lwt_task);
+    config.save();
+
+    res.json(data);
   });
 };
 

@@ -1,0 +1,17 @@
+<h1>All Tasks List</h1>
+<div class="alert alert-warning">This is just a temporary page so I can see some data.</div>
+
+<table class="table table-condensed">
+    <thead><tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Status</th>
+    </tr></thead>
+    <tbody>
+        <tr ng-repeat="task in tasks">
+            <td><i ng-class="types[task.type].icon"></i> {{types[task.type].name}}</td>
+            <td>{{task.name}}</td>
+            <td><i ng-class="statuses[task.status].icon"></i> {{statuses[task.status].name}}</td>
+        </tr>
+    </tbody>
+</table>

@@ -22,6 +22,10 @@ config.save();
 // marks a dependency between tasks
 // task --depends_on--> task
 links.create('lm_wumpus_todo__depends_on');
+// task --status-> status
+links.create('lm_wumpus_todo__status');
+// task --status-> type
+links.create('lm_wumpus_todo__type');
 
 exports.ideas = {
   lm_wumpus_todo: lm_wumpus_todo,

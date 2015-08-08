@@ -11,6 +11,15 @@ exports.rest = function(router) {
     res.json({ count: taskCount() });
   });
 
+  // QUERY
+  router.get('/tasks', function(req, res) {
+    // for now, it just returns everything
+    var list = lwt_task.link(links.list.type_of.opposite);
+    list = list.map(function(idea) { return idea.data(); });
+
+    res.json({ list: list });
+  });
+
   // CREATE task
   router.post('/tasks', function(req, res) {
     var data = req.body;
@@ -18,6 +27,8 @@ exports.rest = function(router) {
     data.id = idea.id;
     idea.update(data);
     idea.link(links.list.type_of, lwt_task);
+    ensureLink(idea, links.list.lm_wumpus_todo__status, data.status);
+    ensureLink(idea, links.list.lm_wumpus_todo__type, data.type);
     ideas.save(idea);
     ideas.save(lwt_task);
     config.save();
@@ -29,4 +40,15 @@ exports.rest = function(router) {
 function taskCount() {
   // for now, no arguments
   return lwt_task.link(links.list.type_of.opposite).length;
+}
+
+function ensureLink(idea, link, to) {
+  if(to && (to = ideas.proxy(to))) {
+    idea.link(link).forEach(function(existing) {
+      ideas.unlink(link, existing);
+      ideas.save(existing);
+    });
+    idea.link(link, to);
+    ideas.save(to);
+  }
 }

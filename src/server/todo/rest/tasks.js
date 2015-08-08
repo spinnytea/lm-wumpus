@@ -1,6 +1,8 @@
 'use strict';
+var ideas = require('lime/src/database/ideas');
 var links = require('lime/src/database/links');
-var context = require('../context');
+
+var lwt_task = ideas.context('lm_wumpus_todo__task');
 
 exports.rest = function(router) {
   // (e.g. http://localhost:3000/rest/todo/tasks/count)
@@ -11,5 +13,5 @@ exports.rest = function(router) {
 
 function taskCount() {
   // for now, no arguments
-  return context.ideas.lwt_task.link(links.list.type_of.opposite).length;
+  return lwt_task.link(links.list.type_of.opposite).length;
 }

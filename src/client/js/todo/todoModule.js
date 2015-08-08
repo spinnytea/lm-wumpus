@@ -15,8 +15,9 @@ module.exports = angular.module('lime.client.todo', [
       templateUrl: 'partials/todo/list.html',
       controller: 'lime.client.todo.displaylist',
     }).when('/todo/statuses', {
-      templateUrl: 'partials/todo/statusList.html',
-      controller: 'lime.client.todo.statusList',
+      templateUrl: 'partials/todo/enumList.html',
+      controller: 'lime.client.todo.enumList',
+      resolve: { ctrlConfig: function() { return { path: 'statuses', label: 'Status' }; } },
     }).when('/todo/tasks/create', {
       templateUrl: 'partials/todo/createTask.html',
       controller: 'lime.client.todo.createTask',
@@ -174,41 +175,45 @@ module.exports = angular.module('lime.client.todo', [
     });
   }
 ])
-.controller('lime.client.todo.statusList', [
+.controller('lime.client.todo.enumList', [
   '$scope',
   '$http',
   '$location',
-  function($scope, $http, $location) {
+  'ctrlConfig',
+  function($scope, $http, $location, ctrlConfig) {
+    var root = '/rest/todo/' + ctrlConfig.path;
+    $scope.label = ctrlConfig.label;
+
     $scope.goHome = function() {
       $location.path('/todo');
     };
 
-    $scope.statuses = [];
-    function getStatus() {
-      $http.get('/rest/todo/statuses').success(function(data) {
-        $scope.statuses = data.list;
+    $scope.items = [];
+    function getItems() {
+      $http.get(root).success(function(data) {
+        $scope.items = data.list;
       });
     }
-    getStatus();
+    getItems();
 
     $scope.formData = {};
 
-    $scope.edit = function(status) {
-      $scope.formData = angular.copy(status);
+    $scope.edit = function(item) {
+      $scope.formData = angular.copy(item);
     };
     $scope.isEdit = function() { return $scope.formData.id !== undefined; };
     $scope.cancelEdit = function() { $scope.formData = {}; };
     $scope.save = function() {
-      $http.put('/rest/todo/statuses/' + $scope.formData.id, $scope.formData).success(function() {
+      $http.put(root + '/' + $scope.formData.id, $scope.formData).success(function() {
         $scope.formData = {};
-        getStatus();
+        getItems();
       });
     };
 
     $scope.create = function() {
-      $http.post('/rest/todo/statuses', $scope.formData).success(function() {
+      $http.post(root, $scope.formData).success(function() {
         $scope.formData = {};
-        getStatus();
+        getItems();
       });
     };
   }

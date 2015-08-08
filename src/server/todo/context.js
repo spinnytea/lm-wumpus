@@ -12,9 +12,11 @@ function ensureContext(idea) {
 var lm_wumpus_todo = ideas.context('lm_wumpus_todo');
 var lwt_task = ideas.context('lm_wumpus_todo__task');
 var lwt_status = ideas.context('lm_wumpus_todo__status');
+var lwt_type = ideas.context('lm_wumpus_todo__type');
 ensureContext(lwt_task);
 ensureContext(lwt_status);
-[lm_wumpus_todo, lwt_task, lwt_status].forEach(ideas.save);
+ensureContext(lwt_type);
+[lm_wumpus_todo, lwt_task, lwt_status, lwt_type].forEach(ideas.save);
 config.save();
 
 // marks a dependency between tasks
@@ -32,35 +34,11 @@ exports.ideas = {
 // we are playing a tricky game with circular dependencies
 //
 exports.rest = function(router) {
+  var enums = require('./rest/enum');
+
   require('./rest/tasks').rest(router);
-
-  router.get('/statuses', function(req, res) {
-    var list = lwt_status.link(links.list.type_of.opposite);
-    list = list.map(function(idea) { return idea.data(); });
-    res.json({ list: list });
-  });
-  router.post('/statuses', function(req, res) {
-    var data = req.body;
-    var idea = ideas.create();
-    data.id = idea.id;
-    idea.update(data);
-    idea.link(links.list.type_of, lwt_status);
-    ideas.save(idea);
-    ideas.save(lwt_status);
-    config.save();
-
-    res.json(data);
-  });
-  router.put('/statuses/:id', function(req, res) {
-    // assumption: req.body.id === req.params.id
-    var data = req.body;
-    var idea = ideas.load(data.id);
-    idea.update(data);
-    ideas.save(idea);
-    config.save();
-
-    res.json(data);
-  });
+  enums.rest(router, 'statuses', lwt_status);
+  enums.rest(router, 'type', lwt_type);
 
   return router;
 };

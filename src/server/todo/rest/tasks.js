@@ -21,7 +21,12 @@ exports.rest = function(router) {
       // for now, it just returns everything
       list = lwt_task.link(links.list.type_of.opposite);
     }
-    list = list.map(function(idea) { return idea.data(); });
+
+    list = list.map(function(idea) {
+      var data = idea.data();
+      data.children = idea.link(links.list.lm_wumpus_todo__child).map(function(proxy) { return proxy.id; });
+      return data;
+    });
 
     res.json({ list: list });
   });

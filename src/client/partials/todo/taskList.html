@@ -19,9 +19,9 @@
             <td><i ng-class="statuses[task.status].icon"></i> {{statuses[task.status].name}}</td>
             <td><a class="fa fa-pencil" href="#/todo/tasks/{{task.id}}" title="Edit"></a>&nbsp;</td>
         </tr>
+        <tr ng-if="expanded[task.id]"><td></td><td colspan="5">{{task.description}}</td></tr>
         <tr ng-if="expanded[task.id]"><td></td><td colspan="5" ng-init="nestedId = task.id">
-            <p>{{task.description}}</p>
-            <p ng-include="'partials/todo/taskList.html'" ng-controller="lime.client.todo.taskList"></p>
+            <div ng-include="'partials/todo/taskList.html'" ng-controller="lime.client.todo.taskList"></div>
         </td></tr>
     </tbody>
 </table>

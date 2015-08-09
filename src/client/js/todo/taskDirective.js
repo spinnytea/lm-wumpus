@@ -24,6 +24,7 @@ function Controller($scope, $http) {
   $scope.formData = {
     id: undefined,
     name: '',
+    parent: undefined,
     type: undefined,
     status: undefined,
     description: '',
@@ -37,4 +38,14 @@ function Controller($scope, $http) {
   $http.get('/rest/todo/types').success(function(data) {
     $scope.types = data.list;
   });
+
+  $scope.$on('$destroy', $scope.$watch('formData.parent', function(parent) {
+    if(parent) {
+      $http.get('/rest/todo/tasks/'+parent)
+        .success(function(data) { $scope.taskParent = data.name; })
+        .error(function(data) { $scope.taskParent = (data.message || 'Error'); });
+    } else {
+      $scope.taskParent = 'None';
+    }
+  }));
 }

@@ -36,7 +36,12 @@ exports.rest = function(router) {
 
   // GET task
   router.get('/tasks/:id', function(req, res) {
-    res.json(ideas.load(req.params.id).data());
+    var idea = ideas.load(req.params.id);
+
+    if(!idea.link(links.list.type_of).find(function(i) { return i.id === lwt_task.id; }))
+      res.status(404).send({ message: 'Not a Task' });
+    else
+      res.json(idea.data());
   });
 
   // UPDATE task
@@ -72,6 +77,6 @@ function updateTask(idea, data) {
   idea.update(data);
   ensureLink(idea, links.list.lm_wumpus_todo__status, data.status);
   ensureLink(idea, links.list.lm_wumpus_todo__type, data.type);
-  ensureLink(idea, links.list.lm_wumpus_todo__child, (data.parent || lwt_task)); // if there is no parent, then default to the task root
+  ensureLink(idea, links.list.lm_wumpus_todo__child.opposite, (data.parent || lwt_task)); // if there is no parent, then default to the task root
   ideas.save(idea);
 }

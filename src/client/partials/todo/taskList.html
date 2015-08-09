@@ -17,7 +17,7 @@
             <td style="width: 90%;">
                 <i class="fa fa-fw" ng-repeat="ignore in range(viewData[task.id].level) track by $index">
                 </i><i ng-class="types[task.type].icon" title="{{types[task.type].name}}"></i>&nbsp;
-                {{task.name}}
+                {{task.name}} <sup data-ng-if="task.description" title="{{task.description}}"><i>[desc]</i></sup>
             </td>
             <td style="white-space: nowrap;">
                 <i ng-class="statuses[task.status].icon" title="{{statuses[task.status].name}}"></i>&nbsp;

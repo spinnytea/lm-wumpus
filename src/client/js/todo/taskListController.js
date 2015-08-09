@@ -22,6 +22,10 @@ module.exports.controller('lime.client.todo.taskList', [
           level: level
         };
       });
+
+      list.sort(function(a, b) {
+        return a.name.toUpperCase() > b.name.toUpperCase();
+      });
     }
 
     $scope.expand = function(task) {

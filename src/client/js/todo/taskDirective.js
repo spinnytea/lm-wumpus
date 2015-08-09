@@ -32,11 +32,11 @@ function Controller($scope, $http) {
 
   $scope.statuses = [];
   $http.get('/rest/todo/statuses').success(function(data) {
-    $scope.statuses = data.list;
+    $scope.statuses = data.list.sort(function(a, b) { return b.order > a.order; });
   });
   $scope.types = [];
   $http.get('/rest/todo/types').success(function(data) {
-    $scope.types = data.list;
+    $scope.types = data.list.sort(function(a, b) { return b.order > a.order; });
   });
 
   $scope.$on('$destroy', $scope.$watch('formData.parent', function(parent) {

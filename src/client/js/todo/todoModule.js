@@ -245,7 +245,7 @@ module.exports = angular.module('lime.client.todo', [
     };
 
     $scope.goHome = function() {
-      $location.path('/todo');
+      $location.path('/todo/tasks');
     };
   }
 ])

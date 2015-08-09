@@ -23,7 +23,8 @@
                 <i ng-class="statuses[task.status].icon" title="{{statuses[task.status].name}}"></i>&nbsp;
             </td>
             <td style="white-space: nowrap;">
-                <a class="fa fa-pencil" href="#/todo/tasks/{{task.id}}" title="Edit"></a>&nbsp;
+                <a class="btn btn-sm btn-default" href="#/todo/tasks/{{task.id}}" title="Edit"><i class="fa fa-pencil"></i></a>
+                <a class="btn btn-sm btn-default" href="#/todo/tasks/create?parent={{task.id}}" title="Create Task"><i class="fa fa-plus"></i></a>
             </td>
         </tr>
         <tr ng-repeat-end="" ng-if="viewData[task.id].expanded && task.description" class="description"><td colspan="2"></td><td colspan="2">{{task.description}}</td></tr>

@@ -15,12 +15,12 @@ module.exports = angular.module('lime.client.todo.taskDirective', [])
         $scope.formData = angular.copy(ngModelController.$modelValue);
       };
     },
-    controller: ['$scope', '$http',
+    controller: ['$scope', '$http', '$location', '$routeParams',
       Controller]
   };
 }]);
 
-function Controller($scope, $http) {
+function Controller($scope, $http, $location, $routeParams) {
   $scope.formData = {
     id: undefined,
     name: '',
@@ -30,9 +30,22 @@ function Controller($scope, $http) {
     description: '',
   };
 
+  if($routeParams.parent) {
+    setTimeout(function() {
+      $scope.$apply(function() {
+        $scope.formData.parent = $routeParams.parent;
+      });
+    });
+    $scope.$on('$destroy', function() {
+      $location.search('');
+    });
+  }
+
   $scope.statuses = [];
   $http.get('/rest/todo/statuses').success(function(data) {
     $scope.statuses = data.list.sort(function(a, b) { return b.order > a.order; });
+    if($scope.formData.id === undefined)
+      $scope.formData.status = $scope.statuses[0].id;
   });
   $scope.types = [];
   $http.get('/rest/todo/types').success(function(data) {

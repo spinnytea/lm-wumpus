@@ -57,11 +57,12 @@ function taskCount() {
 }
 
 function ensureLink(idea, link, to) {
+  idea.link(link).forEach(function(existing) {
+    idea.unlink(link, existing);
+    ideas.save(existing);
+  });
+
   if(to && (to = ideas.proxy(to))) {
-    idea.link(link).forEach(function(existing) {
-      idea.unlink(link, existing);
-      ideas.save(existing);
-    });
     idea.link(link, to);
     ideas.save(to);
   }
@@ -71,5 +72,6 @@ function updateTask(idea, data) {
   idea.update(data);
   ensureLink(idea, links.list.lm_wumpus_todo__status, data.status);
   ensureLink(idea, links.list.lm_wumpus_todo__type, data.type);
+  ensureLink(idea, links.list.lm_wumpus_todo__child, (data.parent || lwt_task)); // if there is no parent, then default to the task root
   ideas.save(idea);
 }

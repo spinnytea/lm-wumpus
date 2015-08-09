@@ -26,6 +26,9 @@ links.create('lm_wumpus_todo__depends_on');
 links.create('lm_wumpus_todo__status');
 // task --status-> type
 links.create('lm_wumpus_todo__type');
+// task --child-> task
+// special case (root): lwt_task -> task
+links.create('lm_wumpus_todo__child');
 
 exports.ideas = {
   lm_wumpus_todo: lm_wumpus_todo,

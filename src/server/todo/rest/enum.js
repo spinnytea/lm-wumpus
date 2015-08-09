@@ -36,7 +36,6 @@ exports.rest = function(router, path, context) {
     var idea = ideas.load(data.id);
     idea.update(data);
     ideas.save(idea);
-    config.save();
 
     res.json(data);
   });

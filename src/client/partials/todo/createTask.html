@@ -1,16 +1,11 @@
-<h1>Create Task</h1>
-
-<div data-ng-show="createError" class="alert alert-danger">
-    <i class="fa fa-exclamation-circle"></i>
-    Error Creating Task ({{createError}})
-    <i class="fa fa-remove pull-right" data-ng-click="createError = false"></i>
-</div>
+<h1>{{nested.taskObject.id?'Update':'Create'}} Task</h1>
 
 <div task-directive data-ng-model="nested.taskObject"></div>
 
 <div class="row">
     <div class="col-sm-offset-4 col-sm-8">
-        <button class="btn btn-primary" data-ng-click="create()">Create</button>
+        <button data-ng-hide="nested.taskObject.id" class="btn btn-primary" data-ng-click="create()">Create</button>
+        <button data-ng-show="nested.taskObject.id" class="btn btn-primary" data-ng-click="update()">Update</button>
         <button class="btn btn-default" data-ng-click="goHome()">Cancel</button>
     </div>
 </div>

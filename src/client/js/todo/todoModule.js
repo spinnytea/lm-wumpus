@@ -23,6 +23,9 @@ module.exports = angular.module('lime.client.todo', [
     }).when('/todo/tasks/all', {
       templateUrl: 'partials/todo/allTasksList.html',
       controller: 'lime.client.todo.allTasksList',
+    }).when('/todo/tasks/:id', {
+      templateUrl: 'partials/todo/createTask.html',
+      controller: 'lime.client.todo.createTask',
     });
   }
 ])
@@ -224,14 +227,20 @@ module.exports = angular.module('lime.client.todo', [
   '$scope',
   '$http',
   '$location',
-  function($scope, $http, $location) {
+  '$routeParams',
+  function($scope, $http, $location, $routeParams) {
     $scope.nested = { taskObject: {} };
     $scope.createError = false;
 
+    if($routeParams.id)
+      $http.get('/rest/todo/tasks/' + $routeParams.id).success(function(data) { $scope.nested.taskObject = data; });
+
     $scope.create = function() {
-      $http.post('/rest/todo/tasks', $scope.nested.taskObject).success($scope.goHome).error(function(data, status) {
-        $scope.createError = status;
-      });
+      $http.post('/rest/todo/tasks', $scope.nested.taskObject).success($scope.goHome);
+    };
+
+    $scope.update = function() {
+      $http.put('/rest/todo/tasks/' + $routeParams.id, $scope.nested.taskObject);
     };
 
     $scope.goHome = function() {

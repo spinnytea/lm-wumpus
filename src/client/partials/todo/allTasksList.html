@@ -3,15 +3,19 @@
 
 <table class="table table-condensed">
     <thead><tr>
+        <th>ID</th>
         <th>Type</th>
         <th>Name</th>
         <th>Status</th>
+        <th></th>
     </tr></thead>
     <tbody>
         <tr ng-repeat="task in tasks">
+            <td>{{task.id}}</td>
             <td><i ng-class="types[task.type].icon"></i> {{types[task.type].name}}</td>
             <td>{{task.name}}</td>
             <td><i ng-class="statuses[task.status].icon"></i> {{statuses[task.status].name}}</td>
+            <td><a class="fa fa-pencil" href="#/todo/tasks/{{task.id}}" title="Edit"></a></td>
         </tr>
     </tbody>
 </table>

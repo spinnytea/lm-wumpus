@@ -25,13 +25,27 @@ exports.rest = function(router) {
     var data = req.body;
     var idea = ideas.create();
     data.id = idea.id;
-    idea.update(data);
     idea.link(links.list.type_of, lwt_task);
-    ensureLink(idea, links.list.lm_wumpus_todo__status, data.status);
-    ensureLink(idea, links.list.lm_wumpus_todo__type, data.type);
-    ideas.save(idea);
     ideas.save(lwt_task);
     config.save();
+
+    updateTask(idea, data);
+
+    res.json(data);
+  });
+
+  // GET task
+  router.get('/tasks/:id', function(req, res) {
+    res.json(ideas.load(req.params.id).data());
+  });
+
+  // UPDATE task
+  router.put('/tasks/:id', function(req, res) {
+    // assumption: req.body.id === req.params.id
+    var data = req.body;
+    var idea = ideas.load(data.id);
+
+    updateTask(idea, data);
 
     res.json(data);
   });
@@ -45,10 +59,17 @@ function taskCount() {
 function ensureLink(idea, link, to) {
   if(to && (to = ideas.proxy(to))) {
     idea.link(link).forEach(function(existing) {
-      ideas.unlink(link, existing);
+      idea.unlink(link, existing);
       ideas.save(existing);
     });
     idea.link(link, to);
     ideas.save(to);
   }
+}
+
+function updateTask(idea, data) {
+  idea.update(data);
+  ensureLink(idea, links.list.lm_wumpus_todo__status, data.status);
+  ensureLink(idea, links.list.lm_wumpus_todo__type, data.type);
+  ideas.save(idea);
 }

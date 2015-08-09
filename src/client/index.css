@@ -85,11 +85,6 @@ svg.subgraph {
  * task list
  */
 
-.tasklist header > h2 {
-  margin-bottom: 0;
-}
-
-.tasklist ul {
-  list-style-type: none;
-  padding-left: 15px;
+.tasklist tr.description td {
+  border-top: none;
 }

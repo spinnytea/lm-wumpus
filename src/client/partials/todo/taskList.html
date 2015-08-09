@@ -11,13 +11,13 @@
         <tr>
             <td>
                 <i ng-if="task.children.length" class="fa" ng-class="expanded[task.id]?'fa-minus-square-o':'fa-plus-square-o'"
-                        ng-click="expanded[task.id] = !expanded[task.id]"></i>
+                        ng-click="expanded[task.id] = !expanded[task.id]"></i>&nbsp;
             </td>
             <td>{{task.id}}</td>
             <td><i ng-class="types[task.type].icon"></i> {{types[task.type].name}}</td>
             <td>{{task.name}}</td>
             <td><i ng-class="statuses[task.status].icon"></i> {{statuses[task.status].name}}</td>
-            <td><a class="fa fa-pencil" href="#/todo/tasks/{{task.id}}" title="Edit"></a></td>
+            <td><a class="fa fa-pencil" href="#/todo/tasks/{{task.id}}" title="Edit"></a>&nbsp;</td>
         </tr>
         <tr ng-if="expanded[task.id]"><td></td><td colspan="5" ng-init="nestedId = task.id">
             <p>{{task.description}}</p>

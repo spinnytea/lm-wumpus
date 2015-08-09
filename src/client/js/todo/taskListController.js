@@ -31,10 +31,8 @@ module.exports.controller('lime.client.todo.taskList', [
     $scope.expand = function(task) {
       if($scope.viewData[task.id].expanded) {
         $scope.viewData[task.id].expanded = false;
-
         var remove = [];
         collapse(task, remove);
-
         $scope.tasks = $scope.tasks.filter(function(task) { return remove.indexOf(task.id) === -1; });
       } else {
         $scope.viewData[task.id].expanded = true;
@@ -51,6 +49,8 @@ module.exports.controller('lime.client.todo.taskList', [
       task.children
         .filter(function(id) { return $scope.viewData[id].expanded; })
         .forEach(function(id) { collapse(findById(id), remove); });
+      task.children
+        .forEach(function(id) { delete $scope.viewData[id]; });
     }
 
     //

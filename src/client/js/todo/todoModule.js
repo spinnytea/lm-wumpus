@@ -57,7 +57,7 @@ module.exports = angular.module('lime.client.todo', [
     $scope.items = [];
     function getItems() {
       $http.get(root).success(function(data) {
-        $scope.items = data.list;
+        $scope.items = data.list.sort(function(a, b) { return b.order > a.order; });
       });
     }
     getItems();

@@ -13,8 +13,14 @@ exports.rest = function(router) {
 
   // QUERY
   router.get('/tasks', function(req, res) {
-    // for now, it just returns everything
-    var list = lwt_task.link(links.list.type_of.opposite);
+    var list;
+    if(req.query.hasOwnProperty('children')) {
+      var root = ideas.proxy(req.query.children || lwt_task);
+      list = root.link(links.list.lm_wumpus_todo__child);
+    } else {
+      // for now, it just returns everything
+      list = lwt_task.link(links.list.type_of.opposite);
+    }
     list = list.map(function(idea) { return idea.data(); });
 
     res.json({ list: list });

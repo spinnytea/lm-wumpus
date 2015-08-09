@@ -3,6 +3,7 @@
 
 module.exports = angular.module('lime.client.todo', [
   require('./taskDirective').name,
+  require('./taskListController').name,
   'ngRoute'
 ])
 .config([
@@ -20,9 +21,9 @@ module.exports = angular.module('lime.client.todo', [
     }).when('/todo/tasks/create', {
       templateUrl: 'partials/todo/createTask.html',
       controller: 'lime.client.todo.createTask',
-    }).when('/todo/tasks/all', {
-      templateUrl: 'partials/todo/allTasksList.html',
-      controller: 'lime.client.todo.allTasksList',
+    }).when('/todo/tasks', {
+      templateUrl: 'partials/todo/tasksList.html',
+      controller: 'lime.client.todo.tasksList',
     }).when('/todo/tasks/:id', {
       templateUrl: 'partials/todo/createTask.html',
       controller: 'lime.client.todo.createTask',
@@ -242,20 +243,6 @@ module.exports = angular.module('lime.client.todo', [
     $scope.update = function() {
       $http.put('/rest/todo/tasks/' + $routeParams.id, $scope.nested.taskObject);
     };
-
-    $scope.goHome = function() {
-      $location.path('/todo');
-    };
-  }
-])
-.controller('lime.client.todo.allTasksList', [
-  '$scope',
-  '$http',
-  '$location',
-  function($scope, $http, $location) {
-    $http.get('/rest/todo/tasks').success(function(data) { $scope.tasks = data.list; });
-    $http.get('/rest/todo/statuses').success(function(data) { $scope.statuses = data.list.reduce(function(ret, obj) { ret[obj.id] = obj; return ret; }, {}); });
-    $http.get('/rest/todo/types').success(function(data) { $scope.types = data.list.reduce(function(ret, obj) { ret[obj.id] = obj; return ret; }, {}); });
 
     $scope.goHome = function() {
       $location.path('/todo');

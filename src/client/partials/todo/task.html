@@ -1,14 +1,14 @@
 <div class="form-horizontal" ng-form="'taskForm'">
     <div class="form-group">
-        <label class="col-sm-4 control-label" for="taskName">Name</label>
-        <div class="col-sm-8">
+        <label class="col-sm-3 control-label" for="taskName">Name</label>
+        <div class="col-sm-9">
             <input class="form-control" id="taskName" name="taskName" data-ng-model="formData.name" />
         </div>
     </div>
 
     <div class="form-group">
-        <label class="col-sm-4 control-label" for="parent">Parent</label>
-        <div class="col-sm-2">
+        <label class="col-sm-3 control-label" for="parent">Parent</label>
+        <div class="col-sm-3">
             <input class="form-control" id="parent" name="parent" data-ng-model="formData.parent" />
         </div>
         <div class="col-sm-6">
@@ -17,24 +17,24 @@
     </div>
 
     <div class="form-group">
-        <label class="col-sm-4 control-label" for="type">Type</label>
-        <div class="col-sm-8">
+        <label class="col-sm-3 control-label" for="type">Type</label>
+        <div class="col-sm-9">
             <select class="form-control" id="type" name="type" data-ng-model="formData.type"
                     ng-options="item.id as item.name for item in types"></select>
         </div>
     </div>
 
     <div class="form-group">
-        <label class="col-sm-4 control-label" for="status">Status</label>
-        <div class="col-sm-8">
+        <label class="col-sm-3 control-label" for="status">Status</label>
+        <div class="col-sm-9">
             <select class="form-control" id="status" name="status" data-ng-model="formData.status"
                     ng-options="item.id as item.name for item in statuses"></select>
         </div>
     </div>
 
     <div class="form-group">
-        <label class="col-sm-4 control-label" for="description">Description</label>
-        <div class="col-sm-8">
+        <label class="col-sm-3 control-label" for="description">Description</label>
+        <div class="col-sm-9">
             <textarea class="form-control" id="description" name="description" data-ng-model="formData.description"></textarea>
         </div>
     </div>

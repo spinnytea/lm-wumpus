@@ -1,11 +1,3 @@
-<h1>Task List</h1>
-
-<div>
-    <a href="#/todo">Home</a>
-    |
-    <a href="#/todo/tasks/create">Create Task</a>
-</div>
-
 <table class="table table-condensed">
     <thead><tr>
         <th></th>
@@ -15,14 +7,21 @@
         <th>Status</th>
         <th></th>
     </tr></thead>
-    <tbody>
-        <tr ng-repeat="task in tasks">
-            <td><i data-ng-if="task.children.length" class="fa fa-plus-square-o"></i></td>
+    <tbody ng-repeat="task in tasks">
+        <tr>
+            <td>
+                <i ng-if="task.children.length" class="fa" ng-class="expanded[task.id]?'fa-minus-square-o':'fa-plus-square-o'"
+                        ng-click="expanded[task.id] = !expanded[task.id]"></i>
+            </td>
             <td>{{task.id}}</td>
             <td><i ng-class="types[task.type].icon"></i> {{types[task.type].name}}</td>
             <td>{{task.name}}</td>
             <td><i ng-class="statuses[task.status].icon"></i> {{statuses[task.status].name}}</td>
             <td><a class="fa fa-pencil" href="#/todo/tasks/{{task.id}}" title="Edit"></a></td>
         </tr>
+        <tr ng-if="expanded[task.id]"><td></td><td colspan="5" ng-init="nestedId = task.id">
+            <p>{{task.description}}</p>
+            <p ng-include="'partials/todo/taskList.html'" ng-controller="lime.client.todo.taskList"></p>
+        </td></tr>
     </tbody>
 </table>

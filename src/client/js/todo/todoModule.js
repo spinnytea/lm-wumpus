@@ -22,8 +22,8 @@ module.exports = angular.module('lime.client.todo', [
       templateUrl: 'partials/todo/createTask.html',
       controller: 'lime.client.todo.createTask',
     }).when('/todo/tasks', {
-      templateUrl: 'partials/todo/tasksList.html',
-      controller: 'lime.client.todo.tasksList',
+      templateUrl: 'partials/todo/taskListPage.html',
+      controller: 'lime.client.todo.taskList',
     }).when('/todo/tasks/:id', {
       templateUrl: 'partials/todo/createTask.html',
       controller: 'lime.client.todo.createTask',

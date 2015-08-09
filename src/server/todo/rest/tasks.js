@@ -22,7 +22,7 @@ exports.rest = function(router) {
       list = lwt_task.link(links.list.type_of.opposite);
     }
 
-    list = list.map(function(idea) {
+    list = list.reverse().map(function(idea) {
       var data = idea.data();
       data.children = idea.link(links.list.lm_wumpus_todo__child).map(function(proxy) { return proxy.id; });
       return data;

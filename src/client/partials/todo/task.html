@@ -35,4 +35,36 @@
             <textarea class="form-control" id="description" name="description" data-ng-model="formData.description"></textarea>
         </div>
     </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Dependencies</label>
+        <div class="col-sm-4">
+            <table class="table table-condensed">
+                <thead><tr>
+                    <th style="white-space: nowrap;"><i class="fa fa-plus" ng-click="addBlockedBy()"></i>&nbsp;</th>
+                    <th style="width: 99%;">Blocked By</th>
+                </tr></thead>
+                <tbody>
+                    <tr data-ng-repeat="ignore in formData.blockedBy track by $index">
+                        <td><i class="fa fa-remove form-control-static" ng-click="removeBlockedBy($index)">&nbsp;</i></td>
+                        <td><div data-ng-model="formData.blockedBy[$index]" data-task-id></div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-4">
+            <table class="table table-condensed">
+                <thead><tr>
+                    <th style="white-space: nowrap;"><i class="fa fa-plus" ng-click="addBlocking()"></i>&nbsp;</th>
+                    <th style="width: 99%;">Blocking</th>
+                </tr></thead>
+                <tbody>
+                <tr data-ng-repeat="ignore in formData.blocking track by $index">
+                    <td><i class="fa fa-remove form-control-static" ng-click="removeBlocking($index)">&nbsp;</i></td>
+                    <td><div data-ng-model="formData.blocking[$index]" data-task-id></div></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

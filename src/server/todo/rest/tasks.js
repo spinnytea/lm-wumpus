@@ -22,11 +22,7 @@ exports.rest = function(router) {
       list = lwt_task.link(links.list.type_of.opposite);
     }
 
-    list = list.map(function(idea) {
-      var data = idea.data();
-      data.children = idea.link(links.list.lm_wumpus_todo__child).map(function(proxy) { return proxy.id; });
-      return data;
-    });
+    list = list.map(getTaskData);
 
     res.json({ list: list });
   });
@@ -52,7 +48,7 @@ exports.rest = function(router) {
     if(!idea.link(links.list.type_of).find(function(i) { return i.id === lwt_task.id; }))
       res.status(404).send({ message: 'Not a Task' });
     else
-      res.json(idea.data());
+      res.json(getTaskData(idea));
   });
 
   // UPDATE task
@@ -72,22 +68,46 @@ function taskCount() {
   return lwt_task.link(links.list.type_of.opposite).length;
 }
 
-function ensureLink(idea, link, to) {
-  idea.link(link).forEach(function(existing) {
-    idea.unlink(link, existing);
-    ideas.save(existing);
+function ensureList(idea, link, list) {
+  list = list.splice(0);
+  var curr = idea.link(link).map(function(proxy) { return proxy.id; });
+
+  // remove: all the ones in curr that are not in list
+  curr.forEach(function(c) {
+    if(list.indexOf(c) === -1) {
+      idea.unlink(link, c);
+      ideas.save(c);
+    }
   });
 
-  if(to && (to = ideas.proxy(to))) {
-    idea.link(link, to);
-    ideas.save(to);
-  }
+  // add: all the oens in list that are not in curr
+  list.forEach(function(l) {
+    if(curr.indexOf(l) === -1) {
+      idea.link(link, l);
+      ideas.save(l);
+    }
+  });
+}
+
+function getTaskData(idea) {
+  var data = idea.data();
+  data.children = idea.link(links.list.lm_wumpus_todo__child).map(function(proxy) { return proxy.id; });
+  data.blockedBy = idea.link(links.list.lm_wumpus_todo__depends_on).map(function(proxy) { return proxy.id; });
+  data.blocking = idea.link(links.list.lm_wumpus_todo__depends_on.opposite).map(function(proxy) { return proxy.id; });
+  return data;
 }
 
 function updateTask(idea, data) {
+  ensureList(idea, links.list.lm_wumpus_todo__status, [data.status]);
+  ensureList(idea, links.list.lm_wumpus_todo__type, [data.type]);
+  ensureList(idea, links.list.lm_wumpus_todo__child.opposite, [(data.parent || lwt_task)]); // if there is no parent, then default to the task root
+  delete data.children;
+
+  ensureList(idea, links.list.lm_wumpus_todo__depends_on, data.blockedBy);
+  ensureList(idea, links.list.lm_wumpus_todo__depends_on.opposite, data.blocking);
+  delete data.blockedBy;
+  delete data.blocking;
+
   idea.update(data);
-  ensureLink(idea, links.list.lm_wumpus_todo__status, data.status);
-  ensureLink(idea, links.list.lm_wumpus_todo__type, data.type);
-  ensureLink(idea, links.list.lm_wumpus_todo__child.opposite, (data.parent || lwt_task)); // if there is no parent, then default to the task root
   ideas.save(idea);
 }

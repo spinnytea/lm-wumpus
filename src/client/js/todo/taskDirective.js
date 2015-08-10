@@ -28,6 +28,8 @@ function Controller($scope, $http, $location, $routeParams) {
     type: undefined,
     status: undefined,
     description: '',
+    blocking: [],
+    blockedBy: [],
   };
 
   if($routeParams.parent) {
@@ -51,4 +53,9 @@ function Controller($scope, $http, $location, $routeParams) {
   $http.get('/rest/todo/types').success(function(data) {
     $scope.types = data.list.sort(function(a, b) { return b.order > a.order; });
   });
+
+  $scope.addBlocking = function() { $scope.formData.blocking.push(undefined); };
+  $scope.removeBlocking = function(idx) { $scope.formData.blocking.splice(idx, 1); };
+  $scope.addBlockedBy = function() { $scope.formData.blockedBy.push(undefined); };
+  $scope.removeBlockedBy = function(idx) { $scope.formData.blockedBy.splice(idx, 1); };
 }

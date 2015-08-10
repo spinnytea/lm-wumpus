@@ -51,14 +51,4 @@ function Controller($scope, $http, $location, $routeParams) {
   $http.get('/rest/todo/types').success(function(data) {
     $scope.types = data.list.sort(function(a, b) { return b.order > a.order; });
   });
-
-  $scope.$on('$destroy', $scope.$watch('formData.parent', function(parent) {
-    if(parent) {
-      $http.get('/rest/todo/tasks/'+parent)
-        .success(function(data) { $scope.taskParent = data.name; })
-        .error(function(data) { $scope.taskParent = (data.message || 'Error'); });
-    } else {
-      $scope.taskParent = 'None';
-    }
-  }));
 }

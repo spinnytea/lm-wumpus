@@ -109,4 +109,56 @@ module.exports = angular.module('lime.client.todo', [
     };
   }
 ])
+.directive('taskId', [
+  function() {
+    return {
+      restrict: 'A',
+      require: 'ngModel',
+      replace: true,
+      scope: {},
+      link: function($scope, elem, attr, ngModelController) {
+        elem.find('input').attr('id', attr.id);
+        elem.removeAttr('id');
+
+        $scope.$on('$destroy', $scope.$watch('formData.id', function(id) {
+          ngModelController.$setViewValue(id);
+        }));
+        ngModelController.$render = function() {
+          $scope.formData.id = ngModelController.$modelValue;
+          $scope.formData.icon = '';
+          $scope.formData.name = '';
+        };
+      },
+      template: '<div class="form-inline"><input class="form-control" ng-model="formData.id" />&nbsp;<i ng-class="formData.icon"></i>&nbsp;<span ng-bind="formData.name"></span></div>',
+      controller: ['$scope', '$http', function($scope, $http) {
+        $scope.formData = {
+          id: undefined,
+          icon: '',
+          name: 'None'
+        };
+
+        var types = {};
+        $http.get('/rest/todo/types').success(function(data) {
+          types = data.list.reduce(function(ret, obj) { ret[obj.id] = obj; return ret; }, {});
+        });
+
+        $scope.$on('$destroy', $scope.$watch('formData.id', function(id) {
+          if(id) {
+            $http.get('/rest/todo/tasks/'+id)
+              .success(function(data) {
+                $scope.formData.icon = types[data.type].icon;
+                $scope.formData.name = data.name;
+              })
+              .error(function(data) {
+                $scope.formData.icon = '';
+                $scope.formData.name = (data.message || 'Error');
+              });
+          } else {
+            $scope.formData.name = 'None';
+          }
+        }));
+      }]
+    };
+  }
+])
 ;

@@ -8,11 +8,8 @@
 
     <div class="form-group">
         <label class="col-sm-3 control-label" for="parent">Parent</label>
-        <div class="col-sm-3">
-            <input class="form-control" id="parent" name="parent" data-ng-model="formData.parent" />
-        </div>
-        <div class="col-sm-6">
-            <p class="form-control-static">{{taskParent}}</p>
+        <div class="col-sm-9">
+            <div id="parent" name="parent" data-ng-model="formData.parent" data-task-id></div>
         </div>
     </div>
 

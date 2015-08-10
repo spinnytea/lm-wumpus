@@ -7,6 +7,6 @@
     <div class="col-sm-offset-3 col-sm-9">
         <button data-ng-hide="nested.taskObject.id" class="btn btn-primary" data-ng-click="create()">Create</button>
         <button data-ng-show="nested.taskObject.id" class="btn btn-primary" data-ng-click="update()">Save</button>
-        <button data-ng-hide="nested.taskObject.id" class="btn btn-default" data-ng-click="goHome()">Cancel</button>
+        <button class="btn btn-default" data-ng-click="goHome()">{{nested.taskObject.id?'List':'Cancel'}}</button>
     </div>
 </div>

@@ -129,7 +129,7 @@ module.exports = angular.module('lime.client.todo', [
           $scope.formData.name = '';
         };
       },
-      template: '<div class="form-inline"><input class="form-control" ng-model="formData.id" />&nbsp;<i ng-class="formData.icon"></i>&nbsp;<span ng-bind="formData.name"></span></div>',
+      template: '<div class="form-inline"><input class="form-control" ng-model="formData.id" />&nbsp;<i ng-class="formData.icon"></i>&nbsp;<a href="#/todo/tasks/{{formData.id}}" ng-bind="formData.name"></a></div>',
       controller: ['$scope', '$http', function($scope, $http) {
         $scope.formData = {
           id: undefined,

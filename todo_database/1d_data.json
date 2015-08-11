@@ -1,0 +1,1 @@
+{"description":"update subgraphModule to use the new subgraph.stringify format; remove the \"wumpusModule.wumpusSocket.context\" back-conversion","parent":"k","type":"8","status":"h","name":"new subgraph.stringify format","id":"1d"}

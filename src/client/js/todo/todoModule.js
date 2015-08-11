@@ -89,18 +89,32 @@ module.exports = angular.module('lime.client.todo', [
   '$http',
   '$location',
   '$routeParams',
-  function($scope, $http, $location, $routeParams) {
+  'lime.client.todo.taskListService',
+  function($scope, $http, $location, $routeParams, taskListService) {
     $scope.nested = { taskObject: {} };
     $scope.createError = false;
+    var originalParent;
 
     if($routeParams.id)
-      $http.get('/rest/todo/tasks/' + $routeParams.id).success(function(data) { $scope.nested.taskObject = data; });
+      $http.get('/rest/todo/tasks/' + $routeParams.id).success(function(data) {
+        $scope.nested.taskObject = data;
+        originalParent = data.parent;
+      });
 
     $scope.create = function() {
+      if($scope.nested.taskObject.parent)
+        taskListService.stale.children[$scope.nested.taskObject.parent] = true;
       $http.post('/rest/todo/tasks', $scope.nested.taskObject).success($scope.goHome);
     };
 
     $scope.update = function() {
+      taskListService.stale.updated[$routeParams.id] = true;
+      if(originalParent !== $scope.nested.taskObject.parent) {
+        if(originalParent)
+          taskListService.stale.children[originalParent] = true;
+        if($scope.nested.taskObject.parent)
+          taskListService.stale.children[$scope.nested.taskObject.parent] = true;
+      }
       $http.put('/rest/todo/tasks/' + $routeParams.id, $scope.nested.taskObject);
     };
 
@@ -175,6 +189,24 @@ module.exports = angular.module('lime.client.todo', [
         Array.prototype.push.apply($scope.tasks, data.list);
       });
     }
+
+    function getStaleList(obj) {
+      // only return the keys the are in the task list (this will probably be all of them
+      return Object.keys(obj).filter(function(id) {
+        return $scope.tasks.some(function(t) { return t.id === id; });
+      });
+    }
+
+    getStaleList(taskListService.stale.updated).forEach(function(id) {
+      $http.get('/rest/todo/tasks/'+id).success(function(data) {
+        // my current browser doesn't support indexOf
+        // basically, find the object's position in the task list, and update it
+        var idx = null;
+        $scope.tasks.some(function(t, i) { if(t.id === id) idx = i; return idx !== null; });
+        angular.extend($scope.tasks[idx], data);
+      });
+    });
+    taskListService.stale.updated = {};
   }
 ])
 ;

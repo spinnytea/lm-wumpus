@@ -10,6 +10,12 @@ module.exports.service('lime.client.todo.taskListService', [
     instance.page.tasks = [];
     instance.page.viewData = {};
 
+    // the keys are task ids to update; the values are arbitrary
+    instance.stale = {
+      updated: {},
+      children: {} // this references the parent under which the children are stale
+    };
+
     instance.initViewData = function(list, viewData, parent) {
       var level = 0;
       if(parent)

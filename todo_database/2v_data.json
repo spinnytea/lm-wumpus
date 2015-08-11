@@ -1,0 +1,1 @@
+{"name":"New Task: Duplicate","parent":"22","type":"d","status":"7","description":"When we create a new task, close/open the task parent, the task remains in the list.\nReason: the local parent task's children list isn't updated; the query asks for all children, but doesn't update this parent. (this will probably be solved by Task 2o)","id":"2v"}

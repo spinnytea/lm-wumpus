@@ -1,5 +1,16 @@
 'use strict';
 
+var EMPTY_TASK = {
+  id: undefined,
+  name: '',
+  parent: undefined,
+  type: undefined,
+  status: undefined,
+  description: '',
+  blocking: [],
+  blockedBy: [],
+};
+
 module.exports = angular.module('lime.client.todo.taskDirective', [])
 .directive('taskDirective', [function() {
   return {
@@ -12,7 +23,11 @@ module.exports = angular.module('lime.client.todo.taskDirective', [])
         ngModelController.$setViewValue(angular.copy(data));
       }, true));
       ngModelController.$render = function() {
-        $scope.formData = angular.copy(ngModelController.$modelValue);
+        if(angular.equals({}, ngModelController.$modelValue)) {
+          $scope.formData = angular.copy(EMPTY_TASK);
+        } else {
+          $scope.formData = angular.copy(ngModelController.$modelValue);
+        }
       };
     },
     controller: ['$scope', '$http', '$location', '$routeParams',
@@ -21,16 +36,7 @@ module.exports = angular.module('lime.client.todo.taskDirective', [])
 }]);
 
 function Controller($scope, $http, $location, $routeParams) {
-  $scope.formData = {
-    id: undefined,
-    name: '',
-    parent: undefined,
-    type: undefined,
-    status: undefined,
-    description: '',
-    blocking: [],
-    blockedBy: [],
-  };
+  $scope.formData = angular.copy(EMPTY_TASK);
 
   if($routeParams.parent) {
     setTimeout(function() {

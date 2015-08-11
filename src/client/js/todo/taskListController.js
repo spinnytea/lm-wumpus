@@ -24,7 +24,10 @@ module.exports.controller('lime.client.todo.taskList', [
       });
 
       list.sort(function(a, b) {
-        return a.name.toUpperCase() > b.name.toUpperCase();
+        if(a.name && b.name)
+          return a.name.toUpperCase() > b.name.toUpperCase();
+        else
+          return a.name > b.name;
       });
     }
 

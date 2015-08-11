@@ -1,36 +1,22 @@
 'use strict';
 
 module.exports = angular.module('lime.client.todo.taskList', []);
-module.exports.directive('taskList', [
+module.exports.service('lime.client.todo.taskListService', [
   function() {
-    return {
-      scope: {
-        tasks: '=taskList'
-      },
-      templateUrl: 'partials/todo/taskList.html',
-      controller: 'lime.client.todo.taskList'
-    };
-  }
-]);
-module.exports.controller('lime.client.todo.taskList', [
-  '$scope',
-  '$http',
-  function($scope, $http) {
-    $http.get('/rest/todo/statuses').success(function(data) { $scope.statuses = data.list.reduce(function(ret, obj) { ret[obj.id] = obj; return ret; }, {}); });
-    $http.get('/rest/todo/types').success(function(data) { $scope.types = data.list.reduce(function(ret, obj) { ret[obj.id] = obj; return ret; }, {}); });
-    $scope.$on('$destroy', $scope.$watch('tasks', function() {
-      $scope.viewData = {};
-      initViewData($scope.tasks);
-    }));
+    var instance = {};
 
-    $scope.viewData = {};
-    function initViewData(list, parent) {
+    // store data for the task list page
+    instance.page = {};
+    instance.page.tasks = [];
+    instance.page.viewData = {};
+
+    instance.initViewData = function(list, viewData, parent) {
       var level = 0;
       if(parent)
-        level = $scope.viewData[parent.id].level + 1;
+        level = viewData[parent.id].level + 1;
 
       list.forEach(function(task) {
-        $scope.viewData[task.id] = {
+        viewData[task.id] = {
           expanded: false,
           level: level
         };
@@ -42,7 +28,30 @@ module.exports.controller('lime.client.todo.taskList', [
         else
           return a.name > b.name;
       });
-    }
+    };
+
+    return instance;
+  }
+]);
+module.exports.directive('taskList', [
+  function() {
+    return {
+      scope: {
+        tasks: '=',
+        viewData: '='
+      },
+      templateUrl: 'partials/todo/taskList.html',
+      controller: 'lime.client.todo.taskList'
+    };
+  }
+]);
+module.exports.controller('lime.client.todo.taskList', [
+  '$scope',
+  '$http',
+  'lime.client.todo.taskListService',
+  function($scope, $http, taskListService) {
+    $http.get('/rest/todo/statuses').success(function(data) { $scope.statuses = data.list.reduce(function(ret, obj) { ret[obj.id] = obj; return ret; }, {}); });
+    $http.get('/rest/todo/types').success(function(data) { $scope.types = data.list.reduce(function(ret, obj) { ret[obj.id] = obj; return ret; }, {}); });
 
     $scope.expand = function(task) {
       if($scope.viewData[task.id].expanded) {
@@ -55,7 +64,7 @@ module.exports.controller('lime.client.todo.taskList', [
       } else {
         $scope.viewData[task.id].expanded = true;
         $http.get('/rest/todo/tasks?children='+task.id).success(function(data) {
-          initViewData(data.list, task);
+          taskListService.initViewData(data.list, $scope.viewData, task);
           data.list.unshift($scope.tasks.indexOf(task)+1, 0);
           $scope.tasks.splice.apply($scope.tasks, data.list);
         });

@@ -164,9 +164,17 @@ module.exports = angular.module('lime.client.todo', [
 .controller('lime.client.todo.taskListPage', [
   '$scope',
   '$http',
-  function($scope, $http) {
-    $scope.tasks = [];
-    $http.get('/rest/todo/tasks?children=').success(function(data) { $scope.tasks = data.list; });
+  'lime.client.todo.taskListService',
+  function($scope, $http, taskListService) {
+    $scope.tasks = taskListService.page.tasks;
+    $scope.viewData = taskListService.page.viewData;
+
+    if($scope.tasks.length === 0) {
+      $http.get('/rest/todo/tasks?children=').success(function(data) {
+        taskListService.initViewData(data.list, $scope.viewData);
+        Array.prototype.push.apply($scope.tasks, data.list);
+      });
+    }
   }
 ])
 ;

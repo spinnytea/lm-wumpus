@@ -1,13 +1,13 @@
 <table class="table table-condensed table-striped tasklist">
     <thead><tr>
-        <th class="min-width"></th>
+        <th class="min-width" data-ng-if="viewData"></th>
         <th style="width: 10%;">ID</th>
         <th style="width: 90%;">Name</th>
         <th class="min-width"></th>
         <th class="min-width"></th>
     </tr></thead>
     <tbody><tr ng-repeat="task in tasks">
-        <td class="min-width">
+        <td class="min-width" data-ng-if="viewData">
             <i class="fa fa-fw" ng-repeat="ignore in range(viewData[task.id].level) track by $index">
             </i><i ng-if="task.children.length" class="fa" ng-class="viewData[task.id].expanded?'fa-minus-square-o':'fa-plus-square-o'"
                     ng-click="expand(task)"></i>&nbsp;

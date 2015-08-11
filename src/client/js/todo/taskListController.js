@@ -1,14 +1,27 @@
 'use strict';
 
 module.exports = angular.module('lime.client.todo.taskList', []);
+module.exports.directive('taskList', [
+  function() {
+    return {
+      scope: {
+        tasks: '=taskList'
+      },
+      templateUrl: 'partials/todo/taskList.html',
+      controller: 'lime.client.todo.taskList'
+    };
+  }
+]);
 module.exports.controller('lime.client.todo.taskList', [
   '$scope',
   '$http',
   function($scope, $http) {
-    $scope.tasks = [];
-    $http.get('/rest/todo/tasks?children=').success(function(data) { initViewData(data.list); $scope.tasks = data.list; });
     $http.get('/rest/todo/statuses').success(function(data) { $scope.statuses = data.list.reduce(function(ret, obj) { ret[obj.id] = obj; return ret; }, {}); });
     $http.get('/rest/todo/types').success(function(data) { $scope.types = data.list.reduce(function(ret, obj) { ret[obj.id] = obj; return ret; }, {}); });
+    $scope.$on('$destroy', $scope.$watch('tasks', function() {
+      $scope.viewData = {};
+      initViewData($scope.tasks);
+    }));
 
     $scope.viewData = {};
     function initViewData(list, parent) {
@@ -36,7 +49,9 @@ module.exports.controller('lime.client.todo.taskList', [
         $scope.viewData[task.id].expanded = false;
         var remove = [];
         collapse(task, remove);
-        $scope.tasks = $scope.tasks.filter(function(task) { return remove.indexOf(task.id) === -1; });
+        var remaining = $scope.tasks.filter(function(task) { return remove.indexOf(task.id) === -1; });
+        $scope.tasks.splice(0);
+        Array.prototype.push.apply($scope.tasks, remaining);
       } else {
         $scope.viewData[task.id].expanded = true;
         $http.get('/rest/todo/tasks?children='+task.id).success(function(data) {
@@ -64,7 +79,7 @@ module.exports.controller('lime.client.todo.taskList', [
       return new Array(num);
     };
     function findById(id) {
-      var found;
+      var found = null;
       $scope.tasks.some(function(task) {
         if(task.id === id)
           found = task;

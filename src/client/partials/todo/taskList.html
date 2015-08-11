@@ -6,27 +6,24 @@
         <th class="min-width"></th>
         <th class="min-width"></th>
     </tr></thead>
-    <tbody>
-        <tr ng-repeat="task in tasks">
-            <td class="min-width">
-                <i class="fa fa-fw" ng-repeat="ignore in range(viewData[task.id].level) track by $index">
-                </i><i ng-if="task.children.length" class="fa" ng-class="viewData[task.id].expanded?'fa-minus-square-o':'fa-plus-square-o'"
-                        ng-click="expand(task)"></i>&nbsp;
-            </td>
-            <td style="width: 10%;">{{task.id}}</td>
-            <td style="width: 90%;">
-                <i class="fa fa-fw" ng-repeat="ignore in range(viewData[task.id].level) track by $index">
-                </i><i ng-class="types[task.type].icon" title="{{types[task.type].name}}"></i>&nbsp;
-                {{task.name}} <sup data-ng-if="task.description" title="{{task.description}}"><i>[desc]</i></sup>
-            </td>
-            <td class="min-width">
-                <i ng-class="statuses[task.status].icon" title="{{statuses[task.status].name}}"></i>&nbsp;
-            </td>
-            <td class="min-width">
-                <a class="btn btn-sm btn-default" href="#/todo/tasks/{{task.id}}" title="Edit"><i class="fa fa-pencil"></i></a>
-                <a class="btn btn-sm btn-default" href="#/todo/tasks/create?parent={{task.id}}" title="Create Task"><i class="fa fa-plus"></i></a>
-            </td>
-        </tr>
-        <tr ng-repeat-end="" ng-if="viewData[task.id].expanded && task.description" class="description"><td colspan="2"></td><td colspan="2">{{task.description}}</td></tr>
-    </tbody>
+    <tbody><tr ng-repeat="task in tasks">
+        <td class="min-width">
+            <i class="fa fa-fw" ng-repeat="ignore in range(viewData[task.id].level) track by $index">
+            </i><i ng-if="task.children.length" class="fa" ng-class="viewData[task.id].expanded?'fa-minus-square-o':'fa-plus-square-o'"
+                    ng-click="expand(task)"></i>&nbsp;
+        </td>
+        <td style="width: 10%;">{{task.id}}</td>
+        <td style="width: 90%;">
+            <i class="fa fa-fw" ng-repeat="ignore in range(viewData[task.id].level) track by $index">
+            </i><i ng-class="types[task.type].icon" title="{{types[task.type].name}}"></i>&nbsp;
+            {{task.name}} <sup data-ng-if="task.description" title="{{task.description}}"><i>[desc]</i></sup>
+        </td>
+        <td class="min-width">
+            <i ng-class="statuses[task.status].icon" title="{{statuses[task.status].name}}"></i>&nbsp;
+        </td>
+        <td class="min-width">
+            <a class="btn btn-sm btn-default" href="#/todo/tasks/{{task.id}}" title="Edit"><i class="fa fa-pencil"></i></a>
+            <a class="btn btn-sm btn-default" href="#/todo/tasks/create?parent={{task.id}}" title="Create Task"><i class="fa fa-plus"></i></a>
+        </td>
+    </tr></tbody>
 </table>

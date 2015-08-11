@@ -89,7 +89,3 @@ svg.subgraph {
 /*
  * task list
  */
-
-.tasklist tr.description td {
-  border-top: none;
-}

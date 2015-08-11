@@ -20,7 +20,7 @@ module.exports = angular.module('lime.client.todo', [
       controller: 'lime.client.todo.createTask',
     }).when('/todo/tasks', {
       templateUrl: 'partials/todo/taskListPage.html',
-      controller: 'lime.client.todo.taskList',
+      controller: 'lime.client.todo.taskListPage',
     }).when('/todo/tasks/:id', {
       templateUrl: 'partials/todo/createTask.html',
       controller: 'lime.client.todo.createTask',
@@ -159,6 +159,14 @@ module.exports = angular.module('lime.client.todo', [
         }));
       }]
     };
+  }
+])
+.controller('lime.client.todo.taskListPage', [
+  '$scope',
+  '$http',
+  function($scope, $http) {
+    $scope.tasks = [];
+    $http.get('/rest/todo/tasks?children=').success(function(data) { $scope.tasks = data.list; });
   }
 ])
 ;

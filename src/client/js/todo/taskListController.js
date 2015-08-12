@@ -51,7 +51,7 @@ module.exports.service('lime.client.todo.taskListService', [
       Array.prototype.push.apply(remove, task.children);
       task.children
         .filter(function(id) { return viewData[id].expanded; })
-        .forEach(function(id) { collapseChildren(findById(tasks, id), remove); });
+        .forEach(function(id) { collapseChildren(tasks, viewData, findById(tasks, id), remove); });
       task.children
         .forEach(function(id) { delete viewData[id]; });
     }

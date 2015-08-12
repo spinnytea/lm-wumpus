@@ -5,6 +5,7 @@ module.exports.service('lime.client.todo.taskListService', [
   '$http',
   '$q',
   function($http, $q) {
+    // TODO pull some of the functions off the service and make them private to this file
     var instance = {};
 
     // store data for the task list page
@@ -113,5 +114,92 @@ module.exports.controller('lime.client.todo.taskList', [
     $scope.range = function(num) {
       return new Array(num);
     };
+  }
+]);
+module.exports.controller('lime.client.todo.taskListPage', [
+  '$scope',
+  '$http',
+  'lime.client.todo.taskListService',
+  function($scope, $http, taskListService) {
+    $scope.tasks = taskListService.page.tasks;
+    $scope.viewData = taskListService.page.viewData;
+
+    if($scope.tasks.length === 0) {
+      $http.get('/rest/todo/tasks?children=').success(function(data) {
+        taskListService.initViewData(data.list, $scope.viewData);
+        Array.prototype.push.apply($scope.tasks, data.list);
+      });
+    }
+
+    function getStaleList(obj) {
+      // only return the keys the are in the task list (this will probably be all of them
+      return Object.keys(obj).filter(function(id) {
+        return $scope.tasks.some(function(t) { return t.id === id; });
+      });
+    }
+
+    getStaleList(taskListService.stale.updated).forEach(function(id) {
+      $http.get('/rest/todo/tasks/'+id).success(function(data) {
+        // my current browser doesn't support Array.find
+        // basically, find the object's position in the task list, and update it
+        var idx = null;
+        $scope.tasks.some(function(t, i) { if(t.id === id) idx = i; return idx !== null; });
+        angular.extend($scope.tasks[idx], data);
+      });
+    });
+    taskListService.stale.updated = {};
+
+    getStaleList(taskListService.stale.children).forEach(function(id) {
+      // collect a list of everything that was expanded before we collapse the parent
+      var toExpand = [];
+
+      if($scope.viewData[id].expanded) {
+        // collect all the expended elements before the collapse
+        angular.forEach($scope.viewData, function(data, id) { if(data.expanded) toExpand.push(id); });
+
+        var task = null;
+        $scope.tasks.some(function(t) { if(t.id === id) task = t; return task; });
+        taskListService.collapse($scope.tasks, $scope.viewData, task);
+
+        // remove all the expanded elements after the collapse
+        angular.forEach($scope.viewData, function(data, id) {
+          if(data.expanded) {
+            var idx = toExpand.indexOf(id);
+            if(idx !== -1)
+              toExpand.splice(idx, 1);
+          }
+        });
+      }
+
+      $http.get('/rest/todo/tasks/'+id).success(function(data) {
+        // my current browser doesn't support Array.find
+        // basically, find the object's position in the task list, and update it
+        var idx = null;
+        $scope.tasks.some(function(t, i) { if(t.id === id) idx = i; return idx !== null; });
+        angular.extend($scope.tasks[idx], data);
+
+        expandAll(toExpand);
+      });
+    });
+    taskListService.stale.children = {};
+
+    function expandAll(toExpand) {
+      // find something on toExpand that is in the task list
+      var task = null;
+      toExpand.some(function(id) {
+        if((id in $scope.viewData) && !$scope.viewData[id].expanded) {
+          // find it in the list
+          $scope.tasks.some(function(t) { if(t.id === id) task = t; return task; });
+        }
+        return task;
+      });
+
+      if(task) {
+        // expand it
+        // then keep going
+        taskListService.expand($scope.tasks, $scope.viewData, task)
+          .then(function() { expandAll(toExpand); });
+      }
+    }
   }
 ]);

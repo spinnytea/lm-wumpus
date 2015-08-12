@@ -199,7 +199,7 @@ module.exports = angular.module('lime.client.todo', [
 
     getStaleList(taskListService.stale.updated).forEach(function(id) {
       $http.get('/rest/todo/tasks/'+id).success(function(data) {
-        // my current browser doesn't support indexOf
+        // my current browser doesn't support Array.find
         // basically, find the object's position in the task list, and update it
         var idx = null;
         $scope.tasks.some(function(t, i) { if(t.id === id) idx = i; return idx !== null; });

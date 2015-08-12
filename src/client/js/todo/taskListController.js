@@ -36,6 +36,30 @@ module.exports.service('lime.client.todo.taskListService', [
       });
     };
 
+    // prereq: viewData[task.id].expanded
+    instance.collapse = function(tasks, viewData, task) {
+      viewData[task.id].expanded = false;
+      var remove = [];
+      collapseChildren(tasks, viewData, task, remove);
+      var remaining = tasks.filter(function(task) { return remove.indexOf(task.id) === -1; });
+      tasks.splice(0);
+      Array.prototype.push.apply(tasks, remaining);
+    };
+    function collapseChildren(tasks, viewData, task, remove) {
+      Array.prototype.push.apply(remove, task.children);
+      task.children
+        .filter(function(id) { return viewData[id].expanded; })
+        .forEach(function(id) { collapseChildren(findById(tasks, id), remove); });
+      task.children
+        .forEach(function(id) { delete viewData[id]; });
+    }
+    function findById(tasks, id) {
+      // my current browser doesn't support Array.find
+      var found = null;
+      tasks.some(function(task) { if(task.id === id) found = task; return found; });
+      return found;
+    }
+
     return instance;
   }
 ]);
@@ -61,12 +85,7 @@ module.exports.controller('lime.client.todo.taskList', [
 
     $scope.expand = function(task) {
       if($scope.viewData[task.id].expanded) {
-        $scope.viewData[task.id].expanded = false;
-        var remove = [];
-        collapse(task, remove);
-        var remaining = $scope.tasks.filter(function(task) { return remove.indexOf(task.id) === -1; });
-        $scope.tasks.splice(0);
-        Array.prototype.push.apply($scope.tasks, remaining);
+        taskListService.collapse($scope.tasks, $scope.viewData, task);
       } else {
         $scope.viewData[task.id].expanded = true;
         $http.get('/rest/todo/tasks?children='+task.id).success(function(data) {
@@ -77,15 +96,6 @@ module.exports.controller('lime.client.todo.taskList', [
       }
     };
 
-    function collapse(task, remove) {
-      Array.prototype.push.apply(remove, task.children);
-      task.children
-        .filter(function(id) { return $scope.viewData[id].expanded; })
-        .forEach(function(id) { collapse(findById(id), remove); });
-      task.children
-        .forEach(function(id) { delete $scope.viewData[id]; });
-    }
-
     //
     // utils
     //
@@ -93,14 +103,5 @@ module.exports.controller('lime.client.todo.taskList', [
     $scope.range = function(num) {
       return new Array(num);
     };
-    function findById(id) {
-      var found = null;
-      $scope.tasks.some(function(task) {
-        if(task.id === id)
-          found = task;
-        return found;
-      });
-      return found;
-    }
   }
 ]);

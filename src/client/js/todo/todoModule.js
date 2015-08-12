@@ -209,10 +209,25 @@ module.exports = angular.module('lime.client.todo', [
     taskListService.stale.updated = {};
 
     getStaleList(taskListService.stale.children).forEach(function(id) {
+      // collect a list of everything that was expanded before we collapse the parent
+      var toExpand = [];
+
       if($scope.viewData[id].expanded) {
+        // collect all the expended elements before the collapse
+        angular.forEach($scope.viewData, function(data, id) { if(data.expanded) toExpand.push(id); });
+
         var task = null;
         $scope.tasks.some(function(t) { if(t.id === id) task = t; return task; });
         taskListService.collapse($scope.tasks, $scope.viewData, task);
+
+        // remove all the expanded elements after the collapse
+        angular.forEach($scope.viewData, function(data, id) {
+          if(data.expanded) {
+            var idx = toExpand.indexOf(id);
+            if(idx !== -1)
+              toExpand.splice(idx, 1);
+          }
+        });
       }
 
       $http.get('/rest/todo/tasks/'+id).success(function(data) {
@@ -221,9 +236,30 @@ module.exports = angular.module('lime.client.todo', [
         var idx = null;
         $scope.tasks.some(function(t, i) { if(t.id === id) idx = i; return idx !== null; });
         angular.extend($scope.tasks[idx], data);
+
+        expandAll(toExpand);
       });
     });
     taskListService.stale.children = {};
+
+    function expandAll(toExpand) {
+      // find something on toExpand that is in the task list
+      var task = null;
+      toExpand.some(function(id) {
+        if((id in $scope.viewData) && !$scope.viewData[id].expanded) {
+          // find it in the list
+          $scope.tasks.some(function(t) { if(t.id === id) task = t; return task; });
+        }
+        return task;
+      });
+
+      if(task) {
+        // expand it
+        // then keep going
+        taskListService.expand($scope.tasks, $scope.viewData, task)
+          .then(function() { expandAll(toExpand); });
+      }
+    }
   }
 ])
 ;

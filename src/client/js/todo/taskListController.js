@@ -65,6 +65,7 @@ module.exports.service('lime.client.todo.taskListService', [
     // prereq: !viewData[task.id].expanded
     instance.expand = function(tasks, viewData, task) {
       var deferred = $q.defer();
+      viewData[task.id].expanded = true;
       $http.get('/rest/todo/tasks?children='+task.id).success(function(data) {
         instance.initViewData(data.list, viewData, task);
         data.list.unshift(tasks.indexOf(task)+1, 0);
@@ -101,7 +102,6 @@ module.exports.controller('lime.client.todo.taskList', [
       if($scope.viewData[task.id].expanded) {
         taskListService.collapse($scope.tasks, $scope.viewData, task);
       } else {
-        $scope.viewData[task.id].expanded = true;
         taskListService.expand($scope.tasks, $scope.viewData, task);
       }
     };

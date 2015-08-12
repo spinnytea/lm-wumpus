@@ -2,7 +2,9 @@
 
 module.exports = angular.module('lime.client.todo.taskList', []);
 module.exports.service('lime.client.todo.taskListService', [
-  function() {
+  '$http',
+  '$q',
+  function($http, $q) {
     var instance = {};
 
     // store data for the task list page
@@ -60,6 +62,18 @@ module.exports.service('lime.client.todo.taskListService', [
       return found;
     }
 
+    // prereq: !viewData[task.id].expanded
+    instance.expand = function(tasks, viewData, task) {
+      var deferred = $q.defer();
+      $http.get('/rest/todo/tasks?children='+task.id).success(function(data) {
+        instance.initViewData(data.list, viewData, task);
+        data.list.unshift(tasks.indexOf(task)+1, 0);
+        tasks.splice.apply(tasks, data.list);
+        deferred.resolve();
+      }).error(deferred.reject);
+      return deferred.promise;
+    };
+
     return instance;
   }
 ]);
@@ -88,11 +102,7 @@ module.exports.controller('lime.client.todo.taskList', [
         taskListService.collapse($scope.tasks, $scope.viewData, task);
       } else {
         $scope.viewData[task.id].expanded = true;
-        $http.get('/rest/todo/tasks?children='+task.id).success(function(data) {
-          taskListService.initViewData(data.list, $scope.viewData, task);
-          data.list.unshift($scope.tasks.indexOf(task)+1, 0);
-          $scope.tasks.splice.apply($scope.tasks, data.list);
-        });
+        taskListService.expand($scope.tasks, $scope.viewData, task);
       }
     };
 

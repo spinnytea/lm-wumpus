@@ -207,6 +207,23 @@ module.exports = angular.module('lime.client.todo', [
       });
     });
     taskListService.stale.updated = {};
+
+    getStaleList(taskListService.stale.children).forEach(function(id) {
+      if($scope.viewData[id].expanded) {
+        var task = null;
+        $scope.tasks.some(function(t) { if(t.id === id) task = t; return task; });
+        taskListService.collapse($scope.tasks, $scope.viewData, task);
+      }
+
+      $http.get('/rest/todo/tasks/'+id).success(function(data) {
+        // my current browser doesn't support Array.find
+        // basically, find the object's position in the task list, and update it
+        var idx = null;
+        $scope.tasks.some(function(t, i) { if(t.id === id) idx = i; return idx !== null; });
+        angular.extend($scope.tasks[idx], data);
+      });
+    });
+    taskListService.stale.children = {};
   }
 ])
 ;

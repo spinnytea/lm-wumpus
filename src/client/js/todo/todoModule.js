@@ -3,7 +3,7 @@
 
 module.exports = angular.module('lime.client.todo', [
   require('./taskDirective').name,
-  require('./taskListController').name,
+  require('./taskList').name,
   'ngRoute'
 ])
 .config([

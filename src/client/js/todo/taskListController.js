@@ -5,7 +5,6 @@ module.exports.service('lime.client.todo.taskListService', [
   '$http',
   '$q',
   function($http, $q) {
-    // TODO pull some of the functions off the service and make them private to this file
     var instance = {};
 
     // store data for the task list page
@@ -45,15 +44,9 @@ module.exports.service('lime.client.todo.taskListService', [
       Array.prototype.push.apply(remove, task.children);
       task.children
         .filter(function(id) { return viewData[id].expanded; })
-        .forEach(function(id) { collapseChildren(tasks, viewData, findById(tasks, id), remove); });
+        .forEach(function(id) { collapseChildren(tasks, viewData, find(tasks, function(task) { return task.id === id; }), remove); });
       task.children
         .forEach(function(id) { delete viewData[id]; });
-    }
-    function findById(tasks, id) {
-      // my current browser doesn't support Array.find
-      var found = null;
-      tasks.some(function(task) { if(task.id === id) found = task; return found; });
-      return found;
     }
 
     // prereq: !viewData[task.id].expanded
@@ -136,8 +129,7 @@ module.exports.controller('lime.client.todo.taskListPage', [
       var task = null;
       toExpand.some(function(id) {
         if((id in $scope.viewData) && !$scope.viewData[id].expanded) {
-          // find it in the list (the browser I'm using doesn't support Array.find)
-          $scope.tasks.some(function(t) { if(t.id === id) task = t; return task; });
+          task = find($scope.tasks, function(t) { return t.id === id; });
         }
         return task;
       });
@@ -153,3 +145,10 @@ module.exports.controller('lime.client.todo.taskListPage', [
     }
   }
 ]);
+
+// my current browser doesn't support Array.find
+function find(array, callback) {
+  var found = null;
+  array.some(function(item) { if(callback(item)) found = item; return found; });
+  return found;
+}

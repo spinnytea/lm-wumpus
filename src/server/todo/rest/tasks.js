@@ -23,8 +23,16 @@ exports.rest = function(router) {
 
     // restrict to the children of a particular task
     if(req.query.hasOwnProperty('children')) {
+      // if no child is provided (empty/null/undefined query param),
+      // then return root thoughts (these are children of the task idea)
       var parent = ideas.proxy(req.query.children || lwt_task);
       sg.addEdge(sg.addVertex(subgraph.matcher.id, parent), links.list.lm_wumpus_todo__child, t);
+    }
+
+    // restrict to tasks with a certain status
+    if(req.query.hasOwnProperty('status')) {
+      var status = ideas.proxy(req.query.status);
+      sg.addEdge(t, links.list.lm_wumpus_todo__status, sg.addVertex(subgraph.matcher.id, status));
     }
 
     // run the search

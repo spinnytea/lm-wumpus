@@ -13,7 +13,7 @@ module.exports.controller('lime.client.todo.queriesController', [
     $scope.searching = false;
     $scope.search = function() {
       $scope.searching = true;
-      $http.get('/rest/todo/tasks?children=').success(function(data) {
+      $http.get('/rest/todo/tasks', { params: $scope.formData }).success(function(data) {
         $scope.searching = false;
         $scope.tasks.splice(0);
         Array.prototype.push.apply($scope.tasks, data.list);

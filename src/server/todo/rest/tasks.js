@@ -2,6 +2,7 @@
 var config = require('lime/src/config');
 var ideas = require('lime/src/database/ideas');
 var links = require('lime/src/database/links');
+var subgraph = require('lime/src/database/subgraph');
 
 var lwt_task = ideas.context('lm_wumpus_todo__task');
 
@@ -13,17 +14,30 @@ exports.rest = function(router) {
 
   // QUERY
   router.get('/tasks', function(req, res) {
-    var list;
+    // build the query
+    var sg = new subgraph.Subgraph();
+    // the task
+    var t = sg.addVertex(subgraph.matcher.filler);
+    // must by of type task
+    sg.addEdge(t, links.list.type_of, sg.addVertex(subgraph.matcher.id, lwt_task));
+
+    // restrict to the children of a particular task
     if(req.query.hasOwnProperty('children')) {
-      var root = ideas.proxy(req.query.children || lwt_task);
-      list = root.link(links.list.lm_wumpus_todo__child);
-    } else {
-      // for now, it just returns everything
-      list = lwt_task.link(links.list.type_of.opposite);
+      var parent = ideas.proxy(req.query.children || lwt_task);
+      sg.addEdge(sg.addVertex(subgraph.matcher.id, parent), links.list.lm_wumpus_todo__child, t);
     }
 
-    list = list.map(getTaskData);
+    // run the search
+    var result = subgraph.search(sg);
 
+    // collect the results we want to send to the UI
+    var list = result
+      // get the task idea from each of the result graphs
+      .map(function(g) { return g.getIdea(t); })
+      // get the task data from these ideas
+      .map(getTaskData);
+
+    // return the list of task data
     res.json({ list: list });
   });
 

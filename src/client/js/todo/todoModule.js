@@ -2,6 +2,7 @@
 // I should just use a bug tracker or something
 
 module.exports = angular.module('lime.client.todo', [
+  require('./queries').name,
   require('./taskDirective').name,
   require('./taskList').name,
   'ngRoute'
@@ -24,6 +25,9 @@ module.exports = angular.module('lime.client.todo', [
     }).when('/todo/tasks/:id', {
       templateUrl: 'partials/todo/createTask.html',
       controller: 'lime.client.todo.createTask',
+    }).when('/todo/queries', {
+      templateUrl: 'partials/todo/queries.html',
+      controller: 'lime.client.todo.queriesController',
     });
   }
 ])

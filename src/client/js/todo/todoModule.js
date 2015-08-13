@@ -89,32 +89,20 @@ module.exports = angular.module('lime.client.todo', [
   '$http',
   '$location',
   '$routeParams',
-  'lime.client.todo.taskListService',
-  function($scope, $http, $location, $routeParams, taskListService) {
+  function($scope, $http, $location, $routeParams) {
     $scope.nested = { taskObject: {} };
     $scope.createError = false;
-    var originalParent;
 
     if($routeParams.id)
       $http.get('/rest/todo/tasks/' + $routeParams.id).success(function(data) {
         $scope.nested.taskObject = data;
-        originalParent = data.parent;
       });
 
     $scope.create = function() {
-      if($scope.nested.taskObject.parent)
-        taskListService.stale.children[$scope.nested.taskObject.parent] = true;
       $http.post('/rest/todo/tasks', $scope.nested.taskObject).success($scope.goHome);
     };
 
     $scope.update = function() {
-      taskListService.stale.updated[$routeParams.id] = true;
-      if(originalParent !== $scope.nested.taskObject.parent) {
-        if(originalParent)
-          taskListService.stale.children[originalParent] = true;
-        if($scope.nested.taskObject.parent)
-          taskListService.stale.children[$scope.nested.taskObject.parent] = true;
-      }
       $http.put('/rest/todo/tasks/' + $routeParams.id, $scope.nested.taskObject);
     };
 

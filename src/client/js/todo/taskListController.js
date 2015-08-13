@@ -10,14 +10,7 @@ module.exports.service('lime.client.todo.taskListService', [
 
     // store data for the task list page
     instance.page = {};
-    instance.page.tasks = [];
     instance.page.viewData = {};
-
-    // the keys are task ids to update; the values are arbitrary
-    instance.stale = {
-      updated: {},
-      children: {} // this references the parent under which the children are stale
-    };
 
     instance.initViewData = function(list, viewData, parent) {
       var level = 0;
@@ -121,79 +114,36 @@ module.exports.controller('lime.client.todo.taskListPage', [
   '$http',
   'lime.client.todo.taskListService',
   function($scope, $http, taskListService) {
-    $scope.tasks = taskListService.page.tasks;
-    $scope.viewData = taskListService.page.viewData;
 
-    if($scope.tasks.length === 0) {
-      $http.get('/rest/todo/tasks?children=').success(function(data) {
-        taskListService.initViewData(data.list, $scope.viewData);
-        Array.prototype.push.apply($scope.tasks, data.list);
-      });
-    }
+    // load the old view data
+    var toExpand = [];
+    angular.forEach(taskListService.page.viewData, function(data, id) { if(data.expanded) toExpand.push(id); });
+    $scope.viewData = taskListService.page.viewData = {};
 
-    function getStaleList(obj) {
-      // only return the keys the are in the task list (this will probably be all of them
-      return Object.keys(obj).filter(function(id) {
-        return $scope.tasks.some(function(t) { return t.id === id; });
-      });
-    }
+    // query the tasks
+    $scope.tasks = [];
+    $http.get('/rest/todo/tasks?children=').success(function(data) {
+      taskListService.initViewData(data.list, $scope.viewData);
+      Array.prototype.push.apply($scope.tasks, data.list);
 
-    getStaleList(taskListService.stale.updated).forEach(function(id) {
-      $http.get('/rest/todo/tasks/'+id).success(function(data) {
-        // my current browser doesn't support Array.find
-        // basically, find the object's position in the task list, and update it
-        var idx = null;
-        $scope.tasks.some(function(t, i) { if(t.id === id) idx = i; return idx !== null; });
-        angular.extend($scope.tasks[idx], data);
-      });
+      // expand everything that was expanded previously
+      expandAll(toExpand);
     });
-    taskListService.stale.updated = {};
-
-    getStaleList(taskListService.stale.children).forEach(function(id) {
-      // collect a list of everything that was expanded before we collapse the parent
-      var toExpand = [];
-
-      if($scope.viewData[id].expanded) {
-        // collect all the expended elements before the collapse
-        angular.forEach($scope.viewData, function(data, id) { if(data.expanded) toExpand.push(id); });
-
-        var task = null;
-        $scope.tasks.some(function(t) { if(t.id === id) task = t; return task; });
-        taskListService.collapse($scope.tasks, $scope.viewData, task);
-
-        // remove all the expanded elements after the collapse
-        angular.forEach($scope.viewData, function(data, id) {
-          if(data.expanded) {
-            var idx = toExpand.indexOf(id);
-            if(idx !== -1)
-              toExpand.splice(idx, 1);
-          }
-        });
-      }
-
-      $http.get('/rest/todo/tasks/'+id).success(function(data) {
-        // my current browser doesn't support Array.find
-        // basically, find the object's position in the task list, and update it
-        var idx = null;
-        $scope.tasks.some(function(t, i) { if(t.id === id) idx = i; return idx !== null; });
-        angular.extend($scope.tasks[idx], data);
-
-        expandAll(toExpand);
-      });
-    });
-    taskListService.stale.children = {};
 
     function expandAll(toExpand) {
-      // find something on toExpand that is in the task list
+      // find for a 'toExpand' that is in the task list and unexpanded
+      // this will find top level things, and work it's way down
       var task = null;
       toExpand.some(function(id) {
         if((id in $scope.viewData) && !$scope.viewData[id].expanded) {
-          // find it in the list
+          // find it in the list (the browser I'm using doesn't support Array.find)
           $scope.tasks.some(function(t) { if(t.id === id) task = t; return task; });
         }
         return task;
       });
 
+      // once nothing is found, then we will terminate
+      // as long as there is a task that we can expand, then expand it
       if(task) {
         // expand it
         // then keep going

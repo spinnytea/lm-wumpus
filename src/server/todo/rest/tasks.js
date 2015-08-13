@@ -35,6 +35,12 @@ exports.rest = function(router) {
       sg.addEdge(t, links.list.lm_wumpus_todo__status, sg.addVertex(subgraph.matcher.id, status));
     }
 
+    // restrict to tasks with a certain type
+    if(req.query.hasOwnProperty('type')) {
+      var type = ideas.proxy(req.query.type);
+      sg.addEdge(t, links.list.lm_wumpus_todo__type, sg.addVertex(subgraph.matcher.id, type));
+    }
+
     // run the search
     var result = subgraph.search(sg);
 

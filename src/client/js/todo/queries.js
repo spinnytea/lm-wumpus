@@ -8,6 +8,7 @@ module.exports.controller('lime.client.todo.queriesController', [
     $scope.tasks = [];
     $scope.formData = {};
 
+    $http.get('/rest/todo/types').success(function(data) { $scope.types = data.list.sort(function(a, b) { return b.order - a.order; }); });
     $http.get('/rest/todo/statuses').success(function(data) { $scope.statuses = data.list.sort(function(a, b) { return b.order - a.order; }); });
 
     $scope.searching = false;

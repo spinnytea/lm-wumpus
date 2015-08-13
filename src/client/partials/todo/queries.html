@@ -5,3 +5,26 @@
     |
     <a href="#/todo/tasks">Task List</a>
 </div>
+
+<div class="well form-horizontal row">
+    <div class="col-md-6"> <!-- start of left part of form -->
+
+        <div class="form-group">
+            <label class="col-sm-4 control-label" for="status">Status</label>
+            <div class="col-sm-8">
+                <select class="form-control" id="status" data-ng-model="formData.status"
+                        ng-options="item.id as item.name for item in statuses"></select>
+            </div>
+        </div>
+
+    </div> <!-- end of left part of form -->
+    <div class="col-md-6"> <!-- start of right part of form -->
+        <div class="form-group" align="right">
+            <div class="col-sm-12">
+                <button class="btn btn-primary" ng-click="search()" data-ng-disabled="searching"><i class="fa fa-search"></i> Search</button>
+            </div>
+        </div>
+    </div> <!-- end of right part of form -->
+</div>
+
+<div task-list data-tasks="tasks"></div>

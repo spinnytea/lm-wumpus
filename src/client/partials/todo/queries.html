@@ -13,7 +13,9 @@
             <label class="col-sm-4 control-label" for="status">Status</label>
             <div class="col-sm-8">
                 <select class="form-control" id="status" data-ng-model="formData.status"
-                        ng-options="item.id as item.name for item in statuses"></select>
+                        ng-options="item.id as item.name for item in statuses">
+                    <option></option>
+                </select>
             </div>
         </div>
 

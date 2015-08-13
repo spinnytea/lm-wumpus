@@ -24,10 +24,12 @@ module.exports.service('lime.client.todo.taskListService', [
       });
 
       list.sort(function(a, b) {
+        // alphabetical sort on names
         if(a.name && b.name)
-          return a.name.toUpperCase() > b.name.toUpperCase();
+          return (a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1);
         else
-          return a.name > b.name;
+          // if a name is not provided, then compare them directly? maybe?
+          return (a.name > b.name ? 1 : -1);
       });
     };
 

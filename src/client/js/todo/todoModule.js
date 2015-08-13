@@ -61,7 +61,7 @@ module.exports = angular.module('lime.client.todo', [
     $scope.items = [];
     function getItems() {
       $http.get(root).success(function(data) {
-        $scope.items = data.list.sort(function(a, b) { return b.order > a.order; });
+        $scope.items = data.list.sort(function(a, b) { return b.order - a.order; });
       });
     }
     getItems();
@@ -144,9 +144,7 @@ module.exports = angular.module('lime.client.todo', [
         };
 
         var types = {};
-        $http.get('/rest/todo/types').success(function(data) {
-          types = data.list.reduce(function(ret, obj) { ret[obj.id] = obj; return ret; }, {});
-        });
+        $http.get('/rest/todo/types').success(function(data) { types = data.list.reduce(function(ret, obj) { ret[obj.id] = obj; return ret; }, {}); });
 
         $scope.$on('$destroy', $scope.$watch('formData.id', function(id) {
           if(id) {

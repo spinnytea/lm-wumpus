@@ -51,14 +51,13 @@ function Controller($scope, $http, $location, $routeParams) {
 
   $scope.statuses = [];
   $http.get('/rest/todo/statuses').success(function(data) {
-    $scope.statuses = data.list.sort(function(a, b) { return b.order > a.order; });
+    $scope.statuses = data.list.sort(function(a, b) { return b.order - a.order; });
     if($scope.formData.id === undefined)
+      // default to the first status
       $scope.formData.status = $scope.statuses[0].id;
   });
   $scope.types = [];
-  $http.get('/rest/todo/types').success(function(data) {
-    $scope.types = data.list.sort(function(a, b) { return b.order > a.order; });
-  });
+  $http.get('/rest/todo/types').success(function(data) { $scope.types = data.list.sort(function(a, b) { return b.order - a.order; }); });
 
   $scope.addBlocking = function() { $scope.formData.blocking.push(undefined); };
   $scope.removeBlocking = function(idx) { $scope.formData.blocking.splice(idx, 1); };

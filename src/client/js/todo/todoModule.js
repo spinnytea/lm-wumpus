@@ -116,12 +116,13 @@ module.exports = angular.module('lime.client.todo', [
   }
 ])
 .directive('taskId', [
-  function() {
+  '$q',
+  function($q) {
     return {
       restrict: 'A',
       require: 'ngModel',
       replace: true,
-      scope: {},
+      scope: { readonly: '=' },
       link: function($scope, elem, attr, ngModelController) {
         elem.find('input').attr('id', attr.id);
         elem.removeAttr('id');
@@ -135,8 +136,10 @@ module.exports = angular.module('lime.client.todo', [
           $scope.formData.name = '';
         };
       },
-      template: '<div class="form-inline"><input class="form-control" ng-model="formData.id" />&nbsp;<i ng-class="formData.icon"></i>&nbsp;<a href="#/todo/tasks/{{formData.id}}" ng-bind="formData.name"></a></div>',
+      template: '<div class="form-inline"><input class="form-control" ng-model="formData.id" ng-readonly="readonly" />&nbsp;<i ng-class="formData.icon"></i>&nbsp;<a href="#/todo/tasks/{{formData.id}}" ng-bind="formData.name"></a></div>',
       controller: ['$scope', '$http', function($scope, $http) {
+        var loaded = $q.defer();
+
         $scope.formData = {
           id: undefined,
           icon: '',
@@ -144,23 +147,28 @@ module.exports = angular.module('lime.client.todo', [
         };
 
         var types = {};
-        $http.get('/rest/todo/types').success(function(data) { types = data.list.reduce(function(ret, obj) { ret[obj.id] = obj; return ret; }, {}); });
+        $http.get('/rest/todo/types').success(function(data) {
+          types = data.list.reduce(function(ret, obj) { ret[obj.id] = obj; return ret; }, {});
+          loaded.resolve();
+        });
 
-        $scope.$on('$destroy', $scope.$watch('formData.id', function(id) {
-          if(id) {
-            $http.get('/rest/todo/tasks/'+id)
-              .success(function(data) {
-                $scope.formData.icon = types[data.type].icon;
-                $scope.formData.name = data.name;
-              })
-              .error(function(data) {
-                $scope.formData.icon = '';
-                $scope.formData.name = (data.message || 'Error');
-              });
-          } else {
-            $scope.formData.name = 'None';
-          }
-        }));
+        loaded.promise.then(function() {
+          $scope.$on('$destroy', $scope.$watch('formData.id', function(id) {
+            if(id) {
+              $http.get('/rest/todo/tasks/'+id)
+                .success(function(data) {
+                  $scope.formData.icon = types[data.type].icon;
+                  $scope.formData.name = data.name;
+                })
+                .error(function(data) {
+                  $scope.formData.icon = '';
+                  $scope.formData.name = (data.message || 'Error');
+                });
+            } else {
+              $scope.formData.name = 'None';
+            }
+          }));
+        });
       }]
     };
   }

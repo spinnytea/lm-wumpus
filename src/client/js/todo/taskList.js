@@ -60,17 +60,19 @@ module.exports.service('lime.client.todo.taskListService', [
     function collapseChildren(tasks, viewData, task, remove) {
       Array.prototype.push.apply(remove, task.children);
       task.children
-        .filter(function(id) { return viewData[id].expanded; })
+        .filter(function(id) { return (id in viewData) && viewData[id].expanded; })
         .forEach(function(id) { collapseChildren(tasks, viewData, find(tasks, function(task) { return task.id === id; }), remove); });
       task.children
         .forEach(function(id) { delete viewData[id]; });
     }
 
     // prereq: !viewData[task.id].expanded
-    instance.expand = function(tasks, viewData, task) {
+    instance.expand = function(tasks, viewData, task, hideClosed) {
+      var statuses = statusService.map;
       var deferred = $q.defer();
       viewData[task.id].expanded = true;
       $http.get('/rest/todo/tasks?children='+task.id).success(function(data) {
+        if(hideClosed) data.list = data.list.filter(function(task) { return statuses[task.status].category !== '2'; });
         instance.initViewData(data.list, viewData, task);
         data.list.unshift(tasks.indexOf(task)+1, 0);
         tasks.splice.apply(tasks, data.list);
@@ -87,7 +89,8 @@ module.exports.directive('taskList', [
     return {
       scope: {
         tasks: '=',
-        viewData: '='
+        viewData: '=',
+        hideClosed: '='
       },
       templateUrl: 'partials/todo/taskList.html',
       controller: 'lime.client.todo.taskList'
@@ -111,7 +114,7 @@ module.exports.controller('lime.client.todo.taskList', [
       if($scope.viewData[task.id].expanded) {
         taskListService.collapse($scope.tasks, $scope.viewData, task);
       } else {
-        taskListService.expand($scope.tasks, $scope.viewData, task);
+        taskListService.expand($scope.tasks, $scope.viewData, task, $scope.hideClosed);
       }
     };
 
@@ -161,7 +164,7 @@ module.exports.controller('lime.client.todo.taskListPage', [
       if(task) {
         // expand it
         // then keep going
-        taskListService.expand($scope.tasks, $scope.viewData, task)
+        taskListService.expand($scope.tasks, $scope.viewData, task, true)
           .then(function() { expandAll(toExpand); });
       }
     }

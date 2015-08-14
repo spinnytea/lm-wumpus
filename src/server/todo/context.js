@@ -13,6 +13,7 @@ var lm_wumpus_todo = ideas.context('lm_wumpus_todo');
 var lwt_task = ideas.context('lm_wumpus_todo__task');
 var lwt_status = ideas.context('lm_wumpus_todo__status');
 var lwt_type = ideas.context('lm_wumpus_todo__type');
+var lwt_priority = ideas.context('lm_wumpus_todo__priority');
 ensureContext(lwt_task);
 ensureContext(lwt_status);
 ensureContext(lwt_type);
@@ -26,6 +27,8 @@ links.create('lm_wumpus_todo__depends_on');
 links.create('lm_wumpus_todo__status');
 // task --status-> type
 links.create('lm_wumpus_todo__type');
+// task --status-> priority
+links.create('lm_wumpus_todo__priority');
 // task --child-> task
 // special case (root): lwt_task -> task
 links.create('lm_wumpus_todo__child');
@@ -46,6 +49,7 @@ exports.rest = function(router) {
   require('./rest/tasks').rest(router);
   enums.rest(router, 'statuses', lwt_status);
   enums.rest(router, 'types', lwt_type);
+  enums.rest(router, 'priorities', lwt_priority);
 
   return router;
 };

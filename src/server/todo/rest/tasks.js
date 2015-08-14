@@ -128,6 +128,7 @@ function getTaskData(idea) {
 function updateTask(idea, data) {
   ensureList(idea, links.list.lm_wumpus_todo__status, data.status?[data.status]:[]);
   ensureList(idea, links.list.lm_wumpus_todo__type, data.type?[data.type]:[]);
+  ensureList(idea, links.list.lm_wumpus_todo__priority, data.priority?[data.priority]:[]);
   ensureList(idea, links.list.lm_wumpus_todo__child.opposite, [(data.parent || lwt_task)]); // if there is no parent, then default to the task root
   delete data.children;
 

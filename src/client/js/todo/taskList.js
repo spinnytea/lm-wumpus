@@ -24,12 +24,15 @@ module.exports.service('lime.client.todo.taskListService', [
       });
 
       list.sort(function(a, b) {
-        // alphabetical sort on names
-        if(a.name && b.name)
-          return (a.name.toUpperCase() > b.name.toUpperCase() ? 1 : -1);
-        else
-          // if a name is not provided, then compare them directly? maybe?
-          return (a.name > b.name ? 1 : -1);
+        // first sort on priority
+        if(b.priority !== a.priority)
+          return b.priority - a.priority;
+
+        // lexicographical sort on ID; highest first
+        if(b.id.length !== a.id.length)
+          return b.id.length - a.id.length;
+        // IDs must not be equal
+        return (b.id > a.id ? 1 : -1);
       });
     };
 

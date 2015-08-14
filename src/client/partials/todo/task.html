@@ -30,6 +30,14 @@
     </div>
 
     <div class="form-group">
+        <label class="col-sm-3 control-label" for="priority">Priority</label>
+        <div class="col-sm-9">
+            <select class="form-control" id="priority" name="priority" data-ng-model="formData.priority"
+                    ng-options="item.id as item.name for item in priorities"></select>
+        </div>
+    </div>
+
+    <div class="form-group">
         <label class="col-sm-3 control-label" for="description">Description</label>
         <div class="col-sm-9">
             <textarea class="form-control" id="description" name="description" rows="4" data-ng-model="formData.description"></textarea>

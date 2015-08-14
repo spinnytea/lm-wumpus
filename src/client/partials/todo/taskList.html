@@ -19,7 +19,8 @@
             {{task.name}} <sup data-ng-if="task.description" title="{{task.description}}"><i>[desc]</i></sup>
         </td>
         <td class="min-width">
-            <i ng-class="statuses[task.status].icon" title="{{statuses[task.status].name}}"></i>&nbsp;
+            <i ng-class="priorities[task.priority].icon" title="{{priorities[task.priority].name}}">
+            </i><i ng-class="statuses[task.status].icon" title="{{statuses[task.status].name}}"></i>&nbsp;
         </td>
         <td class="min-width">
             <a class="btn btn-sm btn-default" href="#/todo/tasks/{{task.id}}" title="Edit"><i class="fa fa-pencil"></i></a>

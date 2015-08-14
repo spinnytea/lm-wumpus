@@ -58,6 +58,8 @@ function Controller($scope, $http, $location, $routeParams) {
   });
   $scope.types = [];
   $http.get('/rest/todo/types').success(function(data) { $scope.types = data.list.sort(function(a, b) { return b.order - a.order; }); });
+  $scope.priorities = [];
+  $http.get('/rest/todo/priorities').success(function(data) { $scope.priorities = data.list.sort(function(a, b) { return b.order - a.order; }); });
 
   $scope.addBlocking = function() { $scope.formData.blocking.push(undefined); };
   $scope.removeBlocking = function(idx) { $scope.formData.blocking.splice(idx, 1); };

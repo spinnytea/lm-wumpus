@@ -86,6 +86,7 @@ module.exports.controller('lime.client.todo.taskList', [
   function($scope, $http, taskListService) {
     $http.get('/rest/todo/statuses').success(function(data) { $scope.statuses = data.list.reduce(function(ret, obj) { ret[obj.id] = obj; return ret; }, {}); });
     $http.get('/rest/todo/types').success(function(data) { $scope.types = data.list.reduce(function(ret, obj) { ret[obj.id] = obj; return ret; }, {}); });
+    $http.get('/rest/todo/priorities').success(function(data) { $scope.priorities = data.list.reduce(function(ret, obj) { ret[obj.id] = obj; return ret; }, {}); });
 
     $scope.expand = function(task) {
       if($scope.viewData[task.id].expanded) {

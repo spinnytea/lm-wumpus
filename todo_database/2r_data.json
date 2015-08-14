@@ -1,1 +1,1 @@
-{"name":"Store enum list in context object","parent":"2k","type":"8","status":"7","description":"If they are going to be auto-magic, then we better go full scope; the UI is going to need a list of them, be able to create them, auto-add them to the task page","id":"2r","priority":"37"}
+{"name":"Store enum list in context object","parent":"2k","type":"8","status":"f","description":"If they are going to be auto-magic, then we better go full scope; the UI is going to need a list of them, be able to create them, auto-add them to the task page","id":"2r","priority":"37"}

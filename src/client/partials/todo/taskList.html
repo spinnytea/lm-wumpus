@@ -13,10 +13,11 @@
                     ng-click="expand(task)"></i>&nbsp;
         </td>
         <td style="width: 10%;">{{task.id}}</td>
-        <td style="width: 90%;" ng-class="statuses[task.status].categoryClass">
+        <td style="width: 90%;">
             <i class="fa fa-fw" ng-repeat="ignore in range(viewData[task.id].level) track by $index">
             </i><i ng-class="types[task.type].icon" title="{{types[task.type].name}}"></i>&nbsp;
-            {{task.name}} <sup data-ng-if="task.description" title="{{task.description}}"><i>[desc]</i></sup>
+            <span ng-bind="task.name" ng-class="statuses[task.status].categoryClass"></span>
+            <sup data-ng-if="task.description" title="{{task.description}}"><i>[desc]</i></sup>
         </td>
         <td class="min-width">
             <i ng-class="priorities[task.priority].icon" title="{{priorities[task.priority].name}}">

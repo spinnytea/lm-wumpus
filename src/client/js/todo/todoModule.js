@@ -115,8 +115,9 @@ module.exports = angular.module('lime.client.todo', [
   }
 ])
 .directive('taskId', [
+  'lime.client.todo.enums.statuses',
   'lime.client.todo.enums.types',
-  function(typeService) {
+  function(statusService, typeService) {
     return {
       restrict: 'A',
       require: 'ngModel',
@@ -135,15 +136,17 @@ module.exports = angular.module('lime.client.todo', [
           $scope.formData.name = '';
         };
       },
-      template: '<div class="form-inline"><input class="form-control" ng-model="formData.id" ng-readonly="readonly" />&nbsp;<i ng-class="formData.icon"></i>&nbsp;<a href="#/todo/tasks/{{formData.id}}" ng-bind="formData.name"></a></div>',
+      template: '<div class="form-inline"><input class="form-control" ng-model="formData.id" ng-readonly="readonly" />&nbsp;<i ng-class="formData.icon"></i>&nbsp;<a href="#/todo/tasks/{{formData.id}}" ng-bind="formData.name" ng-class="formData.class"></a></div>',
       controller: ['$scope', '$http', function($scope, $http) {
         $scope.formData = {
           id: undefined,
           icon: '',
+          class: '',
           name: 'None'
         };
 
-        typeService.ready.then(function() {
+        statusService.ready.then(function() { typeService.ready.then(function() {
+          var statuses = statusService.map;
           var types = typeService.map;
 
           $scope.$on('$destroy', $scope.$watch('formData.id', function(id) {
@@ -151,6 +154,7 @@ module.exports = angular.module('lime.client.todo', [
               $http.get('/rest/todo/tasks/'+id)
                 .success(function(data) {
                   $scope.formData.icon = types[data.type].icon;
+                  $scope.formData.class = statuses[data.status].categoryClass;
                   $scope.formData.name = data.name;
                 })
                 .error(function(data) {
@@ -161,7 +165,7 @@ module.exports = angular.module('lime.client.todo', [
               $scope.formData.name = 'None';
             }
           }));
-        });
+        }); });
       }]
     };
   }

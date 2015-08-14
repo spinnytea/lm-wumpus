@@ -20,6 +20,16 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <label class="col-sm-4 control-label" for="priority">Priority</label>
+            <div class="col-sm-8">
+                <select class="form-control" id="priority" data-ng-model="formData.priority"
+                        ng-options="item.id as item.name for item in priorities">
+                    <option></option>
+                </select>
+            </div>
+        </div>
+
     </div> <!-- end of left part of form -->
     <div class="col-md-6"> <!-- start of right part of form -->
 

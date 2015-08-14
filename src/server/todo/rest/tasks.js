@@ -41,6 +41,12 @@ exports.rest = function(router) {
       sg.addEdge(t, links.list.lm_wumpus_todo__type, sg.addVertex(subgraph.matcher.id, type));
     }
 
+    // restrict to tasks with a certain priority
+    if(req.query.hasOwnProperty('priority')) {
+      var priority = ideas.proxy(req.query.priority);
+      sg.addEdge(t, links.list.lm_wumpus_todo__priority, sg.addVertex(subgraph.matcher.id, priority));
+    }
+
     // run the search
     var result = subgraph.search(sg);
 

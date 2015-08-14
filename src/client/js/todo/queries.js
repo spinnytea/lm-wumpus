@@ -10,11 +10,13 @@ module.exports.controller('lime.client.todo.queriesController', [
   '$http',
   'lime.client.todo.enums.statuses',
   'lime.client.todo.enums.types',
-  function($scope, $http, statusService, typeService) {
+  'lime.client.todo.enums.priorities',
+  function($scope, $http, statusService, typeService, priorityService) {
     $scope.tasks = [];
     $scope.formData = formData;
     statusService.ready.then(function() { $scope.statuses = statusService.list; });
     typeService.ready.then(function() { $scope.types = typeService.list; });
+    priorityService.ready.then(function() { $scope.priorities = priorityService.list; });
 
     $scope.searching = false;
     $scope.search = function() {

@@ -1,1 +1,1 @@
-{"name":"Move task database to src","parent":"l","type":"8","status":"h","description":"There isn't much of a reason to keep it separate, and that's the point of the 'integration src project' anyway","id":"2i"}
+{"name":"Move task database to src","parent":"l","type":"8","status":"h","description":"There isn't much of a reason to keep it separate, and that's the point of the 'integration src project' anyway","id":"2i","priority":"37"}

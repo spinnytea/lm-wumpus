@@ -5,6 +5,9 @@ module.exports.service('lime.client.todo.taskListService', [
   '$http',
   '$q',
   function($http, $q) {
+    var priorities;
+    $http.get('/rest/todo/priorities').success(function(data) { priorities = data.list.reduce(function(ret, obj) { ret[obj.id] = obj; return ret; }, {}); });
+
     var instance = {};
 
     // store data for the task list page
@@ -26,7 +29,7 @@ module.exports.service('lime.client.todo.taskListService', [
       list.sort(function(a, b) {
         // first sort on priority
         if(b.priority !== a.priority)
-          return b.priority - a.priority;
+          return priorities[b.priority].order - priorities[a.priority].order;
 
         // lexicographical sort on ID; highest first
         if(b.id.length !== a.id.length)

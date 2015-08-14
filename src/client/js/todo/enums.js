@@ -1,16 +1,22 @@
 'use strict';
 
 module.exports = angular.module('lime.client.todo.enums', []);
-module.exports.service('lime.client.todo.enums.statuses', createService('/rest/todo/statuses'));
+module.exports.service('lime.client.todo.enums.statuses', createService('/rest/todo/statuses', {
+  0: { display: 'Start', class: 'identified' },
+  1: { display: 'Being Addressed', class: 'open' },
+  2: { display: 'Finished', class: 'closed' },
+}));
 module.exports.service('lime.client.todo.enums.types', createService('/rest/todo/types'));
 module.exports.service('lime.client.todo.enums.priorities', createService('/rest/todo/priorities'));
 
-function createService(path) {
+function createService(path, categories) {
   return [
     '$q',
     '$http',
     function($q, $http) {
       var instance = {};
+
+      instance.categories = categories;
 
       instance.update = function() {
         var deferred = $q.defer();

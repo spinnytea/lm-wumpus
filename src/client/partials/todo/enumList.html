@@ -6,16 +6,18 @@
     <thead><tr>
         <th>Icon</th>
         <th>Name</th>
-        <th>Description</th>
         <th>Order</th>
+        <th ng-if="categories">Category</th>
+        <th>Description</th>
         <th>Actions</th>
     </tr></thead>
     <tbody>
         <tr ng-repeat="item in items">
             <td><i ng-class="item.icon"></i></td>
             <td>{{item.name}}</td>
-            <td>{{item.description}}</td>
             <td>{{item.order}}</td>
+            <td ng-if="categories">{{categories[item.category].display}}</td>
+            <td>{{item.description}}</td>
             <td>
                 <i class="fa fa-pencil" title="Edit" ng-click="edit(item)"></i>
             </td>
@@ -44,16 +46,25 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-4 control-label" for="description">Description</label>
+            <label class="col-sm-4 control-label" for="order">Order</label>
             <div class="col-sm-8">
-                <textarea class="form-control" id="description" name="description" data-ng-model="formData.description"></textarea>
+                <input class="form-control" type="number" id="order" name="order" data-ng-model="formData.order" />
+            </div>
+        </div>
+
+        <div class="form-group" ng-if="categories">
+            <label class="col-sm-4 control-label" for="category">Category</label>
+            <div class="col-sm-8">
+                <select class="form-control" id="category" name="category" data-ng-model="formData.category"
+                        ng-options="id as item.display for (id, item) in categories">
+                </select>
             </div>
         </div>
 
         <div class="form-group">
-            <label class="col-sm-4 control-label" for="order">Order</label>
+            <label class="col-sm-4 control-label" for="description">Description</label>
             <div class="col-sm-8">
-                <input class="form-control" type="number" id="order" name="order" data-ng-model="formData.order" />
+                <textarea class="form-control" id="description" name="description" data-ng-model="formData.description"></textarea>
             </div>
         </div>
 

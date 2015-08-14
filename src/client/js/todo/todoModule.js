@@ -56,6 +56,7 @@ module.exports = angular.module('lime.client.todo', [
     var service = $injector.get('lime.client.todo.enums.' + $routeParams.name);
     var root = '/rest/todo/' + $routeParams.name;
     $scope.label = $routeParams.name;
+    $scope.categories = service.categories;
 
     $scope.goHome = function() {
       $location.path('/todo');

@@ -2,6 +2,7 @@
 // I should just use a bug tracker or something
 
 module.exports = angular.module('lime.client.todo', [
+  require('./enums').name,
   require('./queries').name,
   require('./taskDirective').name,
   require('./taskList').name,
@@ -50,7 +51,9 @@ module.exports = angular.module('lime.client.todo', [
   '$http',
   '$location',
   '$routeParams',
-  function($scope, $http, $location, $routeParams) {
+  '$injector',
+  function($scope, $http, $location, $routeParams, $injector) {
+    var service = $injector.get('lime.client.todo.enums.' + $routeParams.name);
     var root = '/rest/todo/' + $routeParams.name;
     $scope.label = $routeParams.name;
 
@@ -59,12 +62,7 @@ module.exports = angular.module('lime.client.todo', [
     };
 
     $scope.items = [];
-    function getItems() {
-      $http.get(root).success(function(data) {
-        $scope.items = data.list.sort(function(a, b) { return b.order - a.order; });
-      });
-    }
-    getItems();
+    service.ready.then(function() { $scope.items = service.list; });
 
     $scope.formData = {};
 
@@ -76,14 +74,14 @@ module.exports = angular.module('lime.client.todo', [
     $scope.save = function() {
       $http.put(root + '/' + $scope.formData.id, $scope.formData).success(function() {
         $scope.formData = {};
-        getItems();
+        service.update().then(function() { $scope.items = service.list; });
       });
     };
 
     $scope.create = function() {
       $http.post(root, $scope.formData).success(function() {
         $scope.formData = {};
-        getItems();
+        service.update().then(function() { $scope.items = service.list; });
       });
     };
   }
@@ -116,8 +114,8 @@ module.exports = angular.module('lime.client.todo', [
   }
 ])
 .directive('taskId', [
-  '$q',
-  function($q) {
+  'lime.client.todo.enums.types',
+  function(typeService) {
     return {
       restrict: 'A',
       require: 'ngModel',
@@ -138,21 +136,15 @@ module.exports = angular.module('lime.client.todo', [
       },
       template: '<div class="form-inline"><input class="form-control" ng-model="formData.id" ng-readonly="readonly" />&nbsp;<i ng-class="formData.icon"></i>&nbsp;<a href="#/todo/tasks/{{formData.id}}" ng-bind="formData.name"></a></div>',
       controller: ['$scope', '$http', function($scope, $http) {
-        var loaded = $q.defer();
-
         $scope.formData = {
           id: undefined,
           icon: '',
           name: 'None'
         };
 
-        var types = {};
-        $http.get('/rest/todo/types').success(function(data) {
-          types = data.list.reduce(function(ret, obj) { ret[obj.id] = obj; return ret; }, {});
-          loaded.resolve();
-        });
+        typeService.ready.then(function() {
+          var types = typeService.map;
 
-        loaded.promise.then(function() {
           $scope.$on('$destroy', $scope.$watch('formData.id', function(id) {
             if(id) {
               $http.get('/rest/todo/tasks/'+id)

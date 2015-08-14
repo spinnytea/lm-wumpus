@@ -2,16 +2,26 @@
 
 var formData = {};
 
-module.exports = angular.module('lime.client.todo.queries', []);
+module.exports = angular.module('lime.client.todo.queries', [
+  require('./enums').name,
+]);
 module.exports.controller('lime.client.todo.queriesController', [
   '$scope',
+  '$q',
   '$http',
-  function($scope, $http) {
+  'lime.client.todo.enums.statuses',
+  'lime.client.todo.enums.types',
+  function($scope, $q, $http, statusService, typeService) {
     $scope.tasks = [];
     $scope.formData = formData;
 
-    $http.get('/rest/todo/types').success(function(data) { $scope.types = data.list.sort(function(a, b) { return b.order - a.order; }); });
-    $http.get('/rest/todo/statuses').success(function(data) { $scope.statuses = data.list.sort(function(a, b) { return b.order - a.order; }); });
+    $q.all([
+      statusService.ready,
+      typeService.ready,
+    ]).then(function() {
+      $scope.statuses = statusService.list;
+      $scope.types = typeService.list;
+    });
 
     $scope.searching = false;
     $scope.search = function() {

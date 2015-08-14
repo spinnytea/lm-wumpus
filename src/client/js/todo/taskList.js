@@ -1,13 +1,13 @@
 'use strict';
 
-module.exports = angular.module('lime.client.todo.taskList', []);
+module.exports = angular.module('lime.client.todo.taskList', [
+  require('./enums').name,
+]);
 module.exports.service('lime.client.todo.taskListService', [
   '$http',
   '$q',
-  function($http, $q) {
-    var priorities;
-    $http.get('/rest/todo/priorities').success(function(data) { priorities = data.list.reduce(function(ret, obj) { ret[obj.id] = obj; return ret; }, {}); });
-
+  'lime.client.todo.enums.priorities',
+  function($http, $q, priorityService) {
     var instance = {};
 
     // store data for the task list page
@@ -15,6 +15,7 @@ module.exports.service('lime.client.todo.taskListService', [
     instance.page.viewData = {};
 
     instance.initViewData = function(list, viewData, parent) {
+      var priorities = priorityService.map;
       var level = 0;
       if(parent)
         level = viewData[parent.id].level + 1;
@@ -87,12 +88,22 @@ module.exports.directive('taskList', [
 ]);
 module.exports.controller('lime.client.todo.taskList', [
   '$scope',
+  '$q',
   '$http',
   'lime.client.todo.taskListService',
-  function($scope, $http, taskListService) {
-    $http.get('/rest/todo/statuses').success(function(data) { $scope.statuses = data.list.reduce(function(ret, obj) { ret[obj.id] = obj; return ret; }, {}); });
-    $http.get('/rest/todo/types').success(function(data) { $scope.types = data.list.reduce(function(ret, obj) { ret[obj.id] = obj; return ret; }, {}); });
-    $http.get('/rest/todo/priorities').success(function(data) { $scope.priorities = data.list.reduce(function(ret, obj) { ret[obj.id] = obj; return ret; }, {}); });
+  'lime.client.todo.enums.statuses',
+  'lime.client.todo.enums.types',
+  'lime.client.todo.enums.priorities',
+  function($scope, $q, $http, taskListService, statusService, typeService, priorityService) {
+    $q.all([
+      statusService.ready,
+      typeService.ready,
+      priorityService.ready,
+    ]).then(function() {
+      $scope.statuses = statusService.map;
+      $scope.types = typeService.map;
+      $scope.priorities = priorityService.map;
+    });
 
     $scope.expand = function(task) {
       if($scope.viewData[task.id].expanded) {

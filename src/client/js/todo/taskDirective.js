@@ -11,7 +11,7 @@ var EMPTY_TASK = {
   blockedBy: [],
 };
 
-module.exports = angular.module('lime.client.todo.taskDirective', [])
+module.exports = angular.module('lime.client.todo.taskDirective', [ require('./enums').name ])
 .directive('taskDirective', [function() {
   return {
     replace: true,
@@ -30,12 +30,13 @@ module.exports = angular.module('lime.client.todo.taskDirective', [])
         }
       };
     },
-    controller: ['$scope', '$http', '$location', '$routeParams',
+    controller: ['$scope', '$q', '$location', '$routeParams',
+      'lime.client.todo.enums.statuses', 'lime.client.todo.enums.types', 'lime.client.todo.enums.priorities',
       Controller]
   };
 }]);
 
-function Controller($scope, $http, $location, $routeParams) {
+function Controller($scope, $q, $location, $routeParams, statusService, typeService, priorityService) {
   $scope.formData = angular.copy(EMPTY_TASK);
 
   if($routeParams.parent) {
@@ -49,17 +50,19 @@ function Controller($scope, $http, $location, $routeParams) {
     });
   }
 
-  $scope.statuses = [];
-  $http.get('/rest/todo/statuses').success(function(data) {
-    $scope.statuses = data.list.sort(function(a, b) { return b.order - a.order; });
+  $q.all([
+    statusService.ready,
+    typeService.ready,
+    priorityService.ready,
+  ]).then(function() {
+    $scope.statuses = statusService.list;
+    $scope.types = typeService.list;
+    $scope.priorities = priorityService.list;
+
+    // default to the first status
     if($scope.formData.id === undefined)
-      // default to the first status
       $scope.formData.status = $scope.statuses[0].id;
   });
-  $scope.types = [];
-  $http.get('/rest/todo/types').success(function(data) { $scope.types = data.list.sort(function(a, b) { return b.order - a.order; }); });
-  $scope.priorities = [];
-  $http.get('/rest/todo/priorities').success(function(data) { $scope.priorities = data.list.sort(function(a, b) { return b.order - a.order; }); });
 
   $scope.addBlocking = function() { $scope.formData.blocking.push(undefined); };
   $scope.removeBlocking = function(idx) { $scope.formData.blocking.splice(idx, 1); };

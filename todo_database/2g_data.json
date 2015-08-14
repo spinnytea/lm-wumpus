@@ -1,1 +1,1 @@
-{"blocking":[],"blockedBy":[],"parent":"2b","status":"2h","type":"8","name":"Update all tasks to have blocking and blockedBy","id":"2g"}
+{"parent":"2b","status":"2h","type":"8","name":"Update all tasks to have blocking and blockedBy","id":"2g","description":"These are just links; we don't need to cache them in the data object"}

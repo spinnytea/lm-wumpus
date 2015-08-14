@@ -89,3 +89,9 @@ svg.subgraph {
 /*
  * task list
  */
+
+.closed {
+  color: #CCCCCC;
+  font-style: italic;
+  text-decoration: line-through;
+}

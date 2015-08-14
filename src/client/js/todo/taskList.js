@@ -6,8 +6,9 @@ module.exports = angular.module('lime.client.todo.taskList', [
 module.exports.service('lime.client.todo.taskListService', [
   '$http',
   '$q',
+  'lime.client.todo.enums.statuses',
   'lime.client.todo.enums.priorities',
-  function($http, $q, priorityService) {
+  function($http, $q, statusService, priorityService) {
     var instance = {};
 
     // store data for the task list page
@@ -15,7 +16,6 @@ module.exports.service('lime.client.todo.taskListService', [
     instance.page.viewData = {};
 
     instance.initViewData = function(list, viewData, parent) {
-      var priorities = priorityService.map;
       var level = 0;
       if(parent)
         level = viewData[parent.id].level + 1;
@@ -27,8 +27,16 @@ module.exports.service('lime.client.todo.taskListService', [
         };
       });
 
+
+      var priorities = priorityService.map;
+      var statuses = statusService.map;
+
       list.sort(function(a, b) {
-        // first sort on priority
+        // sort by status category
+        if(statuses[b.status].categoryOrder !== statuses[a.status].categoryOrder)
+          return statuses[b.status].categoryOrder - statuses[a.status].categoryOrder;
+
+        // sort on priority
         if(b.priority !== a.priority)
           return priorities[b.priority].order - priorities[a.priority].order;
 

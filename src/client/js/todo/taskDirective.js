@@ -30,13 +30,13 @@ module.exports = angular.module('lime.client.todo.taskDirective', [ require('./e
         }
       };
     },
-    controller: ['$scope', '$q', '$location', '$routeParams',
+    controller: ['$scope', '$location', '$routeParams',
       'lime.client.todo.enums.statuses', 'lime.client.todo.enums.types', 'lime.client.todo.enums.priorities',
       Controller]
   };
 }]);
 
-function Controller($scope, $q, $location, $routeParams, statusService, typeService, priorityService) {
+function Controller($scope, $location, $routeParams, statusService, typeService, priorityService) {
   $scope.formData = angular.copy(EMPTY_TASK);
 
   if($routeParams.parent) {
@@ -50,19 +50,14 @@ function Controller($scope, $q, $location, $routeParams, statusService, typeServ
     });
   }
 
-  $q.all([
-    statusService.ready,
-    typeService.ready,
-    priorityService.ready,
-  ]).then(function() {
+  statusService.ready.then(function() {
     $scope.statuses = statusService.list;
-    $scope.types = typeService.list;
-    $scope.priorities = priorityService.list;
-
     // default to the first status
     if($scope.formData.id === undefined)
       $scope.formData.status = $scope.statuses[0].id;
   });
+  typeService.ready.then(function() { $scope.types = typeService.list; });
+  priorityService.ready.then(function() { $scope.priorities = priorityService.list; });
 
   $scope.addBlocking = function() { $scope.formData.blocking.push(undefined); };
   $scope.removeBlocking = function(idx) { $scope.formData.blocking.splice(idx, 1); };

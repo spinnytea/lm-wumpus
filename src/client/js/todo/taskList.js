@@ -95,15 +95,9 @@ module.exports.controller('lime.client.todo.taskList', [
   'lime.client.todo.enums.types',
   'lime.client.todo.enums.priorities',
   function($scope, $q, $http, taskListService, statusService, typeService, priorityService) {
-    $q.all([
-      statusService.ready,
-      typeService.ready,
-      priorityService.ready,
-    ]).then(function() {
-      $scope.statuses = statusService.map;
-      $scope.types = typeService.map;
-      $scope.priorities = priorityService.map;
-    });
+    statusService.ready.then(function() { $scope.statuses = statusService.map; });
+    typeService.ready.then(function() { $scope.types = typeService.map; });
+    priorityService.ready.then(function() { $scope.priorities = priorityService.map; });
 
     $scope.expand = function(task) {
       if($scope.viewData[task.id].expanded) {

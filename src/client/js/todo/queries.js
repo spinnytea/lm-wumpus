@@ -7,21 +7,14 @@ module.exports = angular.module('lime.client.todo.queries', [
 ]);
 module.exports.controller('lime.client.todo.queriesController', [
   '$scope',
-  '$q',
   '$http',
   'lime.client.todo.enums.statuses',
   'lime.client.todo.enums.types',
-  function($scope, $q, $http, statusService, typeService) {
+  function($scope, $http, statusService, typeService) {
     $scope.tasks = [];
     $scope.formData = formData;
-
-    $q.all([
-      statusService.ready,
-      typeService.ready,
-    ]).then(function() {
-      $scope.statuses = statusService.list;
-      $scope.types = typeService.list;
-    });
+    statusService.ready.then(function() { $scope.statuses = statusService.list; });
+    typeService.ready.then(function() { $scope.types = typeService.list; });
 
     $scope.searching = false;
     $scope.search = function() {

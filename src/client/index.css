@@ -91,7 +91,6 @@ svg.subgraph {
  */
 
 .closed {
-  color: #CCCCCC;
   font-style: italic;
   text-decoration: line-through;
 }

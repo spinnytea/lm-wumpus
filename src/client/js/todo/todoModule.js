@@ -96,10 +96,17 @@ module.exports = angular.module('lime.client.todo', [
     $scope.nested = { taskObject: {} };
     $scope.createError = false;
 
-    if($routeParams.id)
+    if($routeParams.id) {
       $http.get('/rest/todo/tasks/' + $routeParams.id).success(function(data) {
         $scope.nested.taskObject = data;
       });
+    } else {
+      //statusService.ready.then(function() {
+      //  // default to the first status
+      //  $scope.nested.taskObject = angular.copy($scope.nested.taskObject);
+      //  $scope.nested.taskObject.status = statusService.list[0].id;
+      //});
+    }
 
     $scope.create = function() {
       $http.post('/rest/todo/tasks', $scope.nested.taskObject).success($scope.goHome);

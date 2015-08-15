@@ -50,12 +50,7 @@ function Controller($scope, $location, $routeParams, statusService, typeService,
     });
   }
 
-  statusService.ready.then(function() {
-    $scope.statuses = statusService.list;
-    // default to the first status
-    if($scope.formData.id === undefined)
-      $scope.formData.status = $scope.statuses[0].id;
-  });
+  statusService.ready.then(function() { $scope.statuses = statusService.list; });
   typeService.ready.then(function() { $scope.types = typeService.list; });
   priorityService.ready.then(function() { $scope.priorities = priorityService.list; });
 

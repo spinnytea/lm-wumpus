@@ -1,52 +1,52 @@
 <div class="form-horizontal" ng-form="'taskForm'">
     <div class="form-group">
-        <label class="col-sm-3 control-label" for="taskName">Name</label>
-        <div class="col-sm-9">
+        <label class="col-sm-2 control-label" for="taskName">Name</label>
+        <div class="col-sm-10">
             <input class="form-control" id="taskName" name="taskName" data-ng-model="formData.name" />
         </div>
     </div>
 
     <div class="form-group">
-        <label class="col-sm-3 control-label" for="parent">Parent</label>
-        <div class="col-sm-9">
+        <label class="col-sm-2 control-label" for="parent">Parent</label>
+        <div class="col-sm-10">
             <div id="parent" name="parent" data-ng-model="formData.parent" data-task-id></div>
         </div>
     </div>
 
     <div class="form-group">
-        <label class="col-sm-3 control-label" for="type">Type</label>
-        <div class="col-sm-9">
+        <label class="col-sm-2 control-label" for="type">Type</label>
+        <div class="col-sm-10">
             <select class="form-control" id="type" name="type" data-ng-model="formData.type"
                     ng-options="item.id as item.name for item in types"></select>
         </div>
     </div>
 
     <div class="form-group">
-        <label class="col-sm-3 control-label" for="status">Status</label>
-        <div class="col-sm-9">
+        <label class="col-sm-2 control-label" for="status">Status</label>
+        <div class="col-sm-10">
             <select class="form-control" id="status" name="status" data-ng-model="formData.status"
                     ng-options="item.id as item.name for item in statuses"></select>
         </div>
     </div>
 
     <div class="form-group">
-        <label class="col-sm-3 control-label" for="priority">Priority</label>
-        <div class="col-sm-9">
+        <label class="col-sm-2 control-label" for="priority">Priority</label>
+        <div class="col-sm-10">
             <select class="form-control" id="priority" name="priority" data-ng-model="formData.priority"
                     ng-options="item.id as item.name for item in priorities"></select>
         </div>
     </div>
 
     <div class="form-group">
-        <label class="col-sm-3 control-label" for="description">Description</label>
-        <div class="col-sm-9">
+        <label class="col-sm-2 control-label" for="description">Description</label>
+        <div class="col-sm-10">
             <textarea class="form-control" id="description" name="description" rows="4" data-ng-model="formData.description"></textarea>
         </div>
     </div>
 
     <div class="form-group">
-        <label class="col-sm-3 control-label">Dependencies</label>
-        <div class="col-sm-4">
+        <label class="col-sm-2 control-label">Dependencies</label>
+        <div class="col-sm-5">
             <table class="table table-condensed">
                 <thead><tr>
                     <th style="white-space: nowrap;"><i class="fa fa-plus" ng-click="addBlockedBy()"></i>&nbsp;</th>
@@ -60,7 +60,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-5">
             <table class="table table-condensed">
                 <thead><tr>
                     <th style="white-space: nowrap;"><i class="fa fa-plus" ng-click="addBlocking()"></i>&nbsp;</th>
@@ -77,8 +77,8 @@
     </div>
 
     <div class="form-group" ng-if="formData.id">
-        <label class="col-sm-3 control-label">Children</label>
-        <div class="col-sm-9">
+        <label class="col-sm-2 control-label">Children</label>
+        <div class="col-sm-10">
             <p class="form-control-static text-muted" ng-if="formData.children.length === 0"><i>None</i></p>
             <div ng-repeat="id in formData.children" data-ng-model="id" data-task-id data-readonly="true"></div>
         </div>

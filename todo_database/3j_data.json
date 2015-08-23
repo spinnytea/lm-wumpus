@@ -1,0 +1,1 @@
+{"name":"remove experience that isn't additive","parent":"1t","type":"8","status":"7","description":"when we pair down the success/fail change/constant\nremove s->a->s that doesn't have anything new (don't worry about a minimal set just yet)","priority":"39","id":"3j"}

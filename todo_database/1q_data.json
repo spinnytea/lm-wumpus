@@ -1,1 +1,1 @@
-{"parent":"1p","name":"save experience","type":"8","status":"7","description":"state -> action -> state","id":"1q","priority":"37"}
+{"parent":"1p","name":"save experience","type":"8","status":"e","description":"state -> action -> state\nstore a subgraph.stringify with dump on","id":"1q","priority":"37"}

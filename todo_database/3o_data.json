@@ -1,0 +1,1 @@
+{"name":"load data and links separately","parent":"3n","type":"8","status":"7","description":"Sometimes we only need to change the links without looking at the data. Loading the data may be a waste of time.\nSometimes we only need to look at the data. Loading the links may be a waste of time.","priority":"37","id":"3o"}

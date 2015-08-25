@@ -32,6 +32,12 @@ module.exports = angular.module('lime.client.todo', [
     });
   }
 ])
+.directive('pageHeading', [function() {
+  return {
+    scope: { active: '@' },
+    templateUrl: 'partials/todo/pageHeading.html'
+  };
+}])
 .controller('lime.client.todo.home', [
   '$scope',
   '$http',

@@ -90,6 +90,10 @@ svg.subgraph {
  * task list
  */
 
+[page-heading] {
+  margin-top: 20px;
+}
+
 .closed {
   font-style: italic;
   text-decoration: line-through;

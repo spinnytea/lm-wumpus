@@ -1,12 +1,17 @@
 <h1 data-ng-hide="nested.taskObject.id">Create Task</h1>
 <h1 data-ng-show="nested.taskObject.id">Task {{nested.taskObject.id}}</h1>
 
+<p>
+    <a href="#/todo/tasks">Task List</a>
+    |
+    <a href="#/todo/queries">Queries</a>
+</p>
+
 <div task-directive data-ng-model="nested.taskObject"></div>
 
 <div class="row">
     <div class="col-sm-offset-2 col-sm-10">
         <button data-ng-hide="nested.taskObject.id" class="btn btn-primary" data-ng-click="create()">Create</button>
         <button data-ng-show="nested.taskObject.id" class="btn btn-primary" data-ng-click="update()">Save</button>
-        <button class="btn btn-default" data-ng-click="goHome()">{{nested.taskObject.id?'List':'Cancel'}}</button>
     </div>
 </div>

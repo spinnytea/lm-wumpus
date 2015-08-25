@@ -115,10 +115,6 @@ module.exports = angular.module('lime.client.todo', [
     $scope.update = function() {
       $http.put('/rest/todo/tasks/' + $routeParams.id, $scope.nested.taskObject);
     };
-
-    $scope.goHome = function() {
-      $location.path('/todo/tasks');
-    };
   }
 ])
 .directive('taskId', [

@@ -7,6 +7,7 @@ var EMPTY_TASK = {
   type: undefined,
   status: undefined,
   description: '',
+  resolution: '',
   blocking: [],
   blockedBy: [],
 };
@@ -53,6 +54,15 @@ function Controller($scope, $location, $routeParams, statusService, typeService,
   statusService.ready.then(function() { $scope.statuses = statusService.list; });
   typeService.ready.then(function() { $scope.types = typeService.list; });
   priorityService.ready.then(function() { $scope.priorities = priorityService.list; });
+
+  $scope.isResolve = function() {
+    if(!statusService.map)
+      return true;
+    if(!statusService.map[$scope.formData.status])
+      return true;
+
+    return statusService.map[$scope.formData.status].category === '2';
+  };
 
   $scope.addBlocking = function() { $scope.formData.blocking.push(undefined); };
   $scope.removeBlocking = function(idx) { $scope.formData.blocking.splice(idx, 1); };

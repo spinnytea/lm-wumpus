@@ -87,7 +87,9 @@
         <label class="col-sm-2 control-label">Children</label>
         <div class="col-sm-10">
             <p class="form-control-static text-muted" ng-if="formData.children.length === 0"><i>None</i></p>
-            <div ng-repeat="id in formData.children" data-ng-model="id" data-task-id data-readonly="true"></div>
+            <table class="table table-condensed">
+                <tr ng-repeat="id in formData.children"><td><div data-task-id data-ng-model="id" data-readonly="true"></div></td></tr>
+            </table>
         </div>
     </div>
 </div>

@@ -94,6 +94,11 @@ svg.subgraph {
   margin-top: 20px;
 }
 
+[ng-form="'taskForm'"] .table.table-condensed >tbody>tr>td {
+  border-top: none;
+  padding: 2px;
+}
+
 .closed {
   font-style: italic;
   text-decoration: line-through;

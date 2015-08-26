@@ -59,7 +59,7 @@ function Controller($scope, $location, $routeParams, statusService, typeService,
     if(!statusService.map)
       return true;
     if(!statusService.map[$scope.formData.status])
-      return true;
+      return false;
 
     return statusService.map[$scope.formData.status].category === '2';
   };

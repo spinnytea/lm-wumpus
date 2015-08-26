@@ -9,7 +9,7 @@
     <tbody><tr ng-repeat="task in tasks">
         <td class="min-width" data-ng-if="viewData">
             <i class="fa fa-fw" ng-repeat="ignore in range(viewData[task.id].level) track by $index">
-            </i><i ng-if="task.children.length" class="fa" ng-class="viewData[task.id].expanded?'fa-minus-square-o':'fa-plus-square-o'"
+            </i><i ng-if="task.children.length" class="fa fa-fw" ng-class="viewData[task.id].expanded?'fa-minus-square-o':'fa-plus-square-o'"
                     ng-click="expand(task)"></i>&nbsp;
         </td>
         <td style="width: 10%;">{{task.id}}</td>

@@ -72,7 +72,7 @@ exports.rest = function(router) {
 
     updateTask(idea, data);
 
-    res.json(data);
+    res.json(getTaskData(idea));
   });
 
   // GET task

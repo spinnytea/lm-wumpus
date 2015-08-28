@@ -4,6 +4,11 @@ var express = require('express');
 var path = require('path');
 var touch = require('touch');
 
+// set the idea database location for this server
+require('lime/src/config').init({
+  location: '/Volumes/Learning Machine Source/git/lm-wumpus/todo_database',
+});
+
 var app = express();
 app.use(bodyParser.json());
 app.use('/vendor', express.static(path.join(__dirname, '..', '..', 'vendor')));

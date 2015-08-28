@@ -18,6 +18,7 @@
             </i><i ng-class="types[task.type].icon" title="{{types[task.type].name}}"></i>&nbsp;
             <span ng-bind="task.name" ng-class="statuses[task.status].categoryClass"></span>
             <sup data-ng-if="task.description" title="{{task.description}}"><i>[desc]</i></sup>
+            <sup data-ng-if="task.resolution" title="{{task.resolution}}"><i>[res]</i></sup>
         </td>
         <td class="min-width">
             <i ng-class="priorities[task.priority].icon" title="{{priorities[task.priority].name}}">

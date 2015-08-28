@@ -1,1 +1,1 @@
-{"parent":"2j","status":"h","name":"Enum Cache","type":"8","description":"Cache the Enum values so we don't request them every time.\nCreate a \"clear cache\" for when we edit them.","id":"2e","priority":"38"}
+{"parent":"2j","status":"h","name":"Enum Cache","type":"8","description":"Cache the Enum values so we don't request them every time.\nCreate a \"clear cache\" for when we edit them.","id":"2e","priority":"38","resolution":"Enum values are stored as a list and a map."}

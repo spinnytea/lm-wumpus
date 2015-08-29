@@ -55,6 +55,15 @@ function Controller($scope, statusService, typeService, priorityService) {
   $scope.removeBlocking = function(idx) { $scope.formData.blocking.splice(idx, 1); };
   $scope.addBlockedBy = function() { $scope.formData.blockedBy.push(undefined); };
   $scope.removeBlockedBy = function(idx) { $scope.formData.blockedBy.splice(idx, 1); };
+
+  $scope.addExternal = function() {
+    if(!$scope.formData.external) $scope.formData.external = [];
+    $scope.formData.external.push('');
+  };
+  $scope.removeExternal = function(idx) {
+    $scope.formData.external.splice(idx, 1);
+    if(!$scope.formData.external.length) delete $scope.formData.external;
+  };
 }
 
 module.exports.controller('lime.client.todo.createTask', [

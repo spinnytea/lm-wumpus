@@ -1,0 +1,1 @@
+{"name":"tinker pop","parent":"3f","type":"1u","status":"7","description":"TinkerPop3 provides graph computing capabilities for both graph databases (OLTP) and graph analytic systems (OLAP) under the Apache2 license.","resolution":"","external":["http://www.tinkerpop.com/"],"priority":"37","id":"49"}

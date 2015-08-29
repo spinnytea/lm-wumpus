@@ -1,1 +1,1 @@
-{"parent":"22","status":"j","name":"filtering","type":"9","description":"At the very least, we should allow filtering out 'Done' tasks","id":"2f","priority":"39"}
+{"parent":"25","status":"j","name":"filtering","type":"9","description":"Right now queries are based on \"match this exactly\" but this should do something more complicated.","id":"2f","priority":"39"}

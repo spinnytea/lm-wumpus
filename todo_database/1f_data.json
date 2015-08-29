@@ -1,1 +1,1 @@
-{"name":"make wumpus/config a thing, so we can go there directly","parent":"k","type":"8","status":"7","id":"1f","priority":"37"}
+{"name":"make wumpus/config a url target, so we can nav there directly","parent":"k","type":"8","status":"7","id":"1f","priority":"37","description":"right now wumpus config is an alternate \"mode\" to playing the wumpus game\ninstead, the config should be a different url target"}

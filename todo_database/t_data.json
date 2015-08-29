@@ -1,1 +1,1 @@
-{"name":"feature detection: identify rooms by loc","parent":"p","type":"8","status":"7","description":"","id":"t","priority":"37"}
+{"name":"feature detection: identify rooms by loc","parent":"p","type":"8","status":"7","description":"This is necessary for the grain for planning. When we are thinking through the problem, we don't have the sensors to tell us which room we are in. So the room sensor should be taken out of data the world sends us, and be computed through some kind of context post-process","id":"t","priority":"37"}

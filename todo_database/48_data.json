@@ -1,1 +1,1 @@
-{"name":"look into existing workflow systems","parent":"3d","type":"1u","status":"g","description":"","resolution":"","priority":"37","id":"48"}
+{"name":"look into existing workflow systems","parent":"3d","type":"1u","status":"g","description":"What would integration even look like. I've seen some kinds of engines, but they wouldn't work well with my subgraph requirements/transitions.\nHow would it integrate with an arbitrary data store. Maybe I need to see one before I pass judgment on the concept.","resolution":"","priority":"37","id":"48"}

@@ -1,1 +1,1 @@
-{"name":"have/use post-process sensors","parent":"3t","type":"8","status":"7","description":"","resolution":"","priority":"37","id":"3u"}
+{"name":"have/use post-process sensors","parent":"3t","type":"8","status":"7","description":"this is just a first cut: the need to exist\nsort of like how we needed to hard code actuators before we could create the more generic stub","resolution":"","priority":"37","id":"3u"}

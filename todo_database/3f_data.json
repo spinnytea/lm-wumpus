@@ -1,1 +1,1 @@
-{"name":"Look into existing graph databases","parent":"3c","type":"1u","status":"g","description":"It'd be nice to have a full featured one with a community. If it doesn't have all the features I need, then I can fork the source.\n\nhttps://www.elastic.co/products/elasticsearch (filters)","priority":"39","id":"3f"}
+{"name":"Look into existing graph databases","parent":"3c","type":"1u","status":"g","description":"It'd be nice to have a full featured one with a community. If it doesn't have all the features I need, then I can fork the source.","priority":"39","id":"3f"}

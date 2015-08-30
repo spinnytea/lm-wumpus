@@ -41,12 +41,16 @@ module.exports = angular.module('lime.client.todo', [
 .controller('lime.client.todo.home', [
   '$scope',
   '$http',
-  function($scope, $http) {
-    $scope.taskCount = 'unknown';
-
-    // get the total task count
-    $http.get('/rest/todo/tasks/count').success(function(data) {
-      $scope.taskCount = data.count;
+    'lime.client.todo.enums.statuses',
+    'lime.client.todo.enums.types',
+  function($scope, $http, statusService, typeService) {
+    statusService.ready.then(function() {
+      $scope.statuses = statusService.list;
+      statusService.counts().then(function(counts) { $scope.statusCounts = counts; });
+    });
+    typeService.ready.then(function() {
+      $scope.types = typeService.list;
+      typeService.counts().then(function(counts) { $scope.typeCounts = counts; });
     });
   }
 ])

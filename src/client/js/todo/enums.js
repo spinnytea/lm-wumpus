@@ -35,6 +35,12 @@ function createService(path, categories) {
         return (instance.ready = deferred.promise);
       };
 
+      instance.counts = function() {
+        var deferred = $q.defer();
+        $http.get(path + '/count').success(function(data) { deferred.resolve(data); });
+        return deferred.promise;
+      };
+
       // initialize data
       instance.update();
 

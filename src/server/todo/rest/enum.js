@@ -3,7 +3,7 @@ var config = require('lime/src/config');
 var ideas = require('lime/src/database/ideas');
 var links = require('lime/src/database/links');
 
-exports.rest = function(router, path, context) {
+exports.rest = function(router, path, context, link) {
   var root = '/'+path;
   var specific = root + '/:id';
 
@@ -38,5 +38,13 @@ exports.rest = function(router, path, context) {
     ideas.save(idea);
 
     res.json(data);
+  });
+
+  // COUNT ALL
+  router.get(root + '/count', function(req, res) {
+    res.json(context.link(links.list.type_of.opposite).reduce(function(counts, idea) {
+      counts[idea.id] = ideas.load(idea.id).link(link.opposite).length;
+      return counts;
+    }, {}));
   });
 };

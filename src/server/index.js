@@ -7,6 +7,7 @@ var touch = require('touch');
 // set the idea database location for this server
 require('lime/src/config').init({
   location: '/Volumes/Learning Machine Source/git/lm-wumpus/todo_database',
+  //location: '/Volumes/RAM Disk',
 });
 
 var app = express();

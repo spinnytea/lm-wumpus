@@ -5,18 +5,18 @@
 <table class="table">
     <thead><tr>
         <th>Icon</th>
-        <th>Name</th>
+        <th class="min-width">Name</th>
         <th>Order</th>
-        <th ng-if="categories">Category</th>
+        <th class="min-width" ng-if="categories">Category</th>
         <th>Description</th>
         <th>Actions</th>
     </tr></thead>
     <tbody>
         <tr ng-repeat="item in items">
             <td><i ng-class="item.icon"></i></td>
-            <td>{{item.name}}</td>
+            <td class="min-width">{{item.name}}</td>
             <td>{{item.order}}</td>
-            <td ng-if="categories">{{categories[item.category].display}}</td>
+            <td class="min-width" ng-if="categories">{{categories[item.category].display}}</td>
             <td>{{item.description}}</td>
             <td>
                 <i class="fa fa-pencil" title="Edit" ng-click="edit(item)"></i>

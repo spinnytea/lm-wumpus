@@ -1,0 +1,1 @@
+{"name":"cause and effect actuators","parent":"4s","type":"8","status":"7","description":"look for actions with (a.causeAndEffect = true;)\nbecause those shouldn't exist\nthey should be this kind of \"the world happens\" kind of actions\nmaybe \"the world happens\" is the precursor to this idea","resolution":"","priority":"37","id":"4z"}

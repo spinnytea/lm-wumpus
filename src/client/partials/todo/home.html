@@ -2,15 +2,13 @@
 
 <!-- Note: fa-inverse is a hack; it assumes icons use font awesome (which they do) -->
 <!-- the intent is to make the icons white, instead of the text-danger/text-primary that is used for specific ones -->
-<p>
-    <label>Type Breakdown:</label>
+<div>
     <span data-ng-repeat="item in types">
         <span class="badge" title="{{item.name}}"><i class="fa-inverse" ng-class="item.icon"></i> {{typeCounts[item.id]}}</span>
     </span>
-</p>
-<p>
-    <label>Status Breakdown:</label>
+</div>
+<div>
     <span data-ng-repeat="item in statuses">
         <span class="badge" title="{{item.name}}"><i class="fa-inverse" ng-class="item.icon"></i> {{statusCounts[item.id]}}</span>
     </span>
-</p>
+</div>

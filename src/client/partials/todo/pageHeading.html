@@ -4,9 +4,11 @@
             <a class="navbar-brand" href="#/todo">Tasks</a>
         </div>
         <ul class="nav navbar-nav">
-            <li data-ng-class="{'active': (active==='create')}"><a href="#/todo/tasks/create">Create</a></li>
             <li data-ng-class="{'active': (active==='list')}"><a href="#/todo/tasks">List</a></li>
             <li data-ng-class="{'active': (active==='query')}"><a href="#/todo/queries">Query</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li data-ng-class="{'active': (active==='create')}"><a href="#/todo/tasks/create">Create</a></li>
             <li class="dropdown" data-ng-class="{'active': (active==='enums')}">
                 <a class="dropdown-toggle" data-toggle="dropdown">Enums <span class="caret"></span></a>
                 <ul class="dropdown-menu">

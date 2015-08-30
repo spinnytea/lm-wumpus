@@ -44,9 +44,7 @@ module.exports = angular.module('lime.client.todo', [
   function($scope, $http) {
     $scope.taskCount = 'unknown';
 
-    //
-    // init
-    //
+    // get the total task count
     $http.get('/rest/todo/tasks/count').success(function(data) {
       $scope.taskCount = data.count;
     });

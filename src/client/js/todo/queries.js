@@ -1,6 +1,6 @@
 'use strict';
 
-var formData = {};
+var formData = { done: true };
 
 module.exports = angular.module('lime.client.todo.queries', [
   require('./enums').name,
@@ -25,6 +25,10 @@ module.exports.controller('lime.client.todo.queriesController', [
       $scope.searching = true;
       $http.get('/rest/todo/tasks', { params: formData }).success(function(data) {
         $scope.searching = false;
+
+        if(formData.done)
+          data.list = data.list.filter(function(task) { return statuses[task.status].category !== '2'; });
+
         $scope.tasks.splice(0);
         Array.prototype.push.apply($scope.tasks, data.list.sort(function(a, b) {
           // sort by status category
@@ -44,8 +48,8 @@ module.exports.controller('lime.client.todo.queriesController', [
       });
     };
 
-    // if there is at least one field with specificity, then perform an initial search
-    if(Object.keys(formData).some(function(key) { return formData[key]; })) {
+    // if there is at least one field with specificity (other than done), then perform an initial search
+    if(Object.keys(formData).some(function(key) { return (key !== 'done' && formData[key]); })) {
       $scope.search();
     }
   }

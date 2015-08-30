@@ -1,1 +1,1 @@
-{"name":"exclude 'Done' tasks","parent":"25","type":"8","status":"7","description":"probably just a checkbox on the client that filters the array once it comes back from the server","resolution":"","priority":"38","id":"4f"}
+{"name":"exclude 'Done' tasks","parent":"25","type":"8","status":"h","description":"probably just a checkbox on the client that filters the array once it comes back from the server","resolution":"","priority":"38","id":"4f"}

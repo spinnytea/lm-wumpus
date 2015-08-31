@@ -39,7 +39,19 @@ function Controller($scope, $http, statusService) {
 
       // add all the links
       data.list.forEach(function(task) {
-        if(task.parent) newGraph.links.push({ source: task_idx[task.id], target: task_idx[task.parent], value: 1 });
+        if(task.parent && (task.parent in task_idx))
+          newGraph.links.push({ source: task_idx[task.id], target: task_idx[task.parent], value: 1 });
+
+        // blocking and blockedBy are inverse, so one will handle the other
+        task.blocking.forEach(function(id) {
+          if(id in task_idx) newGraph.links.push({ source: task_idx[task.id], target: task_idx[id], value: 3 });
+        });
+
+        // related will get registered twice
+        // this will draw them closer; I guess this is okay
+        task.related.forEach(function(id) {
+          if(id in task_idx) newGraph.links.push({ source: task_idx[task.id], target: task_idx[id], value: 9 });
+        });
       });
 
       $scope.myData = newGraph;

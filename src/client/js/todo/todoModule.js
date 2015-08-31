@@ -6,6 +6,7 @@ module.exports = angular.module('lime.client.todo', [
   require('./queries').name,
   require('./taskDirective').name,
   require('./taskList').name,
+  require('./taskGraph').name,
   'ngRoute'
 ])
 .config([

@@ -1,6 +1,6 @@
 'use strict';
 
-var formData = { done: true };
+var formData = { hideClosed: true };
 
 module.exports = angular.module('lime.client.todo.queries', [
   require('./enums').name,
@@ -26,7 +26,7 @@ module.exports.controller('lime.client.todo.queriesController', [
       $http.get('/rest/todo/tasks', { params: formData }).success(function(data) {
         $scope.searching = false;
 
-        if(formData.done)
+        if(formData.hideClosed)
           data.list = data.list.filter(function(task) { return statuses[task.status].category !== '2'; });
 
         $scope.tasks.splice(0);
@@ -48,8 +48,8 @@ module.exports.controller('lime.client.todo.queriesController', [
       });
     };
 
-    // if there is at least one field with specificity (other than done), then perform an initial search
-    if(Object.keys(formData).some(function(key) { return (key !== 'done' && formData[key]); })) {
+    // if there is at least one field with specificity (other than hideClosed), then perform an initial search
+    if(Object.keys(formData).some(function(key) { return (key !== 'hideClosed' && formData[key]); })) {
       $scope.search();
     }
   }

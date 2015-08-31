@@ -4,7 +4,7 @@ module.exports = angular.module('lime.client.todo.enums', []);
 module.exports.service('lime.client.todo.enums.statuses', createService('/rest/todo/statuses', {
   0: { display: 'Start', class: '', order: 2 },
   1: { display: 'Being Addressed', class: 'text-primary', order: 3 },
-  2: { display: 'Finished', class: 'closed text-muted', order: 1 },
+  2: { display: 'Closed', class: 'closed text-muted', order: 1 },
 }));
 module.exports.service('lime.client.todo.enums.types', createService('/rest/todo/types'));
 module.exports.service('lime.client.todo.enums.priorities', createService('/rest/todo/priorities'));

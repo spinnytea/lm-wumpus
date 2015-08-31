@@ -48,7 +48,7 @@ function Controller($scope, $http, statusService) {
       function getColor(task) {
         if(statuses[task.status].category === '2') return '#7f7f7f';
         if(!task.parent) return '#ff7f0e';
-        if(!task.children.length) return '#337ab7';
+        //if(!task.children.length) return '#337ab7';
 
         return '#000000';
       }

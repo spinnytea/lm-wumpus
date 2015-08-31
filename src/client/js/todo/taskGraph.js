@@ -10,13 +10,7 @@ module.exports.directive('taskGraph', [function() {
 }]);
 
 function Controller($scope, $http) {
-  $scope.myData = {
-    nodes: [],
-    links: []
-  };
-
-
-  $http.get('/rest/todo/tasks?children=').success(function(data) {
+  $http.get('/rest/todo/tasks').success(function(data) {
     var newGraph = {
       nodes: [],
       links: []
@@ -27,11 +21,24 @@ function Controller($scope, $http) {
     // so... we need to save the mapping
     var task_idx = {};
 
+    // register all the nodes
     data.list.forEach(function(task) {
       task_idx[task.id] = newGraph.nodes.length;
-      newGraph.nodes.push({ id: task.id, name: task.name, value: 1 });
+      newGraph.nodes.push({ id: task.id, name: task.name, color: getColor(task) });
+    });
+
+    // add all the links
+    data.list.forEach(function(task) {
+      if(task.parent) newGraph.links.push({ source: task_idx[task.id], target: task_idx[task.parent], value: 1 });
     });
 
     $scope.myData = newGraph;
   });
+}
+
+function getColor(task) {
+  if(!task.parent) return '#ff7f0e';
+  if(!task.children.length) return '#337ab7';
+
+  return '#000000';
 }

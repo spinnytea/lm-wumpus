@@ -94,9 +94,10 @@ svg.subgraph {
   margin-top: 20px;
 }
 
-[ng-form="'taskForm'"] .table.table-condensed >tbody>tr>td {
+[ng-form="'taskForm'"] .table.table-condensed >tbody>tr>td,
+[ng-form="'taskForm'"] .table.table-condensed >tbody>tr>th {
   border-top: none;
-  padding: 2px;
+  padding: 2px 5px;
 }
 
 .closed {

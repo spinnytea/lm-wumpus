@@ -10,6 +10,7 @@ var EMPTY_TASK = {
   resolution: '',
   blocking: [],
   blockedBy: [],
+  related: [],
 };
 
 module.exports = angular.module('lime.client.todo.taskDirective', [ require('./enums').name ]);
@@ -55,6 +56,8 @@ function Controller($scope, statusService, typeService, priorityService) {
   $scope.removeBlocking = function(idx) { $scope.formData.blocking.splice(idx, 1); };
   $scope.addBlockedBy = function() { $scope.formData.blockedBy.push(undefined); };
   $scope.removeBlockedBy = function(idx) { $scope.formData.blockedBy.splice(idx, 1); };
+  $scope.addRelated = function() { $scope.formData.related.push(undefined); };
+  $scope.removeRelated = function(idx) { $scope.formData.related.splice(idx, 1); };
 
   $scope.addExternal = function() {
     if(!$scope.formData.external) $scope.formData.external = [];

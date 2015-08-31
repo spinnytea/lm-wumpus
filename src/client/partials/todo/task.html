@@ -52,7 +52,7 @@
     </div>
 
     <div class="form-group">
-        <label class="col-sm-2 control-label">External Links</label>
+        <label class="col-sm-2 control-label">External</label>
         <div class="col-sm-10">
             <table class="table table-condensed">
                 <thead><tr>
@@ -75,44 +75,62 @@
     </div>
 
     <div class="form-group">
-        <label class="col-sm-2 control-label">Dependencies</label>
-        <div class="col-sm-5">
-            <table class="table table-condensed">
-                <thead><tr>
-                    <th style="white-space: nowrap;"><i class="fa fa-plus" ng-click="addBlockedBy()"></i>&nbsp;</th>
-                    <th style="width: 99%;">Blocked By</th>
-                </tr></thead>
-                <tbody>
-                    <tr data-ng-repeat="ignore in formData.blockedBy track by $index">
-                        <th><i class="fa fa-remove form-control-static" ng-click="removeBlockedBy($index)">&nbsp;</i></th>
-                        <td><div data-ng-model="formData.blockedBy[$index]" data-task-id></div></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="col-sm-5">
-            <table class="table table-condensed">
-                <thead><tr>
-                    <th style="white-space: nowrap;"><i class="fa fa-plus" ng-click="addBlocking()"></i>&nbsp;</th>
-                    <th style="width: 99%;">Blocking</th>
-                </tr></thead>
-                <tbody>
-                <tr data-ng-repeat="ignore in formData.blocking track by $index">
-                    <th><i class="fa fa-remove form-control-static" ng-click="removeBlocking($index)">&nbsp;</i></th>
-                    <td><div data-ng-model="formData.blocking[$index]" data-task-id></div></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+        <label class="col-sm-2 control-label">Links</label>
+        <div class="col-sm-10"><div class="row">
+            <div class="col-sm-6">
+                <table class="table table-condensed">
+                    <thead><tr>
+                        <th style="white-space: nowrap;"><i class="fa fa-plus" ng-click="addBlockedBy()"></i>&nbsp;</th>
+                        <th style="width: 99%;">Blocked By</th>
+                    </tr></thead>
+                    <tbody>
+                        <tr data-ng-repeat="ignore in formData.blockedBy track by $index">
+                            <th><i class="fa fa-remove form-control-static" ng-click="removeBlockedBy($index)">&nbsp;</i></th>
+                            <td><div data-ng-model="formData.blockedBy[$index]" data-task-id></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-    <div class="form-group" ng-if="formData.id">
-        <label class="col-sm-2 control-label">Children</label>
-        <div class="col-sm-10">
-            <p class="form-control-static text-muted" ng-if="formData.children.length === 0"><i>None</i></p>
-            <table class="table table-condensed">
-                <tr ng-repeat="id in formData.children"><td><div data-task-id data-ng-model="id" data-readonly="true"></div></td></tr>
-            </table>
-        </div>
+            <div class="col-sm-6">
+                <table class="table table-condensed">
+                    <thead><tr>
+                        <th style="white-space: nowrap;"><i class="fa fa-plus" ng-click="addBlocking()"></i>&nbsp;</th>
+                        <th style="width: 99%;">Blocking</th>
+                    </tr></thead>
+                    <tbody>
+                    <tr data-ng-repeat="ignore in formData.blocking track by $index">
+                        <th><i class="fa fa-remove form-control-static" ng-click="removeBlocking($index)">&nbsp;</i></th>
+                        <td><div data-ng-model="formData.blocking[$index]" data-task-id></div></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-sm-6">
+                <table class="table table-condensed">
+                    <thead><tr>
+                        <th style="white-space: nowrap;"><i class="fa fa-plus" ng-click="addRelated()"></i>&nbsp;</th>
+                        <th style="width: 99%;">Related</th>
+                    </tr></thead>
+                    <tbody>
+                    <tr data-ng-repeat="ignore in formData.related track by $index">
+                        <th><i class="fa fa-remove form-control-static" ng-click="removeRelated($index)">&nbsp;</i></th>
+                        <td><div data-ng-model="formData.related[$index]" data-task-id></div></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-sm-6">
+                <table class="table table-condensed">
+                    <thead><tr><th>Children</th></tr></thead>
+                    <tbody>
+                        <tr ng-if="formData.children.length === 0"><td class="text-muted"><i>None</i></td></tr>
+                        <tr ng-repeat="id in formData.children"><td><div data-task-id data-ng-model="id" data-readonly="true"></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div></div>
     </div>
 </div>

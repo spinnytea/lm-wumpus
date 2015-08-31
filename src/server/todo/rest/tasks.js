@@ -128,6 +128,7 @@ function getTaskData(idea) {
   data.children = idea.link(links.list.lm_wumpus_todo__child).map(function(proxy) { return proxy.id; });
   data.blockedBy = idea.link(links.list.lm_wumpus_todo__depends_on).map(function(proxy) { return proxy.id; });
   data.blocking = idea.link(links.list.lm_wumpus_todo__depends_on.opposite).map(function(proxy) { return proxy.id; });
+  data.related = idea.link(links.list.lm_wumpus_todo__related).map(function(proxy) { return proxy.id; });
   return data;
 }
 
@@ -140,8 +141,10 @@ function updateTask(idea, data) {
 
   ensureList(idea, links.list.lm_wumpus_todo__depends_on, data.blockedBy);
   ensureList(idea, links.list.lm_wumpus_todo__depends_on.opposite, data.blocking);
+  ensureList(idea, links.list.lm_wumpus_todo__related, data.related);
   delete data.blockedBy;
   delete data.blocking;
+  delete data.related;
 
   idea.update(data);
   ideas.save(idea);

@@ -24,6 +24,9 @@ config.save();
 // task --depends_on--> task
 links.list.lm_wumpus_todo__depends_on = undefined;
 links.create('lm_wumpus_todo__depends_on');
+// task --related--> task
+links.list.lm_wumpus_todo__related = undefined;
+links.create('lm_wumpus_todo__related', true);
 // task --status-> status
 links.list.lm_wumpus_todo__status = undefined;
 links.create('lm_wumpus_todo__status');

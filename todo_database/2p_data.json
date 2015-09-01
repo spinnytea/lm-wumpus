@@ -1,1 +1,1 @@
-{"name":"viewData doesn't support multiples","description":"we can't allow browsing in a tab list if this is a possibility (searches)"}
+{"name":"viewData doesn't support multiples","description":"we can't allow browsing in a task list if this is a possibility (queries)","resolution":"this doesn't seem to be an issue\nexpanding tasks in the queries is proving unimportant"}

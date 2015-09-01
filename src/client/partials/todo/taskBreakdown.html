@@ -3,10 +3,15 @@
 <div>
     <span data-ng-repeat="item in types" data-ng-show="typeCounts[item.id]">
         <span class="badge" title="{{item.name}}"><i class="fa-inverse" ng-class="item.icon"></i> {{typeCounts[item.id]}}</span>
-    </span>
+    </span>&nbsp;
 </div>
 <div>
     <span data-ng-repeat="item in statuses" data-ng-show="statusCounts[item.id]">
         <span class="badge" title="{{item.name}}"><i class="fa-inverse" ng-class="item.icon"></i> {{statusCounts[item.id]}}</span>
-    </span>
+    </span>&nbsp;
+</div>
+<div>
+    <span data-ng-repeat="item in priorities" data-ng-show="priorityCounts[item.id]">
+        <span class="badge" title="{{item.name}}"><i class="fa-inverse" ng-class="item.icon"></i> {{priorityCounts[item.id]}}</span>
+    </span>&nbsp;
 </div>

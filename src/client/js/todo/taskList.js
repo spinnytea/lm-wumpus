@@ -91,7 +91,7 @@ module.exports.directive('taskList', [
     return {
       scope: {
         tasks: '=',
-        viewData: '=',
+        viewData: '=', // XXX you cannot use viewData if it's possible to have the same task in the list twice
         hideClosed: '='
       },
       templateUrl: 'partials/todo/taskList.html',

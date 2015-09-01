@@ -170,6 +170,7 @@ function buildGraph(graph, elem) {
       .data(graph.links)
     .enter().append('line')
       .attr('class', 'link')
+      .style('stroke', function(d) { return d.color; })
       .style('stroke-width', function(d) { return Math.sqrt(d.value); })
       .style('stroke-opacity', function(d) { return d.opacity; });
 

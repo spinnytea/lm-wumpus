@@ -45,13 +45,13 @@ function Controller($scope, $http, statusService) {
 
         // blocking and blockedBy are inverse, so one will handle the other
         task.blocking.forEach(function(id) {
-          if(id in task_idx) newGraph.links.push({ source: task_idx[task.id], target: task_idx[id], value: 3 });
+          if(id in task_idx) newGraph.links.push({ source: task_idx[task.id], target: task_idx[id], value: 3, color: '#337ab7' });
         });
 
         // related will get registered twice
         // this will draw them closer; I guess this is okay
         task.related.forEach(function(id) {
-          if(id in task_idx) newGraph.links.push({ source: task_idx[task.id], target: task_idx[id], value: 9 });
+          if(id in task_idx) newGraph.links.push({ source: task_idx[task.id], target: task_idx[id], value: 3, color: '#2ca02c' });
         });
       });
 

@@ -1,1 +1,1 @@
-{"name":"Validation","description":"Make sure some of the fields are filled out"}
+{"name":"Validation","description":"Make sure some of the fields are filled out\nName/Priority are used for sorting in the GUI and are expected.\nType/Status should be required, too."}

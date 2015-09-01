@@ -1,1 +1,1 @@
-{"name":"Where do we filter?","description":"Client Side? during expand? data.list = data.list.filter(function(task) { return task.status !== 'h'; });\nServer? during subgraph.search? after subgraph.search?"}
+{"name":"Where do we filter?","description":"Client Side? during expand? data.list = data.list.filter(function(task) { return task.status !== 'h'; });\nServer? during subgraph.search? after subgraph.search?\n\nnot on the client side, that's dumb"}

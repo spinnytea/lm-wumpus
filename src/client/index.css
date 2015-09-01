@@ -104,3 +104,7 @@ svg.subgraph {
   font-style: italic;
   text-decoration: line-through;
 }
+
+[data-task-graph] h1 {
+  font-size: 1.4em;
+}

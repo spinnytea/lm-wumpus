@@ -17,6 +17,7 @@ module.exports.directive('taskGraph', [function() {
 function Controller($scope, $http, statusService) {
   statusService.ready.then(function() {
     var statuses = statusService.map;
+    // TODO this REALLY shouldn't request every task in the system
     $http.get('/rest/todo/tasks').success(function(data) {
       var newGraph = {
         nodes: [],

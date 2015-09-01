@@ -1,1 +1,1 @@
-{"name":"Clean up Controller","description":"The Task Graph controller is stupid ugly.\nClean it up.","resolution":""}
+{"name":"Clean up Controller","description":"The Task Graph controller is stupid ugly.\nClean it up.","resolution":"refactored how it gets the data, it no longer depends on the taskBreakdown\nhome page has been cleaned up"}

@@ -7,6 +7,7 @@ module.exports = angular.module('lime.client.todo', [
   require('./taskDirective').name,
   require('./taskList').name,
   require('./taskGraph').name,
+  require('./taskBreakdown').name,
   'ngRoute'
 ])
 .config([
@@ -42,16 +43,14 @@ module.exports = angular.module('lime.client.todo', [
 .controller('lime.client.todo.home', [
   '$scope',
   '$http',
-    'lime.client.todo.enums.statuses',
-    'lime.client.todo.enums.types',
-  function($scope, $http, statusService, typeService) {
+  'lime.client.todo.enums.statuses',
+  function($scope, $http, statusService) {
     statusService.ready.then(function() {
-      $scope.statuses = statusService.list;
-      statusService.counts().then(function(counts) { $scope.statusCounts = counts; });
-    });
-    typeService.ready.then(function() {
-      $scope.types = typeService.list;
-      typeService.counts().then(function(counts) { $scope.typeCounts = counts; });
+      var params = {};
+      params.status = statusService.getNonClosed();
+      $http.get('/rest/todo/tasks', { params: params }).success(function(data) {
+        $scope.tasks = data.list;
+      });
     });
   }
 ])

@@ -1,1 +1,1 @@
-{"description":"sense: alive, can only take actions when alive; allow up to enter pit; planning should prune this","type":"8","status":"h","parent":"k","name":"actions depend on alive","id":"11","priority":"38"}
+{"description":"sense: alive, can only take actions when alive; allow up to enter pit; planning should prune this","name":"actions depend on alive"}

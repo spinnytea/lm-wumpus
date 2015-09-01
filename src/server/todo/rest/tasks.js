@@ -125,7 +125,19 @@ function ensureList(idea, link, list) {
 
 function getTaskData(idea) {
   var data = idea.data();
+  data.id = idea.id;
+
+  data.status = idea.link(links.list.lm_wumpus_todo__status).map(function(proxy) { return proxy.id; });
+  if(data.status.length === 1) data.status = data.status[0]; else data.status = undefined;
+  data.type = idea.link(links.list.lm_wumpus_todo__type).map(function(proxy) { return proxy.id; });
+  if(data.type.length === 1) data.type = data.type[0]; else data.type = undefined;
+  data.priority = idea.link(links.list.lm_wumpus_todo__priority).map(function(proxy) { return proxy.id; });
+  if(data.priority.length === 1) data.priority = data.priority[0]; else data.priority = undefined;
+
+  data.parent = idea.link(links.list.lm_wumpus_todo__child.opposite).map(function(proxy) { return proxy.id; });
+  if(data.parent.length === 1 && data.parent[0] !== lwt_task.id) data.parent = data.parent[0]; else data.parent = undefined;
   data.children = idea.link(links.list.lm_wumpus_todo__child).map(function(proxy) { return proxy.id; });
+
   data.blockedBy = idea.link(links.list.lm_wumpus_todo__depends_on).map(function(proxy) { return proxy.id; });
   data.blocking = idea.link(links.list.lm_wumpus_todo__depends_on.opposite).map(function(proxy) { return proxy.id; });
   data.related = idea.link(links.list.lm_wumpus_todo__related).map(function(proxy) { return proxy.id; });
@@ -133,11 +145,18 @@ function getTaskData(idea) {
 }
 
 function updateTask(idea, data) {
+  delete data.id;
+
   ensureList(idea, links.list.lm_wumpus_todo__status, data.status?[data.status]:[]);
   ensureList(idea, links.list.lm_wumpus_todo__type, data.type?[data.type]:[]);
   ensureList(idea, links.list.lm_wumpus_todo__priority, data.priority?[data.priority]:[]);
+  delete data.status;
+  delete data.type;
+  delete data.priority;
+
   ensureList(idea, links.list.lm_wumpus_todo__child.opposite, [(data.parent || lwt_task)]); // if there is no parent, then default to the task root
-  delete data.children;
+  delete data.parent;
+  delete data.children; // we only care about making sure the parent is hooked up; the child list will handle itself by extension
 
   ensureList(idea, links.list.lm_wumpus_todo__depends_on, data.blockedBy);
   ensureList(idea, links.list.lm_wumpus_todo__depends_on.opposite, data.blocking);

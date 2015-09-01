@@ -1,1 +1,1 @@
-{"name":"Where do we filter?","parent":"2f","type":"1u","status":"7","description":"Client Side? during expand? data.list = data.list.filter(function(task) { return task.status !== 'h'; });\nServer? during subgraph.search? after subgraph.search?","id":"30","priority":"37"}
+{"name":"Where do we filter?","description":"Client Side? during expand? data.list = data.list.filter(function(task) { return task.status !== 'h'; });\nServer? during subgraph.search? after subgraph.search?"}

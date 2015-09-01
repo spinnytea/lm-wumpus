@@ -1,1 +1,1 @@
-{"parent":"s","description":"The environment doesn't always stay the same; rooms change/pits move/wumpus moves - after you've finished with a partially observable world","name":"Changing Environment","type":"9","status":"7","id":"z","priority":"37"}
+{"description":"The environment doesn't always stay the same; rooms change/pits move/wumpus moves - after you've finished with a partially observable world","name":"Changing Environment"}

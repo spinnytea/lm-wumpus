@@ -1,1 +1,1 @@
-{"name":"Sensor Noise","parent":"s","description":"The values the sensors report aren't always perfect.","type":"9","status":"7","id":"y","priority":"37"}
+{"name":"Sensor Noise","description":"The values the sensors report aren't always perfect."}

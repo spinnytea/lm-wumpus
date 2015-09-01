@@ -1,1 +1,1 @@
-{"name":"Database","parent":"1k","type":"b","status":"j","description":"Infinite Graph Database\nOff The Shelf databases use 64 bit keys against their records, so this may not be a viable option. I specifically want a graph structure.","priority":"37","id":"3c"}
+{"name":"Database","description":"Infinite Graph Database\nOff The Shelf databases use 64 bit keys against their records, so this may not be a viable option. I specifically want a graph structure."}

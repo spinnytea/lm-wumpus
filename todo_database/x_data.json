@@ -1,1 +1,1 @@
-{"name":"navigate to nearest \"unexplored room\"","parent":"4c","description":"this is how the maze game wanders the state space","type":"8","status":"7","id":"x","priority":"37"}
+{"name":"navigate to nearest \"unexplored room\"","description":"this is how the maze game wanders the state space"}

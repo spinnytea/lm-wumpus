@@ -1,1 +1,1 @@
-{"name":"left/right/forward/noop","parent":"4e","type":"8","status":"7","description":"remember: the agent has a velocity\ndo we allow for a percentage push? unlike when the person plays, we could all the agent to apply partial pressure to each action","resolution":"","priority":"38","id":"4v"}
+{"name":"left/right/forward/noop","description":"remember: the agent has a velocity\ndo we allow for a percentage push? unlike when the person plays, we could all the agent to apply partial pressure to each action","resolution":""}

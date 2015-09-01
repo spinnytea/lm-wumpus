@@ -1,1 +1,1 @@
-{"parent":"22","name":"Create Child Task","type":"8","status":"h","description":"button to create child task in the task list\nSeed the create form with the parent","id":"21","priority":"37"}
+{"name":"Create Child Task","description":"button to create child task in the task list\nSeed the create form with the parent"}

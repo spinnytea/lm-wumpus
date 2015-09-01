@@ -9,13 +9,23 @@ module.exports.directive('taskGraph', [function() {
     scope: {
       hideClosed: '='
     },
-    template: '<div render-subgraph="myData"></div>',
-    controller: ['$scope', '$http', 'lime.client.todo.enums.statuses', Controller]
+    templateUrl: 'partials/todo/taskGraph.html',
+    controller: ['$scope', '$http', 'lime.client.todo.enums.statuses', 'lime.client.todo.enums.types', Controller]
   };
 }]);
 
-function Controller($scope, $http, statusService) {
+// XXX I am not happy with this controller code
+// - it is stupid ugly
+function Controller($scope, $http, statusService, typeService) {
+  $scope.typeCounts = {};
+  $scope.statusCounts = {};
+  typeService.ready.then(function() {
+    $scope.types = typeService.list;
+    typeService.list.forEach(function(s) { $scope.typeCounts[s.id] = 0; });
   statusService.ready.then(function() {
+    $scope.statuses = statusService.list;
+    statusService.list.forEach(function(s) { $scope.statusCounts[s.id] = 0; });
+
     var statuses = statusService.map;
 
     var params = {};
@@ -27,6 +37,12 @@ function Controller($scope, $http, statusService) {
         nodes: [],
         links: []
       };
+
+      // tally
+      data.list.forEach(function(task) {
+        $scope.typeCounts[task.type]++;
+        $scope.statusCounts[task.status]++;
+      });
 
       // the notes is supposed to be a list
       // and the link source/target are position within that list
@@ -67,5 +83,6 @@ function Controller($scope, $http, statusService) {
         return '#000000';
       }
     });
-  });
+  }); // end statusService
+  }); // end typeService
 }

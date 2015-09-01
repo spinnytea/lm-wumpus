@@ -23,11 +23,17 @@ module.exports.controller('lime.client.todo.queriesController', [
     $scope.searching = false;
     $scope.search = function() {
       $scope.searching = true;
-      $http.get('/rest/todo/tasks', { params: formData }).success(function(data) {
-        $scope.searching = false;
 
-        if(formData.hideClosed)
-          data.list = data.list.filter(function(task) { return statuses[task.status].category !== '2'; });
+      var params = angular.copy(formData);
+      delete params.hideClosed;
+
+      // since status is a form element
+      // we need to ignore the hideClosed if status is set
+      if(formData.hideClosed && !formData.status)
+        params.status = statusService.getNonClosed();
+
+      $http.get('/rest/todo/tasks', { params: params }).success(function(data) {
+        $scope.searching = false;
 
         $scope.tasks.splice(0);
         Array.prototype.push.apply($scope.tasks, data.list.sort(function(a, b) {

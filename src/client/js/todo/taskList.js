@@ -70,13 +70,11 @@ module.exports.service('lime.client.todo.taskListService', [
     instance.expand = function(tasks, viewData, task, hideClosed) {
       var deferred = $q.defer();
       viewData[task.id].expanded = true;
-      if(hideClosed) {
-        var join = '&status=';
-        hideClosed = join+statusService.getNonClosed().join(join);
-      } else {
-        hideClosed = '';
-      }
-      $http.get('/rest/todo/tasks?children='+task.id + hideClosed).success(function(data) {
+      var params = {
+        children: task.id,
+        status: (hideClosed?statusService.getNonClosed():undefined)
+      };
+      $http.get('/rest/todo/tasks', { params: params }).success(function(data) {
         instance.initViewData(data.list, viewData, task);
         data.list.unshift(tasks.indexOf(task)+1, 0);
         tasks.splice.apply(tasks, data.list);

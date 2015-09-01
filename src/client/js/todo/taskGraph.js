@@ -17,15 +17,16 @@ module.exports.directive('taskGraph', [function() {
 function Controller($scope, $http, statusService) {
   statusService.ready.then(function() {
     var statuses = statusService.map;
-    // TODO this REALLY shouldn't request every task in the system
-    $http.get('/rest/todo/tasks').success(function(data) {
+
+    var params = {};
+    if($scope.hideClosed)
+      params.status = statusService.getNonClosed();
+
+    $http.get('/rest/todo/tasks', { params: params }).success(function(data) {
       var newGraph = {
         nodes: [],
         links: []
       };
-
-      if($scope.hideClosed)
-        data.list = data.list.filter(function(task) { return statuses[task.status].category !== '2'; });
 
       // the notes is supposed to be a list
       // and the link source/target are position within that list

@@ -1,6 +1,7 @@
 'use strict';
 module.exports = angular.module('lime.client.todo.taskGraph', [
   require('./enums').name,
+  require('./taskBreakdown').name,
   require('../subgraph/subgraphModule').name
 ]);
 module.exports.directive('taskGraph', [function() {
@@ -10,39 +11,27 @@ module.exports.directive('taskGraph', [function() {
       hideClosed: '='
     },
     templateUrl: 'partials/todo/taskGraph.html',
-    controller: ['$scope', '$http', 'lime.client.todo.enums.statuses', 'lime.client.todo.enums.types', Controller]
+    controller: ['$scope', '$http', 'lime.client.todo.enums.statuses', Controller]
   };
 }]);
 
 // XXX I am not happy with this controller code
 // - it is stupid ugly
-function Controller($scope, $http, statusService, typeService) {
-  $scope.typeCounts = {};
-  $scope.statusCounts = {};
-  typeService.ready.then(function() {
-    $scope.types = typeService.list;
-    typeService.list.forEach(function(s) { $scope.typeCounts[s.id] = 0; });
+function Controller($scope, $http, statusService) {
   statusService.ready.then(function() {
-    $scope.statuses = statusService.list;
-    statusService.list.forEach(function(s) { $scope.statusCounts[s.id] = 0; });
-
-    var statuses = statusService.map;
-
     var params = {};
     if($scope.hideClosed)
       params.status = statusService.getNonClosed();
 
+    // TODO should the list be queried by the graph? shouldn't this list be provided to it?
     $http.get('/rest/todo/tasks', { params: params }).success(function(data) {
+      $scope.taskList = data.list;
+
+      // TODO get the newGraph stuff out of the controller
       var newGraph = {
         nodes: [],
         links: []
       };
-
-      // tally
-      data.list.forEach(function(task) {
-        $scope.typeCounts[task.type]++;
-        $scope.statusCounts[task.status]++;
-      });
 
       // the notes is supposed to be a list
       // and the link source/target are position within that list
@@ -73,16 +62,14 @@ function Controller($scope, $http, statusService, typeService) {
       });
 
       $scope.myData = newGraph;
+    }); // end $http get
+  }); // end status.ready
+}
 
+function getColor(task) {
+  //if(statuses[task.status].category === '2') return '#7f7f7f';
+  if(!task.parent) return '#ff7f0e';
+  //if(!task.children.length) return '#337ab7';
 
-      function getColor(task) {
-        if(statuses[task.status].category === '2') return '#7f7f7f';
-        if(!task.parent) return '#ff7f0e';
-        //if(!task.children.length) return '#337ab7';
-
-        return '#000000';
-      }
-    });
-  }); // end statusService
-  }); // end typeService
+  return '#000000';
 }

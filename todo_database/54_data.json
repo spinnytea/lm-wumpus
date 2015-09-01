@@ -1,1 +1,1 @@
-{"name":"Metadata","description":"","resolution":""}
+{"name":"Task Breakdown","description":"The task breakdown started on the home page. It's super cool, but I kept reading it as \"current\" rather than as \"everything\".\nIt got moved to the TaskGraph, but should really be it's own thing.\nThen we can reuse it! :D","resolution":""}

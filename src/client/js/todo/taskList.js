@@ -68,11 +68,15 @@ module.exports.service('lime.client.todo.taskListService', [
 
     // prereq: !viewData[task.id].expanded
     instance.expand = function(tasks, viewData, task, hideClosed) {
-      var statuses = statusService.map;
       var deferred = $q.defer();
       viewData[task.id].expanded = true;
-      $http.get('/rest/todo/tasks?children='+task.id).success(function(data) {
-        if(hideClosed) data.list = data.list.filter(function(task) { return statuses[task.status].category !== '2'; });
+      if(hideClosed) {
+        var join = '&status=';
+        hideClosed = join+statusService.getNonClosed().join(join);
+      } else {
+        hideClosed = '';
+      }
+      $http.get('/rest/todo/tasks?children='+task.id + hideClosed).success(function(data) {
         instance.initViewData(data.list, viewData, task);
         data.list.unshift(tasks.indexOf(task)+1, 0);
         tasks.splice.apply(tasks, data.list);
@@ -123,6 +127,7 @@ module.exports.controller('lime.client.todo.taskList', [
     //
 
     $scope.range = function(num) {
+      if(num === undefined) return [];
       return new Array(num);
     };
   }

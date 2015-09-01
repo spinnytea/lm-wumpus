@@ -2,14 +2,20 @@
 
 module.exports = angular.module('lime.client.todo.enums', []);
 module.exports.service('lime.client.todo.enums.statuses', createService('/rest/todo/statuses', {
-  0: { display: 'Start', class: '', order: 2 },
-  1: { display: 'Being Addressed', class: 'text-primary', order: 3 },
-  2: { display: 'Closed', class: 'closed text-muted', order: 1 },
+  '0': { display: 'Start', class: '', order: 2 },
+  '1': { display: 'Being Addressed', class: 'text-primary', order: 3 },
+  '2': { display: 'Closed', class: 'closed text-muted', order: 1 },
+}, {
+  getNonClosed: function(instance) {
+    return instance.list
+      .filter(function(s) { return s.category !== '2'; })
+      .map(function(s) { return s.id; });
+  }
 }));
 module.exports.service('lime.client.todo.enums.types', createService('/rest/todo/types'));
 module.exports.service('lime.client.todo.enums.priorities', createService('/rest/todo/priorities'));
 
-function createService(path, categories) {
+function createService(path, categories, extensions) {
   return [
     '$q',
     '$http',
@@ -22,6 +28,8 @@ function createService(path, categories) {
         var deferred = $q.defer();
         $http.get(path).success(function(data) {
           if(categories) {
+            // flatten some data onto the enum object for ease of use
+            // TODO is this being under-utilized
             data.list.forEach(function(obj) {
               Object.defineProperty(obj, 'categoryClass', { value: categories[obj.category].class, enumerable: false });
               Object.defineProperty(obj, 'categoryOrder', { value: categories[obj.category].order, enumerable: false });
@@ -40,6 +48,11 @@ function createService(path, categories) {
         $http.get(path + '/count').success(function(data) { deferred.resolve(data); });
         return deferred.promise;
       };
+
+      // TODO convert extensions to a decorator
+      angular.forEach(extensions, function(fn, key) {
+        instance[key] = function() { return fn(instance); };
+      });
 
       // initialize data
       instance.update();

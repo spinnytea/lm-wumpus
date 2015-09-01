@@ -1,4 +1,5 @@
 'use strict';
+var _ = require('lodash');
 var config = require('lime/src/config');
 var ideas = require('lime/src/database/ideas');
 var links = require('lime/src/database/links');
@@ -14,51 +15,74 @@ exports.rest = function(router) {
 
   // QUERY
   router.get('/tasks', function(req, res) {
-    // build the query
-    var sg = new subgraph.Subgraph();
+    // build the query set
+
+    var sgs = new subgraph.Subgraph();
     // the task
-    var t = sg.addVertex(subgraph.matcher.filler);
+    var t = sgs.addVertex(subgraph.matcher.filler);
     // must by of type task
-    sg.addEdge(t, links.list.type_of, sg.addVertex(subgraph.matcher.id, lwt_task));
+    sgs.addEdge(t, links.list.type_of, sgs.addVertex(subgraph.matcher.id, lwt_task));
+
+    // convert the base into an array
+    // all other params must add to the list
+    sgs = [sgs];
+
+    function addRequirement(link, idea) {
+      if(!_.isArray(idea)) {
+        // if there is only one value (the raw value)
+        // then we can loop through the subgraphs and modify them directly
+        sgs.forEach(function(sg) {
+          sg.addEdge(t, link, sg.addVertex(subgraph.matcher.id, idea));
+        });
+      } else {
+        // if there is a list of values, then we'll OR them together
+        // for each sg, create a list of sg (one for each search value)
+        // then reduce the ~matrix into one array
+        sgs = sgs.map(function(sg) {
+          return idea.map(function(id) {
+            var copy = sg.copy();
+            copy.addEdge(t, link, copy.addVertex(subgraph.matcher.id, id));
+            return copy;
+          });
+        }).reduce(function(ret, list) { Array.prototype.push.apply(ret, list); return ret; }, []);
+      }
+    }
 
     // restrict to the children of a particular task
     if(req.query.hasOwnProperty('children')) {
-      // if no child is provided (empty/null/undefined query param),
-      // then return root thoughts (these are children of the task idea)
-      var parent = ideas.proxy(req.query.children || lwt_task);
-      sg.addEdge(sg.addVertex(subgraph.matcher.id, parent), links.list.lm_wumpus_todo__child, t);
+      if(!_.isArray(req.query.children)) {
+        // if no child is provided (empty/null/undefined query param),
+        // then return root thoughts (these are children of the task idea)
+        var parent = ideas.proxy(req.query.children || lwt_task);
+        sgs.forEach(function (sg) {
+          sg.addEdge(sg.addVertex(subgraph.matcher.id, parent), links.list.lm_wumpus_todo__child, t);
+        });
+      }
     }
 
     // restrict to tasks with a certain status
     if(req.query.hasOwnProperty('status')) {
-      var status = ideas.proxy(req.query.status);
-      sg.addEdge(t, links.list.lm_wumpus_todo__status, sg.addVertex(subgraph.matcher.id, status));
+      addRequirement(links.list.lm_wumpus_todo__status, req.query.status);
     }
 
     // restrict to tasks with a certain type
     if(req.query.hasOwnProperty('type')) {
-      var type = ideas.proxy(req.query.type);
-      sg.addEdge(t, links.list.lm_wumpus_todo__type, sg.addVertex(subgraph.matcher.id, type));
+      addRequirement(links.list.lm_wumpus_todo__type, req.query.type);
     }
 
     // restrict to tasks with a certain priority
     if(req.query.hasOwnProperty('priority')) {
-      var priority = ideas.proxy(req.query.priority);
-      sg.addEdge(t, links.list.lm_wumpus_todo__priority, sg.addVertex(subgraph.matcher.id, priority));
+      addRequirement(links.list.lm_wumpus_todo__priority, req.query.priority);
     }
 
-    // run the search
-    var result = subgraph.search(sg);
-
-    // collect the results we want to send to the UI
-    var list = result
-      // get the task idea from each of the result graphs
-      .map(function(g) { return g.getIdea(t); })
-      // get the task data from these ideas
-      .map(getTaskData);
+    // run the searches, reduce the results to a set, strip out the values
+    // TODO lodash chain start/end
+    var list = _.values(sgs
+      .map(function(sg) { return subgraph.search(sg); })
+      .reduce(function(set, next) { next.forEach(function(g) { set[g.getIdea(t).id] = g.getIdea(t); }); return set; }, {}));
 
     // return the list of task data
-    res.json({ list: list });
+    res.json({ list: list.map(getTaskData) });
   });
 
   // CREATE task

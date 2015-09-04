@@ -100,6 +100,10 @@ svg.subgraph {
   padding: 2px 5px;
 }
 
+[ng-form="'taskForm'"] textarea {
+  resize: vertical;
+}
+
 .closed {
   font-style: italic;
   text-decoration: line-through;
@@ -107,4 +111,10 @@ svg.subgraph {
 
 [data-task-graph] h1 {
   font-size: 1.4em;
+}
+
+[task-id].form-inline input.form-control,
+[data-task-id].form-inline input.form-control {
+  width: 4em;
+  text-align: center;
 }

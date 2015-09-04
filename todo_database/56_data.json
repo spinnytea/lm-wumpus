@@ -1,0 +1,1 @@
+{"name":"certainty: how to use it","description":"most specifically, how do we use it in subgraph search?\ndoes the certainty of the subgraph match depend on the certainty of the links?\ndo we sort astar matches by certainty?\ndo subgraphs cache the certainty?","resolution":""}

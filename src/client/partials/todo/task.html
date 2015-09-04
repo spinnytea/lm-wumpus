@@ -84,10 +84,10 @@
                         <th style="width: 99%;">Blocked By</th>
                     </tr></thead>
                     <tbody>
-                        <tr data-ng-repeat="ignore in formData.blockedBy track by $index">
-                            <th><i class="fa fa-remove form-control-static" ng-click="removeBlockedBy($index)">&nbsp;</i></th>
-                            <td><div data-ng-model="formData.blockedBy[$index]" data-task-id></div></td>
-                        </tr>
+                    <tr data-ng-repeat="ignore in formData.blockedBy track by $index">
+                        <th><i class="fa fa-remove form-control-static" ng-click="removeBlockedBy($index)">&nbsp;</i></th>
+                        <td><div data-ng-model="formData.blockedBy[$index]" data-task-id></div></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -126,8 +126,8 @@
                 <table class="table table-condensed">
                     <thead><tr><th>Children</th></tr></thead>
                     <tbody>
-                        <tr ng-if="formData.children.length === 0"><td class="text-muted"><i>None</i></td></tr>
-                        <tr ng-repeat="id in formData.children"><td><div data-task-id data-ng-model="id" data-readonly="true"></div></td></tr>
+                    <tr ng-if="formData.children.length === 0"><td class="text-muted"><i>None</i></td></tr>
+                    <tr ng-repeat="id in formData.children"><td><div data-task-id data-ng-model="id" data-readonly="true"></div></td></tr>
                     </tbody>
                 </table>
             </div>

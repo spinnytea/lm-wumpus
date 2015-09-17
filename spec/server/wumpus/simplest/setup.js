@@ -6,6 +6,7 @@ var _ = require('lodash');
 var links = require('lime/src/database/links');
 var number = require('lime/src/planning/primitives/number');
 var scheduler = require('lime/src/planning/scheduler');
+var sensor = require('lime/src/pattern/sensor');
 var subgraph = require('lime/src/database/subgraph');
 
 var server = require('../../../../src/server/wumpus/index');
@@ -51,7 +52,7 @@ function agentState() {
 }
 
 describe('setup', function() {
-  it('context', function() {
+  it.only('context', function() {
     var CHRONA = 'I don\'t know how to deal with this.';
 
     // invalid config
@@ -81,6 +82,11 @@ describe('setup', function() {
     context.cleanup();
     context.setup(socket, config);
     expect(socket.messages.message).to.equal('Connected');
+
+
+    // check the context to make sure it's valid
+    expect(sensor.list(context.idea('agent_inside_room')).length).to.equal(1);
+
 
     context.cleanup();
   });

@@ -112,6 +112,11 @@ gulp.task('run', [], function() {
 });
 
 gulp.task('mocha', ['server-jshint', 'spec-jshint'], function() {
+  // set the idea database location for this server
+  require('lime/src/config').init({
+    location: '/Volumes/RAM Disk'
+  });
+
   return gulp.src(['spec/**/*.js'], {read: false})
     .pipe(mocha({reporter: reporter, timeout: 8000}));
 });

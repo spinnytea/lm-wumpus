@@ -11,6 +11,7 @@ var scheduler = require('lime/src/planning/scheduler');
 var subgraph = require('lime/src/database/subgraph');
 
 var discreteActuators = require('./actuators/discreteActuators');
+var wumpusSensors = require('./actuators/wumpusSensors');
 
 var ERROR_RANGE = 0.001;
 links.create('wumpus_sense_agent_dir');
@@ -101,6 +102,9 @@ var getDiscreteContext = function() {
   exports.subgraph.addEdge(exports.keys.action_grab, links.list.thought_description, exports.keys.wumpus_world);
   exports.subgraph.addEdge(exports.keys.action_exit, links.list.thought_description, exports.keys.wumpus_world);
   exports.subgraph.addEdge(exports.keys.action_CaeActions, links.list.thought_description, exports.keys.wumpus_world);
+  // sensors
+  exports.keys.agent_inside_room = exports.subgraph.addVertex(subgraph.matcher.exact, {name:'sensor:agent_inside_room'});
+  exports.subgraph.addEdge(exports.keys.agent_inside_room, links.list.thought_description, exports.keys.wumpus_world);
 
   // directions
   exports.keys.directions = exports.subgraph.addVertex(subgraph.matcher.similar, discrete.definitions.similar);
@@ -120,6 +124,9 @@ var getDiscreteContext = function() {
   // room coord
   exports.keys.room_coord = exports.subgraph.addVertex(subgraph.matcher.similar, {name:'room_coord'});
   exports.subgraph.addEdge(exports.keys.room_coord, links.list.context, exports.keys.wumpus_world);
+  // radius unit
+  exports.keys.radius_unit = exports.subgraph.addVertex(subgraph.matcher.similar, {name:'radius_unit'});
+  exports.subgraph.addEdge(exports.keys.radius_unit, links.list.context, exports.keys.wumpus_world);
 
   var results = subgraph.search(exports.subgraph);
   if(results.length === 0) {
@@ -141,6 +148,9 @@ var getDiscreteContext = function() {
     action_grab.link(links.list.thought_description, wumpus_world);
     action_exit.link(links.list.thought_description, wumpus_world);
     action_CaeActions.link(links.list.thought_description, wumpus_world);
+    // sensors
+    var agent_inside_room = ideas.create({name:'sensor:agent_inside_room'});
+    agent_inside_room.link(links.list.thought_description, wumpus_world);
 
     // directions
     var directions = discrete.definitions.create(['east', 'south', 'west', 'north'], 'cycle');
@@ -157,6 +167,9 @@ var getDiscreteContext = function() {
     // room coord
     var room_coord = ideas.create({name:'room_coord'});
     room_coord.link(links.list.context, wumpus_world);
+    // radius unit
+    var radius_unit = ideas.create({name:'radius_unit'});
+    radius_unit.link(links.list.context, wumpus_world);
 
 
     // create actuators
@@ -167,12 +180,16 @@ var getDiscreteContext = function() {
     discreteActuators.grab(agent, room, [wumpus_world, action_grab]);
     discreteActuators.exit(agent, room, [wumpus_world, action_exit]);
     discreteActuators.deathByPit(agent, room, [wumpus_world, action_CaeActions]);
+    // create sensors
+
+    wumpusSensors.agent_inside_room(agent, room_coord, room, radius_unit, [agent_inside_room]);
 
 
     // save our the ideas
     [
       wumpus_world, stub_room, action_left, action_right, action_up, action_grab, action_exit, action_CaeActions, ideas.context('blueprint'),
-      directions, compass, agent, room, room_coord
+      agent_inside_room, ideas.context('sensor'),
+      directions, compass, agent, room, room_coord, radius_unit
     ].forEach(ideas.save);
     // now search again
     results = subgraph.search(exports.subgraph);

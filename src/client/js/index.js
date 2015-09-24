@@ -12,6 +12,10 @@ angular.module('lime.client', [
       templateUrl: 'partials/wumpus/app.html',
       controller: 'lime.client.wumpus.app',
     })
+    .when('/wumpus/config', {
+      templateUrl: 'partials/wumpus/config.html',
+      controller: 'lime.client.wumpus.config',
+    })
     .when('/subgraph/example', {
       templateUrl: 'partials/subgraph/example.html',
       controller: 'lime.client.subgraph.example',

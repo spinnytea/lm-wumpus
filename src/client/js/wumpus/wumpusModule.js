@@ -16,16 +16,22 @@ module.exports = angular.module('lime.client.wumpus', [
 // some aesthetics for when the game ends
 // and puts a border between the game area and the HUD
 .constant('lime.client.wumpus.gameBoxBorder', 12)
+.controller('lime.client.wumpus.config', [
+  '$scope',
+  function($scope) {
+    $scope.config = config;
+  }
+])
 .controller('lime.client.wumpus.app', [
-  '$scope', 'lime.client.subgraph.data',
-  function($scope, subgraphData) {
+  '$scope', '$location', 'lime.client.subgraph.data',
+  function($scope, $location, subgraphData) {
     $scope.config = config;
     $scope.game = game;
-    $scope.state = 'config';
+    $scope.state = 'none';
 
     $scope.gotoConfig = function() {
-      $scope.state = 'config';
       game.cave = undefined;
+      $location.path('/wumpus/config');
     };
     $scope.generateGame = function() {
       // our game is in a directive
@@ -160,6 +166,7 @@ module.exports = angular.module('lime.client.wumpus', [
           }));
         }
 
+        var dynamicTimeout;
         function dynamicUpdate() {
           $scope.$apply(game.update);
           if(config.game.player === 'lemon')
@@ -167,7 +174,6 @@ module.exports = angular.module('lime.client.wumpus', [
           dynamicTimeout = setTimeout(dynamicUpdate, config.timing.updateDelay);
         }
         if(config.game.timing === 'dynamic') {
-          var dynamicTimeout;
           $scope.$on('$destroy', function() { clearTimeout(dynamicTimeout); });
 
           // we need to wait for the digest cycle to end

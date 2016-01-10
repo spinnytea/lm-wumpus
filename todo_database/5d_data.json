@@ -1,0 +1,1 @@
+{"name":"query by project","description":"result: only return nodes that are a child of the specified task\noption 1: prefill a dropdown with all the root projects\noption 2: enter any task id","resolution":""}

@@ -4,7 +4,6 @@
         <th style="width: 10%;">ID</th>
         <th style="width: 90%;">Name</th>
         <th class="min-width"></th>
-        <th class="min-width"></th>
     </tr></thead>
     <tbody><tr ng-repeat="task in tasks">
         <td class="min-width" data-ng-if="viewData">
@@ -22,9 +21,7 @@
         </td>
         <td class="min-width">
             <i ng-class="priorities[task.priority].icon" title="{{priorities[task.priority].name}}">
-            </i><i ng-class="statuses[task.status].icon" title="{{statuses[task.status].name}}"></i>&nbsp;
-        </td>
-        <td class="min-width">
+            </i><i ng-class="statuses[task.status].icon" title="{{statuses[task.status].name}}"></i>
             <a class="btn btn-sm btn-default" href="#/todo/tasks/{{task.id}}" title="Edit"><i class="fa fa-pencil"></i></a>
             <a class="btn btn-sm btn-default" href="#/todo/tasks/create?parent={{task.id}}" title="Create Task"><i class="fa fa-plus"></i></a>
         </td>

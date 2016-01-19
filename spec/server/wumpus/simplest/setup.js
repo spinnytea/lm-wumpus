@@ -6,7 +6,7 @@ var _ = require('lodash');
 var links = require('lime/src/database/links');
 var number = require('lime/src/planning/primitives/number');
 var scheduler = require('lime/src/planning/scheduler');
-var sensor = require('lime/src/pattern/sensor');
+var sensor = require('lime/src/sensor/sensor');
 var subgraph = require('lime/src/database/subgraph');
 
 var server = require('../../../../src/server/wumpus/index');

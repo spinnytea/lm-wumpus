@@ -1,6 +1,6 @@
 'use strict';
 
-var hardcodedsensor = require('lime/src/pattern/hardcodedsensor');
+var hardcodedsensor = require('lime/src/sensor/hardcodedsensor');
 var ideas = require('lime/src/database/ideas');
 var links = require('lime/src/database/links');
 var subgraph = require('lime/src/database/subgraph');

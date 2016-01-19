@@ -182,9 +182,9 @@ function updateTask(idea, data) {
   delete data.parent;
   delete data.children; // we only care about making sure the parent is hooked up; the child list will handle itself by extension
 
-  ensureList(idea, links.list.lm_wumpus_todo__depends_on, data.blockedBy);
-  ensureList(idea, links.list.lm_wumpus_todo__depends_on.opposite, data.blocking);
-  ensureList(idea, links.list.lm_wumpus_todo__related, data.related);
+  ensureList(idea, links.list.lm_wumpus_todo__depends_on, data.blockedBy||[]);
+  ensureList(idea, links.list.lm_wumpus_todo__depends_on.opposite, data.blocking||[]);
+  ensureList(idea, links.list.lm_wumpus_todo__related, data.related||[]);
   delete data.blockedBy;
   delete data.blocking;
   delete data.related;

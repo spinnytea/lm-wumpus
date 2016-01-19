@@ -52,7 +52,7 @@ function agentState() {
 }
 
 describe('setup', function() {
-  it.only('context', function() {
+  it('context', function() {
     var CHRONA = 'I don\'t know how to deal with this.';
 
     // invalid config

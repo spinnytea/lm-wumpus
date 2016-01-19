@@ -1,6 +1,7 @@
 'use strict';
 /* global describe, it, beforeEach, before */
 // TODO instead of opting into/out of benchmarking, we should make another gulp task
+// XXX why isn't this a "describe.skip" ?
 describe.only = function() {};
 var expect = require('chai').expect;
 

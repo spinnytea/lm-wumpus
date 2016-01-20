@@ -60,6 +60,16 @@ exports.rest = function(router) {
       }
     }
 
+    // restrict to children of a particular task, but do a recursive search
+    if(req.query.hasOwnProperty('parent') && req.query.parent) {
+      if(!_.isArray(req.query.parent)) {
+        var some_parent = ideas.proxy(req.query.parent);
+        sgs.forEach(function (sg) {
+          sg.addEdge(sg.addVertex(subgraph.matcher.id, some_parent), links.list.lm_wumpus_todo__child, t, undefined, true);
+        });
+      }
+    }
+
     // restrict to tasks with a certain status
     if(req.query.hasOwnProperty('status')) {
       addRequirement(links.list.lm_wumpus_todo__status, req.query.status);

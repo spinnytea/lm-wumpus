@@ -74,9 +74,10 @@ module.exports.controller('lime.client.todo.createTask', [
   '$http',
   '$location',
   '$routeParams',
+  'lime.client.todo.enums.types',
   'lime.client.todo.enums.statuses',
   'lime.client.todo.enums.priorities',
-  function($scope, $http, $location, $routeParams, statusService, priorityService) {
+  function($scope, $http, $location, $routeParams, typeService, statusService, priorityService) {
     $scope.nested = { taskObject: angular.copy(EMPTY_TASK) };
     $scope.createError = false;
 
@@ -92,14 +93,18 @@ module.exports.controller('lime.client.todo.createTask', [
         $scope.nested.taskObject = data;
       });
     } else {
+      typeService.ready.then(function() {
       statusService.ready.then(function() {
-        priorityService.ready.then(function() {
+      priorityService.ready.then(function() {
         // force the model to update on the UI
         $scope.nested.taskObject = angular.copy($scope.nested.taskObject);
+        // default to the first type
+        $scope.nested.taskObject.type = typeService.list[0].id;
         // default to the first status
         $scope.nested.taskObject.status = statusService.list[0].id;
         // default to the middle priority
         $scope.nested.taskObject.priority = priorityService.list[Math.floor(priorityService.list.length/2)].id;
+      });
       });
       });
     }

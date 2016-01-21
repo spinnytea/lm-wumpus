@@ -5,6 +5,8 @@ var ideas = require('lime/src/database/ideas');
 var links = require('lime/src/database/links');
 var subgraph = require('lime/src/database/subgraph');
 
+var tags = require('./tags');
+
 var lwt_task = ideas.context('lm_wumpus_todo__task');
 
 exports.rest = function(router) {
@@ -175,6 +177,8 @@ function getTaskData(idea) {
   data.blockedBy = idea.link(links.list.lm_wumpus_todo__depends_on).map(function(proxy) { return proxy.id; });
   data.blocking = idea.link(links.list.lm_wumpus_todo__depends_on.opposite).map(function(proxy) { return proxy.id; });
   data.related = idea.link(links.list.lm_wumpus_todo__related).map(function(proxy) { return proxy.id; });
+
+  data.tags = idea.link(links.list.lm_wumpus_todo__tag.opposite).map(function(proxy) { return proxy.data(); });
   return data;
 }
 
@@ -198,6 +202,9 @@ function updateTask(idea, data) {
   delete data.blockedBy;
   delete data.blocking;
   delete data.related;
+
+  ensureList(idea, links.list.lm_wumpus_todo__tag.opposite, tags.getAsIdeas(data.tags||[]));
+  delete data.tags;
 
   idea.update(data);
   ideas.save(idea);

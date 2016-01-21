@@ -9,8 +9,8 @@ module.exports = angular.module('lime.client.todo', [
   require('./taskGraph').name,
   require('./taskBreakdown').name,
   'ngRoute'
-])
-.config([
+]);
+module.exports.config([
   '$routeProvider',
   function($routeProvider) {
     $routeProvider.when('/todo', {
@@ -33,14 +33,14 @@ module.exports = angular.module('lime.client.todo', [
       controller: 'lime.client.todo.queriesController',
     });
   }
-])
-.directive('pageHeading', [function() {
+]);
+module.exports.directive('pageHeading', [function() {
   return {
     scope: { active: '@' },
     templateUrl: 'partials/todo/pageHeading.html'
   };
-}])
-.controller('lime.client.todo.home', [
+}]);
+module.exports.controller('lime.client.todo.home', [
   '$scope',
   '$http',
   'lime.client.todo.enums.statuses',
@@ -53,8 +53,8 @@ module.exports = angular.module('lime.client.todo', [
       });
     });
   }
-])
-.controller('lime.client.todo.enumList', [
+]);
+module.exports.controller('lime.client.todo.enumList', [
   '$scope',
   '$http',
   '$location',
@@ -94,8 +94,8 @@ module.exports = angular.module('lime.client.todo', [
       });
     };
   }
-])
-.directive('taskId', [
+]);
+module.exports.directive('taskId', [
   'lime.client.todo.enums.statuses',
   'lime.client.todo.enums.types',
   function(statusService, typeService) {
@@ -150,5 +150,51 @@ module.exports = angular.module('lime.client.todo', [
       }]
     };
   }
-])
-;
+]);
+module.exports.directive('tags', [
+  function() {
+    return {
+      require: 'ngModel',
+      replace: true,
+      scope: {},
+      link: function($scope, elem, attr, ngModelController) {
+        elem.find('input').attr('id', attr.id);
+        elem.removeAttr('id');
+
+        $scope.$on('$destroy', $scope.$watch('formData.tags', function(list) {
+          ngModelController.$setViewValue(list);
+        }, true));
+        ngModelController.$render = function() {
+          // TODO validate that this is a list?
+          $scope.formData.tags = ngModelController.$modelValue || [];
+          $scope.formData.input = '';
+        };
+      },
+      templateUrl: 'partials/todo/tagsInput.html',
+      controller: [
+        '$scope',
+        function($scope) {
+          $scope.formData = {
+            tags: [],
+            input: ''
+          };
+
+          // TODO if the user hits Enter, then call addTag
+          $scope.addTag = function() {
+            var newTag = $scope.formData.input;
+            if($scope.formData.tags.every(function(t) { return t !== newTag; })) {
+              // TODO focus on input field
+              $scope.formData.tags.push(newTag);
+              $scope.formData.tags.sort();
+              $scope.formData.input = '';
+            }
+          };
+
+          $scope.removeTag = function(tag) {
+            $scope.formData.tags.splice($scope.formData.tags.indexOf(tag), 1);
+          };
+        }
+      ]
+    };
+  }
+]);

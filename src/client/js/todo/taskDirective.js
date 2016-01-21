@@ -8,6 +8,7 @@ var EMPTY_TASK = {
   status: undefined,
   description: '',
   resolution: '',
+  tags: [],
   blocking: [],
   blockedBy: [],
   related: [],

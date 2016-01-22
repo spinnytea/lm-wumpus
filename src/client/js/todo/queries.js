@@ -55,7 +55,7 @@ module.exports.controller('lime.client.todo.queriesController', [
     };
 
     // if there is at least one field with specificity (other than hideClosed), then perform an initial search
-    if(Object.keys(formData).some(function(key) { return (key !== 'hideClosed' && formData[key]); })) {
+    if(Object.keys(formData).some(function(key) { return (key !== 'hideClosed' && key !== 'tags' && formData[key]); }) || (formData && formData.tags && formData.tags.length)) {
       $scope.search();
     }
   }

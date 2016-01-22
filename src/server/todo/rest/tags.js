@@ -1,5 +1,6 @@
 'use strict';
 var _ = require('lodash');
+var config = require('lime/src/config');
 var ideas = require('lime/src/database/ideas');
 var links = require('lime/src/database/links');
 
@@ -37,6 +38,7 @@ function getAsIdeas(strings, create) {
       idea.link(links.list.type_of, lwt_tag);
       ideas.save(lwt_tag);
       ideas.save(idea);
+      config.save();
       tagsByName[str] = idea;
       return idea;
     } else {

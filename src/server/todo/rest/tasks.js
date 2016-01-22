@@ -87,6 +87,18 @@ exports.rest = function(router) {
       addRequirement(links.list.lm_wumpus_todo__priority, req.query.priority);
     }
 
+    // restrict to tasks with a certain set of tags
+    if(req.query.hasOwnProperty('tags') && req.query.tags) {
+      var tagList = req.query.tags;
+      // a single tag will come across as a string
+      if(_.isString(tagList))
+        tagList = [tagList];
+      tagList = tags.getAsIdeas(tagList, false);
+      tagList.forEach(function(id) {
+        addRequirement(links.list.lm_wumpus_todo__tag.opposite, id);
+      });
+    }
+
     // run the searches, reduce the results to a set, strip out the values
     // TODO lodash chain start/end
     var list = _.values(sgs
@@ -203,7 +215,7 @@ function updateTask(idea, data) {
   delete data.blocking;
   delete data.related;
 
-  ensureList(idea, links.list.lm_wumpus_todo__tag.opposite, tags.getAsIdeas(data.tags||[]).map(function(proxy) { return proxy.id; }));
+  ensureList(idea, links.list.lm_wumpus_todo__tag.opposite, tags.getAsIdeas(data.tags||[], true));
   delete data.tags;
 
   idea.update(data);

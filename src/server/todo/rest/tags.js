@@ -21,7 +21,8 @@ exports.rest = function(router) {
   });
 };
 
-function getAsIdeas(strings) {
+// @return [idea.id]
+function getAsIdeas(strings, create) {
   var tagsByName = _.indexBy(lwt_tag.link(links.list.type_of.opposite), function(idea) {
     return idea.data();
   });
@@ -31,11 +32,17 @@ function getAsIdeas(strings) {
     if(tagsByName[str])
       return tagsByName[str];
     // or create
-    var idea = ideas.create(str);
-    idea.link(links.list.type_of, lwt_tag);
-    ideas.save(lwt_tag);
-    ideas.save(idea);
-    tagsByName[str] = idea;
-    return idea;
-  });
+    if(create) {
+      var idea = ideas.create(str);
+      idea.link(links.list.type_of, lwt_tag);
+      ideas.save(lwt_tag);
+      ideas.save(idea);
+      tagsByName[str] = idea;
+      return idea;
+    } else {
+      return undefined;
+    }
+    // clear out the undefined ideas when we don't create them
+  }).filter(function(idea) { return idea; })
+    .map(function(idea) { return idea.id; });
 }

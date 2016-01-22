@@ -203,7 +203,7 @@ function updateTask(idea, data) {
   delete data.blocking;
   delete data.related;
 
-  ensureList(idea, links.list.lm_wumpus_todo__tag.opposite, tags.getAsIdeas(data.tags||[]));
+  ensureList(idea, links.list.lm_wumpus_todo__tag.opposite, tags.getAsIdeas(data.tags||[]).map(function(proxy) { return proxy.id; }));
   delete data.tags;
 
   idea.update(data);

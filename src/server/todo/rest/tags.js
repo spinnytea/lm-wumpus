@@ -11,15 +11,15 @@ var lwt_tag = ideas.context('lm_wumpus_todo__tag');
 exports.getAsIdeas = getAsIdeas;
 exports.rest = function(router) {
   router.get('/tags', function(req, res) {
-    res.json({ list: getTags() });
+    var tags = {};
+    lwt_tag.link(links.list.type_of.opposite).forEach(function(idea) {
+      tags[idea.data()] = {
+        count: idea.link(links.list.lm_wumpus_todo__tag).length,
+      };
+    });
+    res.json({ map: tags });
   });
 };
-
-// get all tags
-function getTags() {
-  return lwt_tag.link(links.list.type_of.opposite)
-    .map(function(idea) { return idea.data(); });
-}
 
 function getAsIdeas(strings) {
   var tagsByName = _.indexBy(lwt_tag.link(links.list.type_of.opposite), function(idea) {
@@ -33,6 +33,8 @@ function getAsIdeas(strings) {
     // or create
     var idea = ideas.create(str);
     idea.link(links.list.type_of, lwt_tag);
+    ideas.save(lwt_tag);
+    ideas.save(idea);
     tagsByName[str] = idea;
     return idea;
   });

@@ -160,6 +160,7 @@ module.exports.directive('tags', [
       link: function($scope, elem, attr, ngModelController) {
         elem.find('input').attr('id', attr.id);
         elem.removeAttr('id');
+        $scope.inputDOM = elem.find('input');
 
         $scope.$on('$destroy', $scope.$watch('formData.tags', function(list) {
           ngModelController.$setViewValue(list);
@@ -179,14 +180,14 @@ module.exports.directive('tags', [
             input: ''
           };
 
-          // TODO if the user hits Enter, then call addTag
           $scope.addTag = function() {
             var newTag = $scope.formData.input;
             if($scope.formData.tags.every(function(t) { return t !== newTag; })) {
-              // TODO focus on input field
               $scope.formData.tags.push(newTag);
               $scope.formData.tags.sort();
               $scope.formData.input = '';
+              // focus on input field
+              $scope.inputDOM.focus();
             }
           };
 
@@ -198,3 +199,15 @@ module.exports.directive('tags', [
     };
   }
 ]);
+module.exports.directive('myEnter', function() {
+  return function (scope, element, attrs) {
+    element.bind('keydown keypress', function(event) {
+      if(event.which === 13) {
+        scope.$apply(function (){
+          scope.$eval(attrs.myEnter);
+        });
+        event.preventDefault();
+      }
+    });
+  };
+});

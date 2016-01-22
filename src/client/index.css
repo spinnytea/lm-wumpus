@@ -24,6 +24,10 @@
   cursor: pointer;
 }
 
+.label + .label {
+  margin-left: 0.3em;
+}
+
 
 /*
  * General UI Tweaks

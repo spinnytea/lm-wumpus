@@ -12,13 +12,13 @@ var lwt_tag = ideas.context('lm_wumpus_todo__tag');
 exports.getAsIdeas = getAsIdeas;
 exports.rest = function(router) {
   router.get('/tags', function(req, res) {
-    var tags = {};
-    lwt_tag.link(links.list.type_of.opposite).forEach(function(idea) {
-      tags[idea.data()] = {
-        count: idea.link(links.list.lm_wumpus_todo__tag).length,
+    var list = lwt_tag.link(links.list.type_of.opposite).map(function(idea) {
+      return {
+        string: idea.data(),
+        count: idea.link(links.list.lm_wumpus_todo__tag).length
       };
     });
-    res.json({ map: tags });
+    res.json({ list: list });
   });
 };
 

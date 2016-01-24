@@ -1,1 +1,1 @@
-{"name":"Unit Testing","description":"There is zero unit testing. And this is a 'far reaching' change.\n(the code base is small, but it touches most of it)"}
+{"name":"Unit Testing","description":"There is zero unit testing. And this is a 'far reaching' change.\n(the code base is small, but it touches most of it)","resolution":"these are very specific tests - ignoring this task in favor of a larger one"}

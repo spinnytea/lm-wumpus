@@ -1,1 +1,1 @@
-{"description":"dependency graph? This is a harder problem\nAs a human, we can tell the LM what it should do, but how does it figure it out? How does it know that one thing must come before another.","name":"How do we figure what these goals should be?"}
+{"description":"dependency graph? This is a harder problem\nHow does it know that one thing must come before another?\nAs a human, we can tell the LM what it should do, but how does it figure it out?","name":"How do we figure what these goals should be?"}

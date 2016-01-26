@@ -1,4 +1,6 @@
 'use strict';
+// TODO come up with some better names 'agent_inside_room' is the same name EVERYWHERE (omg), but each ref is a different impl
+// TODO this isn't an actuator, why is a sensor in the actuators?
 
 var hardcodedsensor = require('lime/src/sensor/hardcodedsensor');
 var ideas = require('lime/src/database/ideas');
@@ -75,6 +77,9 @@ hardcodedsensor.sensors.agent_inside_room = function(state, glueGroup) {
     to: rooms
   };
 };
+
+exports.units = {};
+exports.units.agent_inside_room = agent_inside_room;
 
 // all parameters are numbers
 // returns true or false

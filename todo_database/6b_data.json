@@ -1,0 +1,1 @@
+{"name":"is task blocked","description":"when loading a task, check it's blocked tasks\nset a flag if any of the blocked tasks are still open","resolution":""}

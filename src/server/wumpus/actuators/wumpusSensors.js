@@ -8,13 +8,19 @@ var links = require('lime/src/database/links');
 var subgraph = require('lime/src/database/subgraph');
 
 
-
+// TODO what about the agentLocation variable
+// - with this link, the contents are now duplicate info; we don't need matchRef on the location
+// - is this an indication that we can do away with matchRef stuff altogether?
+// agentInstance --inside-> room
+links.create('agent_inside_room');
 
 
 exports.agent_inside_room = function(agent, room_coord, room, radius_unit, sensor_context) {
   var hs = new hardcodedsensor.Sensor();
   hs.sensor = 'agent_inside_room';
   var h_agent = hs.requirements.addVertex(subgraph.matcher.id, agent);
+  var h_a_inst = hs.requirements.addVertex(subgraph.matcher.filler);
+  var h_a_loc = hs.requirements.addVertex(subgraph.matcher.filler);
   var h_a_x = hs.requirements.addVertex(subgraph.matcher.similar, { unit: room_coord.id });
   var h_a_y = hs.requirements.addVertex(subgraph.matcher.similar, { unit: room_coord.id });
   var h_room_type = hs.requirements.addVertex(subgraph.matcher.id, room);
@@ -23,24 +29,26 @@ exports.agent_inside_room = function(agent, room_coord, room, radius_unit, senso
   var h_r_y = hs.requirements.addVertex(subgraph.matcher.similar, { unit: room_coord.id });
   var h_r_r = hs.requirements.addVertex(subgraph.matcher.similar, { unit: radius_unit.id });
 
-  hs.requirements.addEdge(h_agent, links.list['wumpus_room_loc_x'], h_a_x);
-  hs.requirements.addEdge(h_agent, links.list['wumpus_room_loc_y'], h_a_y);
+  hs.requirements.addEdge(h_a_inst, links.list.type_of, h_agent);
+  hs.requirements.addEdge(h_a_inst, links.list['wumpus_sense_agent_loc'], h_a_loc);
+  hs.requirements.addEdge(h_a_loc, links.list['wumpus_room_loc_x'], h_a_x);
+  hs.requirements.addEdge(h_a_loc, links.list['wumpus_room_loc_y'], h_a_y);
   hs.requirements.addEdge(h_room, links.list.type_of, h_room_type);
   hs.requirements.addEdge(h_room, links.list['wumpus_room_loc_x'], h_r_x);
   hs.requirements.addEdge(h_room, links.list['wumpus_room_loc_y'], h_r_y);
   hs.requirements.addEdge(h_room, links.list.property, h_r_r);
 
   hs.groupfn = 'byOuterIdea';
-  hs.groupConfig = h_agent;
+  hs.groupConfig = h_a_inst;
 
   // for simplicity, these values are hardcoded in the agent_inside_room
-  if(h_agent !== '0') throw new Error('subgraph vertex_ids have changed. Update the sensor.');
-  if(h_a_x !== '1') throw new Error('subgraph vertex_ids have changed. Update the sensor.');
-  if(h_a_y !== '2') throw new Error('subgraph vertex_ids have changed. Update the sensor.');
-  if(h_room !== '4') throw new Error('subgraph vertex_ids have changed. Update the sensor.');
-  if(h_r_x !== '5') throw new Error('subgraph vertex_ids have changed. Update the sensor.');
-  if(h_r_y !== '6') throw new Error('subgraph vertex_ids have changed. Update the sensor.');
-  if(h_r_r !== '7') throw new Error('subgraph vertex_ids have changed. Update the sensor.');
+  if(h_a_inst !== '1') throw new Error('subgraph vertex_ids have changed. Update the sensor.');
+  if(h_a_x !== '3') throw new Error('subgraph vertex_ids have changed. Update the sensor.');
+  if(h_a_y !== '4') throw new Error('subgraph vertex_ids have changed. Update the sensor.');
+  if(h_room !== '6') throw new Error('subgraph vertex_ids have changed. Update the sensor.');
+  if(h_r_x !== '7') throw new Error('subgraph vertex_ids have changed. Update the sensor.');
+  if(h_r_y !== '8') throw new Error('subgraph vertex_ids have changed. Update the sensor.');
+  if(h_r_r !== '9') throw new Error('subgraph vertex_ids have changed. Update the sensor.');
 
   hs.save();
   sensor_context.forEach(function(sc) {
@@ -51,13 +59,13 @@ exports.agent_inside_room = function(agent, room_coord, room, radius_unit, senso
 };
 
 hardcodedsensor.sensors.agent_inside_room = function(state, glueGroup) {
-  var agent = '0';
-  var agent_x = '1';
-  var agent_y = '2';
-  var room = '4';
-  var room_x = '5';
-  var room_y = '6';
-  var room_r = '7';
+  var agent_inst = '1';
+  var agent_x = '3';
+  var agent_y = '4';
+  var room = '6';
+  var room_x = '7';
+  var room_y = '8';
+  var room_r = '9';
 
   var rooms = glueGroup.filter(function(glue) {
     return agent_inside_room(
@@ -73,7 +81,7 @@ hardcodedsensor.sensors.agent_inside_room = function(state, glueGroup) {
 
   return {
     ensureLinks: links.list.agent_inside_room,
-    from: state.getIdea(glueGroup[0][agent]),
+    from: state.getIdea(glueGroup[0][agent_inst]),
     to: rooms
   };
 };

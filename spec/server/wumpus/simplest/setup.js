@@ -311,6 +311,36 @@ describe('setup', function() {
       });
     }); // end actuators
 
+    describe('sensors', function() {
+      it('agent_inside_room', function() {
+        // hs is the list of ideas that are of sensors of type agent_inside_room
+        var hs = sensor.list(context.idea('agent_inside_room'));
+        expect(hs.length).to.equal(1);
+        // load the actual sensor
+        hs = sensor.load(hs[0]);
+        expect(hs.sensor).to.equal('agent_inside_room');
+        expect(hs.groupfn).to.equal('byOuterIdea');
+
+        // first, let's make sure the requirements are valid
+        // 10 rooms, all with a radius of 48
+        var result = subgraph.match(context.subgraph, hs.requirements);
+        expect(result.length).to.equal(10);
+        expect(result.map(function(vM) { return context.subgraph.getData(vM['9']).value.l; }))
+          .to.deep.equal([48,48,48,48,48,48,48,48,48,48]);
+
+
+        // agent is not considered to be inside any room
+        expect(context.idea('agentInstance').link(links.list['agent_inside_room']).length).to.equal(0);
+
+        hs.sense(context.subgraph);
+
+        // agent is inside one room
+        var in_rooms = context.idea('agentInstance').link(links.list['agent_inside_room']);
+        expect(in_rooms.length).to.equal(1);
+        expect(in_rooms[0].data().value).to.equal(63);
+      });
+    }); // end sensors
+
     describe('goal', function() {
       var goalCallback;
       before(function() {

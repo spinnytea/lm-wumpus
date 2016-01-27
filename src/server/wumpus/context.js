@@ -239,6 +239,7 @@ exports.sense = function(state) {
       roomInstance.link(links.list.type_of, exports.idea('room'));
       roomInstance.link(links.list['wumpus_room_loc_x'], ideas.create(number.cast({value: number.value(room.x), unit: exports.idea('room_coord').id})));
       roomInstance.link(links.list['wumpus_room_loc_y'], ideas.create(number.cast({value: number.value(room.y), unit: exports.idea('room_coord').id})));
+      roomInstance.link(links.list.property, ideas.create(number.cast({value: number.value(gameConfig.room.radius), unit: exports.idea('radius_unit').id})));
       var roomHasPit = ideas.create(discrete.cast({value:room.hasPit, unit: discrete.definitions.list.boolean}));
       var roomHasGold = ideas.create(discrete.cast({value:room.hasGold, unit: discrete.definitions.list.boolean}));
       var roomHasExit = ideas.create(discrete.cast({value:room.hasExit, unit: discrete.definitions.list.boolean}));
@@ -253,6 +254,8 @@ exports.sense = function(state) {
         exports.subgraph.addVertex(subgraph.matcher.number, number.cast({value: number.value(room.x), unit: exports.idea('room_coord').id})), -1);
       exports.subgraph.addEdge(keys_rI, links.list['wumpus_room_loc_y'],
         exports.subgraph.addVertex(subgraph.matcher.number, number.cast({value: number.value(room.y), unit: exports.idea('room_coord').id})), -1);
+      exports.subgraph.addEdge(keys_rI, links.list.property,
+        exports.subgraph.addVertex(subgraph.matcher.number, number.cast({value: number.value(gameConfig.room.radius), unit: exports.idea('radius_unit').id})), -1);
       exports.subgraph.addEdge(keys_rI, links.list['wumpus_sense_hasPit'],
         exports.subgraph.addVertex(subgraph.matcher.id, roomHasPit));
       exports.subgraph.addEdge(keys_rI, links.list['wumpus_sense_hasGold'],

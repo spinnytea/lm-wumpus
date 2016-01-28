@@ -1,4 +1,6 @@
 'use strict';
+var _ = require('lodash');
+
 module.exports = angular.module('lime.client.todo.taskGraph', [
   require('./enums').name,
   require('../subgraph/subgraphModule').name
@@ -44,11 +46,13 @@ function buildData(list) {
   // and the link source/target are position within that list
   // so... we need to save the mapping
   var task_idx = {};
+  var heights = taskHeights(list);
 
   // register all the nodes
   list.forEach(function(task) {
     task_idx[task.id] = newGraph.nodes.length;
-    newGraph.nodes.push({ id: task.id, name: task.name, color: getColor(task) });
+    var size = 4 + 2 * Math.sin(Math.PI*heights[task.id]/(heights._max*2));
+    newGraph.nodes.push({ id: task.id, name: task.name, color: getColor(task), size: size });
   });
 
   // add all the links
@@ -69,4 +73,29 @@ function buildData(list) {
   });
 
   return newGraph;
+}
+
+function taskHeights(list) {
+  var heights = {};
+  var map = _.indexBy(list, 'id');
+  function recurse(id) {
+    var task = map[id];
+    if(!task) {
+      heights[id] = 0;
+    } else if(task.children && task.children.length) {
+      task.children.forEach(recurse);
+      heights[id] = _.sumBy(task.children, function(c) { return heights[c]; });
+    } else {
+      heights[id] = 1;
+    }
+  }
+
+  list.forEach(function(task) {
+    if(!task.parent) {
+      recurse(task.id);
+      heights._max = Math.max(heights[task.id], heights._max||0);
+    }
+  });
+
+  return heights;
 }

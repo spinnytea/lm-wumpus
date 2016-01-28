@@ -178,7 +178,7 @@ function buildGraph(graph, elem) {
       .data(graph.nodes)
     .enter().append('circle')
       .attr('class', 'node')
-      .attr('r', 5)
+      .attr('r', function(d) { return d.size||5; })
       .style('fill', function(d) { return d.color; })
       .style('fill-opacity', function(d) { return d.opacity; })
       .call(force.drag);

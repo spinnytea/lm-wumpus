@@ -338,6 +338,41 @@ describe('setup', function() {
         var in_rooms = context.idea('agentInstance').link(links.list['agent_inside_room']);
         expect(in_rooms.length).to.equal(1);
         expect(in_rooms[0].data().value).to.equal(63);
+
+
+        // move the agent, and the values should change
+        // room 63 (86.4, 0)
+        var loc = context.idea('agentLocX').data();
+        loc.value = number.value(86.4);
+        context.idea('agentLocX').update(loc);
+        context.subgraph.deleteData(context.keys.agentLocX);
+        hs.sense(context.subgraph);
+
+        // agent is inside one room
+        in_rooms = context.idea('agentInstance').link(links.list['agent_inside_room']);
+        expect(in_rooms.length).to.equal(1);
+        expect(in_rooms[0].data().value).to.equal(65);
+
+        // move the agent into two rooms
+        loc.value = number.value(43.2);
+        context.idea('agentLocX').update(loc);
+        context.subgraph.deleteData(context.keys.agentLocX);
+        hs.sense(context.subgraph);
+
+        // agent is inside two rooms
+        in_rooms = context.idea('agentInstance').link(links.list['agent_inside_room']);
+        expect(in_rooms.length).to.equal(2);
+        expect(in_rooms.map(function(r) { return r.data().value; })).to.deep.equal([63, 65]);
+
+        // move the agent away from everything
+        loc.value = number.value(9001);
+        context.idea('agentLocX').update(loc);
+        context.subgraph.deleteData(context.keys.agentLocX);
+        hs.sense(context.subgraph);
+
+        // agent is not in a room
+        in_rooms = context.idea('agentInstance').link(links.list['agent_inside_room']);
+        expect(in_rooms.length).to.equal(0);
       });
     }); // end sensors
 

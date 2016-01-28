@@ -10,6 +10,7 @@ var subgraph = require('lime/src/database/subgraph');
 
 // TODO what about the agentLocation variable
 // - with this link, the contents are now duplicate info; we don't need matchRef on the location
+// - actually, the agentLocation as a matchRef doesn't work once the agent can be in more than one room
 // - is this an indication that we can do away with matchRef stuff altogether?
 // agentInstance --inside-> room
 links.create('agent_inside_room');

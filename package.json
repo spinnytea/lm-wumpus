@@ -10,7 +10,7 @@
   "author": "spinnytea <spinnytea@gmail.com>",
   "private": true,
   "devDependencies": {
-    "bower": "^1.4.1",
+    "bower": "^1.7.7",
     "browser-sync": "^1.7.0",
     "browserify": "^6.3.2",
     "chai": "^1.9.1",

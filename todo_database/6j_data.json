@@ -1,0 +1,1 @@
+{"name":"When can these sensors be run?","description":"Are they triggered as an action? Do they run every step? Do they run whenever new data is available?\nRight now, lm-wumpus calls them directly, rather than a process inside of lime.\nShould this always be the case? What happens when lime generates new ones?","resolution":""}

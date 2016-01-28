@@ -329,12 +329,8 @@ describe('setup', function() {
           .to.deep.equal([48,48,48,48,48,48,48,48,48,48]);
 
 
-        // agent is not considered to be inside any room
-        expect(context.idea('agentInstance').link(links.list['agent_inside_room']).length).to.equal(0);
-
-        hs.sense(context.subgraph);
-
-        // agent is inside one room
+        // the sensor should run whenever the state updates (so for the tests, once on startup)
+        expect(context.idea('agentInstance').link(links.list['agent_inside_room']).length).to.equal(1);
         var in_rooms = context.idea('agentInstance').link(links.list['agent_inside_room']);
         expect(in_rooms.length).to.equal(1);
         expect(in_rooms[0].data().value).to.equal(63);

@@ -8,6 +8,7 @@ var ideas = require('lime/src/database/ideas');
 var links = require('lime/src/database/links');
 var number = require('lime/src/planning/primitives/number');
 var scheduler = require('lime/src/planning/scheduler');
+var sensor = require('lime/src/sensor/sensor');
 var subgraph = require('lime/src/database/subgraph');
 
 var discreteActuators = require('./actuators/discreteActuators');
@@ -400,6 +401,11 @@ exports.sense = function(state) {
 
   senseRooms(state.rooms);
   senseAgent(state.agent);
+
+  // load sensors and run
+  var list = sensor.list(exports.idea('agent_inside_room')).map(sensor.load);
+  list.forEach(function(s) { s.sense(exports.subgraph); });
+
 
   scheduler.check();
 };

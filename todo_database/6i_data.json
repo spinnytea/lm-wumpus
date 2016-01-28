@@ -1,0 +1,1 @@
+{"name":"remove agentLocation matchRef value","description":"it's not needed anymore now that we have a sensor that can figure it out\n\nshould the discrete actuators update or invalidate the link?","resolution":""}

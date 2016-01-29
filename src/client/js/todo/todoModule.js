@@ -8,6 +8,7 @@ module.exports = angular.module('lime.client.todo', [
   require('./taskList').name,
   require('./taskGraph').name,
   require('./taskBreakdown').name,
+  require('../tagCloud').name,
   'ngRoute'
 ]);
 module.exports.config([
@@ -50,6 +51,9 @@ module.exports.controller('lime.client.todo.home', [
       params.status = statusService.getNonClosed();
       $http.get('/rest/todo/tasks', { params: params }).success(function(data) {
         $scope.tasks = data.list;
+      });
+      $http.get('/rest/todo/tags').success(function(data) {
+        $scope.tags = data.list;
       });
     });
   }

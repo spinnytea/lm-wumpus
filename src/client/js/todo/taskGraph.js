@@ -84,7 +84,7 @@ function taskHeights(list) {
       heights[id] = 0;
     } else if(task.children && task.children.length) {
       task.children.forEach(recurse);
-      heights[id] = _.sumBy(task.children, function(c) { return heights[c]; });
+      heights[id] = task.children.reduce(function(sum, c) { return sum + heights[c]; }, 0);
     } else {
       heights[id] = 1;
     }

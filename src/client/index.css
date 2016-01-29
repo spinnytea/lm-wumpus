@@ -122,3 +122,10 @@ svg.subgraph {
   width: 4em;
   text-align: center;
 }
+
+/*
+ * tag cloud
+ */
+[tag-cloud]>svg {
+  border: 1px solid lightgrey;
+}

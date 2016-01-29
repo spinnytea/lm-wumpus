@@ -1,5 +1,5 @@
 'use strict';
-/* global d3, $ */
+/* global d3 */
 // render a core/database/subgraph
 
 module.exports = angular.module('lime.client.subgraph', [])
@@ -132,7 +132,7 @@ module.exports = angular.module('lime.client.subgraph', [])
       },
       link: function($scope, elem) {
         $scope.$on('$destroy', $scope.$watch('renderSubgraph', function(data) {
-          if(data) buildGraph(data, elem[0]);
+          if(data) buildGraph(data, elem);
         }));
       }
     };
@@ -149,14 +149,14 @@ var typeColor = {
 };
 
 function buildGraph(graph, elem) {
-  $(elem).empty();
+  elem.empty();
 
   var force = d3.layout.force()
       .charge(-120)
       .linkDistance(30)
       .size([width, height]);
 
-  var svg = d3.select(elem).append('svg')
+  var svg = d3.select(elem[0]).append('svg')
       .attr('width', width)
       .attr('height', height)
       .attr('class', 'subgraph');

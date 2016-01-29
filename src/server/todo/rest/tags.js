@@ -14,7 +14,7 @@ exports.rest = function(router) {
   router.get('/tags', function(req, res) {
     var list = lwt_tag.link(links.list.type_of.opposite).map(function(idea) {
       return {
-        string: idea.data(),
+        text: idea.data(),
         count: idea.link(links.list.lm_wumpus_todo__tag).length
       };
     });

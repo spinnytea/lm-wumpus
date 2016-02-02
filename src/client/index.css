@@ -84,6 +84,9 @@ svg.subgraph {
   stroke: #fff;
   stroke-width: 1.5px;
 }
+.node.click {
+  cursor: pointer;
+}
 
 .link {
   stroke: #999;

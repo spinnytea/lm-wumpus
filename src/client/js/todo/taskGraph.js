@@ -12,18 +12,24 @@ module.exports.directive('taskGraph', [function() {
       theList: '=taskGraph'
     },
     template: '<div render-subgraph="myData"></div>',
-    controller: ['$scope', Controller]
+    controller: ['$scope', '$location', Controller]
   };
 }]);
 
-function Controller($scope) {
+function Controller($scope, $location) {
   $scope.myData = {
     nodes: [],
     links: []
   };
 
+  function navCallback(node) {
+    $scope.$apply(function() {
+      $location.path('/todo/tasks/' + node.id);
+    });
+  }
+
   $scope.$on('$destroy', $scope.$watch('theList', function(list) {
-    if(list) $scope.myData = buildData(list);
+    if(list) $scope.myData = buildData(list, navCallback);
   }, true));
 }
 
@@ -36,7 +42,7 @@ function getColor(task) {
   return '#000000';
 }
 
-function buildData(list) {
+function buildData(list, navCallback) {
   var newGraph = {
     nodes: [],
     links: []
@@ -52,7 +58,7 @@ function buildData(list) {
   list.forEach(function(task) {
     task_idx[task.id] = newGraph.nodes.length;
     var size = 4 + 2 * Math.sin(Math.PI*heights[task.id]/(heights._max*2));
-    newGraph.nodes.push({ id: task.id, name: task.name, color: getColor(task), size: size });
+    newGraph.nodes.push({ id: task.id, name: task.name, color: getColor(task), size: size, click: navCallback });
   });
 
   // add all the links

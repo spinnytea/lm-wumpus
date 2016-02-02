@@ -177,10 +177,11 @@ function buildGraph(graph, elem) {
   var node = svg.selectAll('.node')
       .data(graph.nodes)
     .enter().append('circle')
-      .attr('class', 'node')
+      .attr('class', function(d) { if(d.click) return 'node click'; return 'node'; })
       .attr('r', function(d) { return d.size||5; })
       .style('fill', function(d) { return d.color; })
       .style('fill-opacity', function(d) { return d.opacity; })
+      .on('click', function(d) { if(d.click) d.click(d); })
       .call(force.drag);
 
   node.append('title')

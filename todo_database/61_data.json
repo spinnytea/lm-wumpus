@@ -1,1 +1,1 @@
-{"name":"tag editor","description":"list all tasks associated with a task\nchange the task name","resolution":""}
+{"name":"tag editor","description":"list all tasks associated with a task\nchange the task name","resolution":"there really doesn't seem to be a need for this\nIf I get the tag wrong, then I'll just change the name directly in the database\nIf I get something horribly wrong, then I can make a tool/thought process at that point in time"}

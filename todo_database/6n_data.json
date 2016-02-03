@@ -1,1 +1,1 @@
-{"name":"add link to query (or tag view?)","description":"click on the word to open a query for that tag","resolution":""}
+{"name":"add link to query (or tag view?)","description":"click on the word to open a query for that tag","resolution":"that was pretty straightforward\nd3 has a .on('click', function);"}

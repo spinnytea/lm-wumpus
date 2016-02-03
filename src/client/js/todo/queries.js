@@ -1,17 +1,22 @@
 'use strict';
 
-var formData = { hideClosed: true };
+var formData = emptyFormData();
+function emptyFormData() {
+  return { hideClosed: true };
+}
 
 module.exports = angular.module('lime.client.todo.queries', [
   require('./enums').name,
+  'ngRoute'
 ]);
 module.exports.controller('lime.client.todo.queriesController', [
   '$scope',
   '$http',
+  '$routeParams',
   'lime.client.todo.enums.statuses',
   'lime.client.todo.enums.types',
   'lime.client.todo.enums.priorities',
-  function($scope, $http, statusService, typeService, priorityService) {
+  function($scope, $http, $routeParams, statusService, typeService, priorityService) {
     $scope.tasks = [];
     $scope.formData = formData;
     var statuses;
@@ -54,9 +59,18 @@ module.exports.controller('lime.client.todo.queriesController', [
       });
     };
 
+    if($routeParams.tags) {
+      $scope.formData = formData = emptyFormData();
+      formData.tags = $routeParams.tags;
+      if(angular.isString(formData.tags))
+        formData.tags = [formData.tags];
+    }
+
     // if there is at least one field with specificity (other than hideClosed), then perform an initial search
     if(Object.keys(formData).some(function(key) { return (key !== 'hideClosed' && key !== 'tags' && formData[key]); }) || (formData && formData.tags && formData.tags.length)) {
-      $scope.search();
+      statusService.ready.then(function() {
+        $scope.search();
+      });
     }
   }
 ]);

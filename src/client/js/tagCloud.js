@@ -3,18 +3,25 @@
 var cloud = require('d3-cloud');
 
 module.exports = angular.module('lime.client.tagCloud', []);
-module.exports.directive('tagCloud', [function() {
+module.exports.directive('tagCloud', ['$location', function($location) {
   return {
     scope: { tagCloud: '=' },
     link: function($scope, element) {
       $scope.$on('$destroy', $scope.$watch('tagCloud', function(data) {
-        if(data) buildGraph(data, element);
+        if(data) buildGraph(data, element, navCallback);
       }));
+
+      function navCallback(textNode) {
+        $scope.$apply(function() {
+          $location.path('/todo/queries');
+          $location.search('tags', textNode.text);
+        });
+      }
     }
   };
 }]);
 
-function buildGraph(words, element) {
+function buildGraph(words, element, navCallback) {
   element.empty();
   var fill = d3.scale.category20();
 
@@ -48,13 +55,15 @@ function buildGraph(words, element) {
       .selectAll('text')
       .data(words)
       .enter().append('text')
-      .style('font-size', function(d) { return d.size + 'px'; })
-      .style('font-family', 'Impact')
-      .style('fill', function(d, i) { return fill(i); })
-      .attr('text-anchor', 'middle')
-      .attr('transform', function(d) {
-        return 'translate(' + [d.x, d.y] + ')rotate(' + d.rotate + ')';
-      })
-      .text(function(d) { return d.text; });
+        .attr('class', 'click')
+        .style('font-size', function(d) { return d.size + 'px'; })
+        .style('font-family', 'Impact')
+        .style('fill', function(d, i) { return fill(i); })
+        .attr('text-anchor', 'middle')
+        .attr('transform', function(d) {
+          return 'translate(' + [d.x, d.y] + ')rotate(' + d.rotate + ')';
+        })
+        .on('click', navCallback)
+        .text(function(d) { return d.text; });
   }
 }

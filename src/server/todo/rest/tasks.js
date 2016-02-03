@@ -93,8 +93,13 @@ exports.rest = function(router) {
       // a single tag will come across as a string
       if(_.isString(tagList))
         tagList = [tagList];
-      tagList = tags.getAsIdeas(tagList, false);
-      tagList.forEach(function(id) {
+      var tagIdeas = tags.getAsIdeas(tagList, false);
+      // if there are less tags then we queried, then there are no matches
+      if(tagList.length !== tagIdeas.length) {
+        res.json({ list: [] });
+        return;
+      }
+      tagIdeas.forEach(function(id) {
         addRequirement(links.list.lm_wumpus_todo__tag.opposite, id);
       });
     }

@@ -131,9 +131,12 @@
 
             <div class="col-sm-6">
                 <table class="table table-condensed">
-                    <thead><tr><th>Children</th></tr></thead>
-                    <tbody>
-                    <tr ng-repeat="id in formData.children"><td><div data-task-id data-ng-model="id" data-readonly="true"></div></td></tr>
+                    <thead><tr><th>
+                        <a href="#/todo/tasks/create?parent={{formData.id}}" title="Create Task"><i class="fa fa-fw fa-plus"></i></a>
+                        Children
+                    </th></tr></thead>
+                    <tbody style="display: block; max-height: 15em; overflow-y: scroll; border: solid 1px lightgrey;">
+                        <tr ng-repeat="id in formData.children"><td><div data-task-id data-ng-model="id" data-readonly="true"></div></td></tr>
                     </tbody>
                 </table>
             </div>

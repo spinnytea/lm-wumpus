@@ -133,7 +133,6 @@
                 <table class="table table-condensed">
                     <thead><tr><th>Children</th></tr></thead>
                     <tbody>
-                    <tr ng-if="formData.children.length === 0"><td class="text-muted"><i>None</i></td></tr>
                     <tr ng-repeat="id in formData.children"><td><div data-task-id data-ng-model="id" data-readonly="true"></div></td></tr>
                     </tbody>
                 </table>

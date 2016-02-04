@@ -1,1 +1,1 @@
-{"name":"implement sobel operator","description":"write it in pure javascript just to try it out","resolution":"","external":["https://www.npmjs.com/package/jimp","https://www.npmjs.com/package/get-pixels"]}
+{"name":"implement sobel operator","description":"write it in pure javascript just to try it out","resolution":"it's a simple something, it's just something to start with","external":["https://www.npmjs.com/package/jimp","https://www.npmjs.com/package/get-pixels"]}

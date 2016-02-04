@@ -3,10 +3,6 @@
   "version": "0.1.0",
   "description": "wumpus - powered by lime",
   "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": ""
-  },
   "author": "spinnytea <spinnytea@gmail.com>",
   "private": true,
   "devDependencies": {

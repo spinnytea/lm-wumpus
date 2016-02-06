@@ -25,6 +25,8 @@ links.create('wumpus_sense_hasAlive');
 links.create('wumpus_room_door');
 links.create('wumpus_room_loc_x');
 links.create('wumpus_room_loc_y');
+// agentInstance --inside-> room
+links.create('agent_inside_room');
 
 // create the actions that we can use
 ['left', 'right', 'up', 'grab', 'exit'].forEach(function(a) {

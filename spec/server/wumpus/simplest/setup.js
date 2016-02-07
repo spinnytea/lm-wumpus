@@ -358,7 +358,7 @@ describe('setup', function() {
         // agent is inside two rooms
         in_rooms = context.idea('agentInstance').link(links.list['agent_inside_room']);
         expect(in_rooms.length).to.equal(2);
-        expect(in_rooms.map(function(r) { return r.data().value; })).to.deep.equal([63, 65]);
+        expect(in_rooms.map(function(r) { return r.data().value; }).sort()).to.deep.equal([63, 65]);
 
         // move the agent away from everything
         loc.value = number.value(9001);

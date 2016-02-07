@@ -18,7 +18,7 @@ module.exports = angular.module('lime.client.wumpus.socketDirective', [
       'goal': 'goal', 'g': 'goal'
     };
     return {
-      templateUrl: 'partials/wumpus/socket.html',
+      templateUrl: 'wumpus/socket.html',
       link: function($scope) {
         $scope.$on('$destroy', socket.connect($scope, $location.protocol(), $location.host()));
 

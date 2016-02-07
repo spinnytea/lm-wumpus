@@ -15,22 +15,22 @@ module.exports.config([
   '$routeProvider',
   function($routeProvider) {
     $routeProvider.when('/todo', {
-      templateUrl: 'partials/todo/home.html',
+      templateUrl: 'todo/home.html',
       controller: 'lime.client.todo.home',
     }).when('/todo/enums/:name', {
-      templateUrl: 'partials/todo/enumList.html',
+      templateUrl: 'todo/enumList.html',
       controller: 'lime.client.todo.enumList',
     }).when('/todo/tasks/create', {
-      templateUrl: 'partials/todo/createTask.html',
+      templateUrl: 'todo/createTask.html',
       controller: 'lime.client.todo.createTask',
     }).when('/todo/tasks', {
-      templateUrl: 'partials/todo/taskListPage.html',
+      templateUrl: 'todo/taskListPage.html',
       controller: 'lime.client.todo.taskListPage',
     }).when('/todo/tasks/:id', {
-      templateUrl: 'partials/todo/createTask.html',
+      templateUrl: 'todo/createTask.html',
       controller: 'lime.client.todo.createTask',
     }).when('/todo/queries', {
-      templateUrl: 'partials/todo/queries.html',
+      templateUrl: 'todo/queries.html',
       controller: 'lime.client.todo.queriesController',
     });
   }
@@ -38,7 +38,7 @@ module.exports.config([
 module.exports.directive('pageHeading', [function() {
   return {
     scope: { active: '@' },
-    templateUrl: 'partials/todo/pageHeading.html'
+    templateUrl: 'todo/pageHeading.html'
   };
 }]);
 module.exports.controller('lime.client.todo.home', [
@@ -175,7 +175,7 @@ module.exports.directive('tags', [
           $scope.formData.input = '';
         };
       },
-      templateUrl: 'partials/todo/tagsInput.html',
+      templateUrl: 'todo/tagsInput.html',
       controller: [
         '$scope',
         function($scope) {

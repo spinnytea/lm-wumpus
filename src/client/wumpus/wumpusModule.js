@@ -102,7 +102,7 @@ module.exports = angular.module('lime.client.wumpus', [
   'lime.client.wumpus.gameBoxBorder',
   function(GAME_BOX_BORDER) {
     return {
-      templateUrl: 'partials/wumpus/instance.html',
+      templateUrl: 'wumpus/instance.html',
       link: function($scope, elem) {
         elem.find('.game-container')
           .css('width', game.cave.bounds.maxx-game.cave.bounds.minx+GAME_BOX_BORDER*2)

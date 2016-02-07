@@ -20,7 +20,7 @@ module.exports.directive('taskDirective', [function() {
     replace: true,
     require: 'ngModel',
     scope: true,
-    templateUrl: 'partials/todo/task.html',
+    templateUrl: 'todo/task.html',
     link: function($scope, elem, attr, ngModelController) {
       $scope.$on('$destroy', $scope.$watch('formData', function(data) {
         ngModelController.$setViewValue(angular.copy(data));

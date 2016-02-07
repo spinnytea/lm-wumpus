@@ -9,15 +9,15 @@ angular.module('lime.client', [
   function($routeProvider) {
     $routeProvider
     .when('/wumpus', {
-      templateUrl: 'partials/wumpus/app.html',
+      templateUrl: 'wumpus/app.html',
       controller: 'lime.client.wumpus.app',
     })
     .when('/wumpus/config', {
-      templateUrl: 'partials/wumpus/config.html',
+      templateUrl: 'wumpus/config.html',
       controller: 'lime.client.wumpus.config',
     })
     .when('/subgraph/example', {
-      templateUrl: 'partials/subgraph/example.html',
+      templateUrl: 'subgraph/example.html',
       controller: 'lime.client.subgraph.example',
     })
     ;

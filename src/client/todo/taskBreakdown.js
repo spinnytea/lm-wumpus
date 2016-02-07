@@ -9,7 +9,7 @@ module.exports.directive('taskBreakdown', [function() {
     scope: {
       theList: '=taskBreakdown'
     },
-    templateUrl: 'partials/todo/taskBreakdown.html',
+    templateUrl: 'todo/taskBreakdown.html',
     controller: ['$scope', '$q', 'lime.client.todo.enums.statuses', 'lime.client.todo.enums.types', 'lime.client.todo.enums.priorities', Controller]
   };
 }]);

@@ -12,7 +12,7 @@ require('lime/src/config').init({
 
 var app = express();
 app.use(bodyParser.json());
-app.use('/vendor', express.static(path.join(__dirname, '..', '..', 'vendor')));
+app.use('/vendor', express.static(path.join(__dirname, '..', '..', 'bower_components')));
 app.use(express.static(path.join(__dirname, '..', 'client')));
 app.listen(8888, function() {
   touch.sync(path.join(__dirname, '.stamp'));

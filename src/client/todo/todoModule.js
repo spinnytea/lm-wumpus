@@ -52,7 +52,7 @@ module.exports.controller('lime.client.todo.home', [
       $http.get('/rest/todo/tasks', { params: params }).success(function(data) {
         $scope.tasks = data.list;
       });
-      $http.get('/rest/todo/tags').success(function(data) {
+      $http.get('/rest/todo/tags', { params: params }).success(function(data) {
         $scope.tags = data.list;
       });
     });

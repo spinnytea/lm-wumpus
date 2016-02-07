@@ -83,7 +83,7 @@ function buildData(list, navCallback) {
 
 function taskHeights(list) {
   var heights = {};
-  var map = _.indexBy(list, 'id');
+  var map = _.keyBy(list, 'id');
   function recurse(id) {
     var task = map[id];
     if(!task) {

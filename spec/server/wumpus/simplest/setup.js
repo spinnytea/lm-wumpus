@@ -445,7 +445,7 @@ describe('setup', function() {
           checkUntilSuccess();
         });
 
-        it('68-78', function(done) {
+        it.skip('68-78', function(done) {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentDirection').data().value).to.equal('east');
 
@@ -592,7 +592,7 @@ describe('setup', function() {
         checkUntilSuccess();
       });
 
-      it('play', function(done) {
+      it.skip('play', function(done) {
         expect(context.idea('agentLocation').data().value).to.equal(63);
         expect(context.idea('agentDirection').data().value).to.equal('east');
         expect(context.idea('agentHasGold').data().value).to.equal(false);
@@ -608,7 +608,7 @@ describe('setup', function() {
         checkUntilSuccess();
       });
 
-      it('goto gold & play', function(done) {
+      it.skip('goto gold & play', function(done) {
         // this was a bugfix test
         //
         // we can generate a plan, but it can't apply it

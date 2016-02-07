@@ -24,7 +24,7 @@ exports.rest = function(router) {
 
 // @return [idea.id]
 function getAsIdeas(strings, create) {
-  var tagsByName = _.indexBy(lwt_tag.link(links.list.type_of.opposite), function(idea) {
+  var tagsByName = _.keyBy(lwt_tag.link(links.list.type_of.opposite), function(idea) {
     return idea.data();
   });
 

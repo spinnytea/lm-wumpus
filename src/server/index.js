@@ -15,7 +15,7 @@ require('lime/src/config').init({
 var app = express();
 app.use(bodyParser.json());
 app.use('/vendor', serve(path.join(__dirname, '..', '..', 'bower_components')));
-app.get('/index.js', browserify(path.join(__dirname, '..', 'client', 'js', 'index.js')));
+app.get('/index.js', browserify(path.join(__dirname, '..', 'client', 'index.js')));
 app.use(serve(path.join(__dirname, '..', 'client')));
 
 var server = require('http').Server(app);

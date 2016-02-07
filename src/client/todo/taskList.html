@@ -11,7 +11,7 @@
             </i><i ng-if="task.children.length" class="fa fa-fw" ng-class="viewData[task.id].expanded?'fa-minus-square-o':'fa-plus-square-o'"
                     ng-click="expand(task)"></i>&nbsp;
         </td>
-        <td style="width: 10%;">{{task.id}}</td>
+        <td style="width: 10%;" ng-bind="task.id"></td>
         <td style="width: 90%;">
             <i class="fa fa-fw" ng-repeat="ignore in range(viewData[task.id].level) track by $index">
             </i><i ng-class="types[task.type].icon" title="{{types[task.type].name}}"></i>&nbsp;

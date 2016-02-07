@@ -129,7 +129,7 @@
             <div class="col-sm-2 form-control-static">
                 <input type="range" min="0" step="0.01" max="1" data-str-to-num data-ng-model="config.game.complications.noise" disabled/>
             </div>
-            <div class="col-sm-1 form-control-static">{{config.game.complications.noise | number: 2}}</div>
+            <div class="col-sm-1 form-control-static" ng-bind="config.game.complications.noise | number: 2"></div>
             <div class="col-sm-7 form-control-static">
                 can the senses be trusted? add some randomness to all the values <i>(not implemented yet)</i>
             </div>
@@ -139,7 +139,7 @@
 
             <div class="col-sm-3 form-control-static">
                 <input type="checkbox" data-ng-model="config.game.complications.environment_change" disabled/>
-                {{config.game.complications.environment_change?'Yes':'No'}}
+                <span ng-bind="config.game.complications.environment_change?'Yes':'No'"></span>
             </div>
             <div class="col-sm-7 form-control-static">
                 does the environment change? (can the exit/gold/wumpus/pits move nearby) <i>(not implemented yet)</i>
@@ -165,7 +165,7 @@
             <div class="col-sm-3 form-control-static">
                 <input type="range" min="6" step="1" max="{{config.room.radius}}" data-str-to-num data-ng-model="config.agent.radius"/>
             </div>
-            <div class="col-sm-1 form-control-static">{{config.agent.radius | number}}</div>
+            <div class="col-sm-1 form-control-static" ng-bind="config.agent.radius | number"></div>
             <div class="col-sm-6 form-control-static">How large is the agent and wumpus?</div>
         </div>
         <div class="form-group">
@@ -174,7 +174,7 @@
             <div class="col-sm-3 form-control-static">
                 <input type="range" min="{{config.agent.radius}}" step="1" max="108" data-str-to-num data-ng-model="config.room.radius"/>
             </div>
-            <div class="col-sm-1 form-control-static">{{config.room.radius | number}}</div>
+            <div class="col-sm-1 form-control-static" ng-bind="config.room.radius | number"></div>
             <div class="col-sm-6 form-control-static">How large are the rooms?</div>
         </div>
         <div class="form-group">
@@ -183,7 +183,7 @@
             <div class="col-sm-3 form-control-static">
                 <input type="range" min="0" step="0.01" max="1" data-str-to-num data-ng-model="config.misc.pit.probability"/>
             </div>
-            <div class="col-sm-1 form-control-static">{{config.misc.pit.probability | number: 2}}</div>
+            <div class="col-sm-1 form-control-static" ng-bind="config.misc.pit.probability | number: 2"></div>
             <div class="col-sm-6 form-control-static">
                 Used when generating a new map.
                 Once the objects have been placed (exit/wumpus/gold), how likely is it for pits to appear?
@@ -196,7 +196,7 @@
                 <input type="range" min="2" step="1" max="12" data-str-to-num data-ng-model="config.grain.continuous.branches"
                        data-ng-disabled="config.game.grain !== 'continuous'"/>
             </div>
-            <div class="col-sm-1 form-control-static">{{config.grain.continuous.branches | number}}</div>
+            <div class="col-sm-1 form-control-static" ng-bind="config.grain.continuous.branches | number"></div>
             <div class="col-sm-6 form-control-static">
                 <strong>Continuous Only:</strong>
                 When the game is in continuous mode, how many branching rooms should the game generate.
@@ -209,7 +209,7 @@
                 <input type="range" min="1" step="1" max="5" data-str-to-num data-ng-model="config.timing.updatesPerSecond.discrete"
                        data-ng-disabled="config.game.timing!=='dynamic' || config.game.grain!=='discrete'"/>
             </div>
-            <div class="col-sm-1 form-control-static">{{config.timing.updatesPerSecond.discrete | number}}</div>
+            <div class="col-sm-1 form-control-static" ng-bind="config.timing.updatesPerSecond.discrete | number"></div>
             <div class="col-sm-6 form-control-static">
                 <strong>Dynamic, Discrete Only:</strong>
                 How many times per second should the game update?
@@ -222,7 +222,7 @@
                 <input type="range" min="5" step="1" max="20" data-str-to-num data-ng-model="config.timing.updatesPerSecond.continuous"
                        data-ng-disabled="config.game.timing!=='dynamic' || config.game.grain!=='continuous'"/>
             </div>
-            <div class="col-sm-1 form-control-static">{{config.timing.updatesPerSecond.continuous | number}}</div>
+            <div class="col-sm-1 form-control-static" ng-bind="config.timing.updatesPerSecond.continuous | number"></div>
             <div class="col-sm-6 form-control-static">
                 <strong>Dynamic, Continuous Only:</strong>
                 How many times per second should the game update?

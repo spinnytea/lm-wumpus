@@ -2,7 +2,7 @@
     <a data-ng-click="generateGame()">New Game</a> |
     <a data-ng-click="gotoConfig()">Update Config</a>
 
-    <div>Points: {{game.points}}</div>
+    <div>Points: <span ng-bind="game.points"></span></div>
     <div data-wumpus-socket data-ng-if="config.game.player==='lemon'"></div>
 
     <div class="alert end-message" data-ng-if="game.cave.agent.win || !game.cave.agent.alive"

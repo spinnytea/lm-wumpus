@@ -18,7 +18,7 @@
                     data-ng-click="selectSubgraph(sg)"
                     data-ng-class="{'btn-default':!sg.selected, 'btn-primary':sg.selected}">
                 <i class="fa" data-ng-class="selectSubgraphIcon(sg)"></i>
-                {{selectSubgraphText(sg)}}
+                <span ng-bind="selectSubgraphText(sg)"></span>
             </button>
         </td>
         <td data-render-subgraph="sg"></td>

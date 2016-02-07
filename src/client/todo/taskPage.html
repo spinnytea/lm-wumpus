@@ -1,7 +1,7 @@
 <div page-heading active="{{nested.taskObject.id?'':'create'}}"></div>
 
 <h1 data-ng-hide="nested.taskObject.id">Create Task</h1>
-<h1 data-ng-show="nested.taskObject.id">Task {{nested.taskObject.id}}</h1>
+<h1 data-ng-show="nested.taskObject.id">Task <span ng-bind="nested.taskObject.id"></span></h1>
 
 <div task-directive data-ng-model="nested.taskObject"></div>
 

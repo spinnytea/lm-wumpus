@@ -3,6 +3,7 @@ var _ = require('lodash');
 var config = require('lime/src/config');
 var ideas = require('lime/src/database/ideas');
 var links = require('lime/src/database/links');
+var subgraph = require('lime/src/database/subgraph');
 
 // the tag type
 // a specific tag is linked to this
@@ -12,15 +13,28 @@ var lwt_tag = ideas.context('lm_wumpus_todo__tag');
 exports.getAsIdeas = getAsIdeas;
 exports.rest = function(router) {
   router.get('/tags', function(req, res) {
-    var list = lwt_tag.link(links.list.type_of.opposite).map(function(idea) {
-      return {
-        text: idea.data(),
-        count: idea.link(links.list.lm_wumpus_todo__tag).length
-      };
-    });
-    res.json({ list: list });
+    res.json({ list: getCounts() });
   });
 };
+
+function getCounts() {
+  var sg = new subgraph.Subgraph();
+  var tag = sg.addVertex(subgraph.matcher.filler);
+  var task = sg.addVertex(subgraph.matcher.filler);
+  sg.addEdge(tag, links.list.type_of, sg.addVertex(subgraph.matcher.id, lwt_tag));
+  sg.addEdge(tag, links.list.lm_wumpus_todo__tag, task);
+
+  // TODO filter tasks
+
+  var result = subgraph.search(sg);
+
+  var str_count = {};
+  result.forEach(function(r) {
+    var str = r.getData(tag);
+    str_count[str] = (str_count[str] || 0) + 1;
+  });
+  return _.map(str_count, function(count, str) { return { text: str, count: count }; });
+}
 
 // @return [idea.id]
 function getAsIdeas(strings, create) {

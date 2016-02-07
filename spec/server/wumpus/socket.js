@@ -1,7 +1,7 @@
 'use strict';
 /* global beforeEach, before, after */
 var context = require('../../../src/server/wumpus/context');
-var config = require('../../../src/client/js/wumpus/impl/config');
+var config = require('../../../src/client/wumpus/impl/config');
 
 //
 // dummy socket.io impl for the specs

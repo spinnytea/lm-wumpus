@@ -2,6 +2,7 @@
 var bodyParser = require('body-parser');
 var express = require('express');
 var path = require('path');
+var serve = require('serve-static');
 var touch = require('touch');
 
 // set the idea database location for this server
@@ -12,8 +13,8 @@ require('lime/src/config').init({
 
 var app = express();
 app.use(bodyParser.json());
-app.use('/vendor', express.static(path.join(__dirname, '..', '..', 'bower_components')));
-app.use(express.static(path.join(__dirname, '..', 'client')));
+app.use('/vendor', serve(path.join(__dirname, '..', '..', 'bower_components')));
+app.use(serve(path.join(__dirname, '..', 'client')));
 app.listen(8888, function() {
   touch.sync(path.join(__dirname, '.stamp'));
 });

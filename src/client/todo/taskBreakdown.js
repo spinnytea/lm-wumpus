@@ -1,4 +1,5 @@
 'use strict';
+// the set of badges for the different enums
 
 module.exports = angular.module('lime.client.todo.taskBreakdown', [
   require('./enums').name

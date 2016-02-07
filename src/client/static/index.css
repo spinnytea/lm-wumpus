@@ -38,9 +38,10 @@
   color: #aaa;
 }
 
-table tr.min-width,
+table th.min-width,
 table td.min-width {
   white-space: nowrap;
+  width: 1px;
 }
 
 

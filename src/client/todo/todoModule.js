@@ -21,14 +21,14 @@ module.exports.config([
       templateUrl: 'todo/enumList.html',
       controller: 'lime.client.todo.enumList',
     }).when('/todo/tasks/create', {
-      templateUrl: 'todo/createTask.html',
-      controller: 'lime.client.todo.createTask',
+      templateUrl: 'todo/taskPage.html',
+      controller: 'lime.client.todo.taskPage',
     }).when('/todo/tasks', {
       templateUrl: 'todo/taskListPage.html',
       controller: 'lime.client.todo.taskListPage',
     }).when('/todo/tasks/:id', {
-      templateUrl: 'todo/createTask.html',
-      controller: 'lime.client.todo.createTask',
+      templateUrl: 'todo/taskPage.html',
+      controller: 'lime.client.todo.taskPage',
     }).when('/todo/queries', {
       templateUrl: 'todo/queries.html',
       controller: 'lime.client.todo.queriesController',

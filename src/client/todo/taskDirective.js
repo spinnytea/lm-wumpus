@@ -70,7 +70,7 @@ function Controller($scope, statusService, typeService, priorityService) {
   };
 }
 
-module.exports.controller('lime.client.todo.createTask', [
+module.exports.controller('lime.client.todo.taskPage', [
   '$scope',
   '$http',
   '$location',

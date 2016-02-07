@@ -59,11 +59,17 @@ module.exports.controller('lime.client.todo.queriesController', [
       });
     };
 
-    if($routeParams.tags) {
+    if($routeParams.tags || $routeParams.status || $routeParams.priority) {
       $scope.formData = formData = emptyFormData();
-      formData.tags = $routeParams.tags;
-      if(angular.isString(formData.tags))
-        formData.tags = [formData.tags];
+      if($routeParams.tags) {
+        formData.tags = $routeParams.tags;
+        if(angular.isString(formData.tags))
+          formData.tags = [formData.tags];
+      }
+      if($routeParams.status)
+        formData.status = $routeParams.status;
+      if($routeParams.priority)
+        formData.priority = $routeParams.priority;
     }
 
     // if there is at least one field with specificity (other than hideClosed), then perform an initial search

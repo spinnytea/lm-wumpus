@@ -51,11 +51,31 @@ module.exports.controller('lime.client.todo.home', [
       params.status = statusService.getNonClosed();
       $http.get('/rest/todo/tasks', { params: params }).success(function(data) {
         $scope.tasks = data.list;
+        amendTags();
       });
       $http.get('/rest/todo/tags', { params: params }).success(function(data) {
         $scope.tags = data.list;
+        $scope.tags.forEach(function(t) { t.search = { key: 'tags', value: t.text }; });
+        amendTags();
       });
     });
+
+    function amendTags() {
+      if($scope.tasks && $scope.tags) {
+        // XXX is there ANY way to make this not so dependent on the existing database?
+        // - I mean, does it matter? but like, this is total hacks
+        $scope.tags.push({
+          text: 'high',
+          search: { key: 'priority', value: '38' },
+          count: $scope.tasks.filter(function(t) { return t.priority === '38'; }).length
+        });
+        $scope.tags.push({
+          text: 'in progress',
+          search: { key: 'status', value: 'e' },
+          count: $scope.tasks.filter(function(t) { return t.status === 'e'; }).length
+        });
+      }
+    }
   }
 ]);
 module.exports.controller('lime.client.todo.enumList', [

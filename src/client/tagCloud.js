@@ -14,7 +14,7 @@ module.exports.directive('tagCloud', ['$location', function($location) {
       function navCallback(textNode) {
         $scope.$apply(function() {
           $location.path('/todo/queries');
-          $location.search('tags', textNode.text);
+          $location.search(textNode.search.key, textNode.search.value);
         });
       }
     }

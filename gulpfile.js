@@ -1,8 +1,10 @@
 'use strict';
 var gulp = require('gulp');
-var gutil = require('gulp-util');
-var mocha = require('gulp-mocha');
 var jshint = require('gulp-jshint');
+var lazypipe = require('lazypipe');
+var path = require('path');
+var mocha = require('gulp-mocha');
+var nodemon = require('gulp-nodemon');
 
 // define which report we will use for the test
 // 'nyan' is the best, so that is the default
@@ -31,85 +33,35 @@ if(reporter === 'skipped') {
 }
 
 
-// TODO modify this section of the gulp file using ~/git/ggj-2015
-var fork = require('child_process').fork;
-
-var browserify = require('gulp-browserify');
-var browserSync = require('browser-sync');
+var jshintTasks = lazypipe()
+  .pipe(jshint)
+  .pipe(jshint.reporter, 'jshint-stylish')
+  .pipe(jshint.reporter, 'fail');
 
 gulp.task('spec-jshint', [], function() {
-  return gulp.src(['spec/**/*.js']).pipe(jshint())
-    .pipe(jshint.reporter('jshint-stylish'))
-    .pipe(jshint.reporter('fail'));
+  return gulp.src(['spec/**/*.js'])
+    .pipe(jshintTasks());
 });
 gulp.task('client-jshint', [], function() {
-  return gulp.src(['src/client/js/**/*.js']).pipe(jshint())
-    .pipe(jshint.reporter('jshint-stylish'))
-    .pipe(jshint.reporter('fail'));
+  return gulp.src(['src/client/js/**/*.js'])
+    .pipe(jshintTasks());
 });
 gulp.task('server-jshint', [], function() {
-  return gulp.src(['src/server/**/*.js', 'gulpfile.js']).pipe(jshint())
-    .pipe(jshint.reporter('jshint-stylish'))
-    .pipe(jshint.reporter('fail'));
+  return gulp.src(['src/server/**/*.js', 'gulpfile.js'])
+    .pipe(jshintTasks());
+});
+gulp.task('jshint', ['server-jshint', 'client-jshint', 'spec-jshint']);
+
+
+gulp.task('run', ['jshint'], function () {
+  nodemon({
+    script: path.join(__dirname, 'src', 'server', 'index.js'),
+    ext: 'js html',
+    ignore: ['src/client/'],
+    tasks: ['jshint']
+  });
 });
 
-gulp.task('browserify', ['client-jshint'], function() {
-  return gulp.src('src/client/js/index.js')
-    .pipe(browserify({
-      debug: true
-    }))
-    .pipe(gulp.dest('src/client'));
-});
-
-var browserSyncSync = false;
-var serverHandle;
-gulp.task('sync', ['browserify'], function() {
-  if(serverHandle) {
-    if(!browserSyncSync) {
-      browserSyncSync = true;
-      return browserSync({
-        proxy: 'localhost:8888',
-        port: '8080',
-        online: false,
-        injectChanges: false,
-        open: false,
-        logConnections: true
-      });
-    } else {
-      return browserSync.reload({stream: false});
-    }
-  } else {
-    gutil.log('Server not started, delaying browser sync.');
-  }
-});
-
-gulp.task('server', ['server-jshint'], function() {
-  if(serverHandle) {
-    serverHandle.kill();
-  } else {
-    serverHandle = fork('src/server');
-    serverHandle.on('close', function() {
-      serverHandle = fork('src/server');
-    });
-  }
-});
-
-gulp.task('run', [], function() {
-  // whenever you change client files, restart the browser
-  gulp.watch(['src/client/**/*', '!src/client/index.js'], ['sync']);
-  // any time the server starts, restart the browser, restart the browser
-  gulp.watch('src/server/.stamp', ['sync']);
-
-  // any time we make changes to the server, restart the server
-  gulp.watch('src/server/**/*', ['server']);
-//  .on('change', function(event) {
-//    gutil.log(gutil.colors.yellow('Server file changed: ' +
-//      path.relative(path.join(__dirname, 'use', 'server'), event.path)));
-//  });
-
-  // try to start the server the first time
-  return gulp.start('server');
-});
 
 gulp.task('mocha', ['server-jshint', 'spec-jshint'], function() {
   // set the idea database location for this server

@@ -1,1 +1,1 @@
-{"name":"unit test the server","description":"","resolution":""}
+{"name":"unit test the server","description":"most of the server interacts with subgraphs; how do I test them?\ndo I create a subgraph mock to make sure it gets setup right?\ndo I create test data and really do integration tests? :o","resolution":""}

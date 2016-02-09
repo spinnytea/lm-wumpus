@@ -1,1 +1,1 @@
-{"name":"is task blocked","description":"when loading a task, check it's blocked tasks\nset a flag if any of the blocked tasks are still open","resolution":""}
+{"name":"is task blocked","description":"when loading a task, check it's blocked tasks\nset a flag if any of the blocked tasks are still open","resolution":"added an isBlocking flag, color task list based on blocking/is blocked\nthe UI needs some tweaking to make it pretty"}

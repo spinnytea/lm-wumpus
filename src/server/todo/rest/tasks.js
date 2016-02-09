@@ -194,6 +194,12 @@ function getTaskData(idea) {
   data.blockedBy = idea.link(links.list.lm_wumpus_todo__depends_on).map(function(proxy) { return proxy.id; });
   data.blocking = idea.link(links.list.lm_wumpus_todo__depends_on.opposite).map(function(proxy) { return proxy.id; });
   data.related = idea.link(links.list.lm_wumpus_todo__related).map(function(proxy) { return proxy.id; });
+  data.isBlocked = idea.link(links.list.lm_wumpus_todo__depends_on).some(function(proxy) {
+    // check the status of the proxy
+    // TODO error checking?
+    var status = proxy.link(links.list.lm_wumpus_todo__status)[0];
+    return status.data().category !== '2';
+  });
 
   data.tags = idea.link(links.list.lm_wumpus_todo__tag.opposite).map(function(proxy) { return proxy.data(); });
   return data;
@@ -219,6 +225,7 @@ function updateTask(idea, data) {
   delete data.blockedBy;
   delete data.blocking;
   delete data.related;
+  delete data.isBlocked;
 
   ensureList(idea, links.list.lm_wumpus_todo__tag.opposite, tags.getAsIdeas(data.tags||[], true));
   delete data.tags;

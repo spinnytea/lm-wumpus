@@ -112,6 +112,16 @@ module.exports.controller('lime.client.todo.taskList', [
     typeService.ready.then(function() { $scope.types = typeService.map; });
     priorityService.ready.then(function() { $scope.priorities = priorityService.map; });
 
+    statusService.ready.then(function() {
+      $scope.taskNameClass = function(task) {
+        if(task.isBlocked)
+          return 'text-warning';
+        if(task.blocking.length)
+          return 'text-danger';
+        return $scope.statuses[task.status].categoryClass;
+      };
+    });
+
     $scope.expand = function(task) {
       if($scope.viewData[task.id].expanded) {
         taskListService.collapse($scope.tasks, $scope.viewData, task);

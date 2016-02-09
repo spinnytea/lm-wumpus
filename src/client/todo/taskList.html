@@ -15,7 +15,7 @@
         <td style="width: 90%;">
             <i class="fa fa-fw" ng-repeat="ignore in range(viewData[task.id].level) track by $index">
             </i><i ng-class="types[task.type].icon" title="{{types[task.type].name}}"></i>&nbsp;
-            <span ng-bind="task.name" ng-class="statuses[task.status].categoryClass"></span>
+            <span ng-bind="task.name" ng-class="taskNameClass(task)"></span>
             <sup data-ng-if="task.description" title="{{task.description}}"><i>[desc]</i></sup>
             <sup data-ng-if="task.resolution" title="{{task.resolution}}"><i>[res]</i></sup>
             <sup data-ng-if="task.tags.length" title="{{task.tags.join(', ')}}"><i>[tags]</i></sup>

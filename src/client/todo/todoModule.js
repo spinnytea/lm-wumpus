@@ -65,12 +65,12 @@ module.exports.controller('lime.client.todo.home', [
         // XXX is there ANY way to make this not so dependent on the existing database?
         // - I mean, does it matter? but like, this is total hacks
         $scope.tags.push({
-          text: 'high',
+          text: 'high (priority)',
           search: { key: 'priority', value: '38' },
           count: $scope.tasks.filter(function(t) { return t.priority === '38'; }).length
         });
         $scope.tags.push({
-          text: 'in progress',
+          text: 'in progress (status)',
           search: { key: 'status', value: 'e' },
           count: $scope.tasks.filter(function(t) { return t.status === 'e'; }).length
         });

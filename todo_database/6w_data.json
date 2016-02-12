@@ -1,0 +1,1 @@
+{"name":"coverage","description":"keep going with code coverage\n\ndon't forget about stratified tests\neach spec file should completely test the src file\nthere isn't yet a clear distinction between unit and integration tests... so... do describe.only and make sure the file is still has 100% coverage","resolution":""}

@@ -9,7 +9,6 @@ var serve = require('serve-static');
 require('lime/src/config').init({
   location: '/Volumes/Learning Machine Source/git/lm-wumpus/todo_database',
   //location: '/Volumes/RAM Disk',
-  do_not_erase: true,
 });
 
 var app = express();

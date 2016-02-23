@@ -24,9 +24,9 @@ exports.turn = function(directions, agent, cycle_value, action_str, actuator_con
   var agentInstance = a.requirements.addVertex(subgraph.matcher.filler);
   var agentHasAlive = a.requirements.addVertex(subgraph.matcher.discrete, {value:true, unit: discrete.definitions.list.boolean});
   var agentDirection = a.requirements.addVertex(subgraph.matcher.similar, {unit: directions.id}, {transitionable:true});
-  a.requirements.addEdge(agentInstance, links.list.type_of, a.requirements.addVertex(subgraph.matcher.id, agent), 6);
-  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasAlive'], agentHasAlive, 5);
-  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_dir'], agentDirection, 4);
+  a.requirements.addEdge(agentInstance, links.list.type_of, a.requirements.addVertex(subgraph.matcher.id, agent), { pref: 6 });
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasAlive'], agentHasAlive, { pref: 5 });
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_dir'], agentDirection, { pref: 4 });
 
 
   // change the agent's direction
@@ -58,12 +58,12 @@ exports.forward = function(directions, agent, room, room_coord, actuator_context
   var agentLocation = a.requirements.addVertex(subgraph.matcher.filler, undefined, {transitionable:true});
   var agentLocX = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id}, {transitionable:true});
   var agentLocY = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id}, {transitionable:true});
-  a.requirements.addEdge(agentInstance, links.list.type_of, a.requirements.addVertex(subgraph.matcher.id, agent), 6);
-  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasAlive'], agentHasAlive, 5);
-  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_dir'], agentDirection, 4);
-  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_loc'], agentLocation, 4);
-  a.requirements.addEdge(agentLocation, links.list['wumpus_room_loc_x'], agentLocX, 4);
-  a.requirements.addEdge(agentLocation, links.list['wumpus_room_loc_y'], agentLocY, 4);
+  a.requirements.addEdge(agentInstance, links.list.type_of, a.requirements.addVertex(subgraph.matcher.id, agent), { pref: 6 });
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasAlive'], agentHasAlive, { pref: 5 });
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_dir'], agentDirection, { pref: 4 });
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_loc'], agentLocation, { pref: 4 });
+  a.requirements.addEdge(agentLocation, links.list['wumpus_room_loc_x'], agentLocX, { pref: 4 });
+  a.requirements.addEdge(agentLocation, links.list['wumpus_room_loc_y'], agentLocY, { pref: 4 });
 
   // there must be a door/room in that direction
   var currentRoom = a.requirements.addVertex(subgraph.matcher.discrete, agentLocation, {matchRef:true});
@@ -72,12 +72,12 @@ exports.forward = function(directions, agent, room, room_coord, actuator_context
   var roomType = a.requirements.addVertex(subgraph.matcher.id, room);
   var targetRoomLocX = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id});
   var targetRoomLocY = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id});
-  a.requirements.addEdge(currentRoom, links.list.wumpus_room_door, roomDirection, 3);
-  a.requirements.addEdge(roomDirection, links.list.wumpus_room_door, targetRoom, 2);
-  a.requirements.addEdge(currentRoom, links.list.type_of, roomType, 3);
-  a.requirements.addEdge(targetRoom, links.list.type_of, roomType, 1);
-  a.requirements.addEdge(targetRoom, links.list.wumpus_room_loc_x, targetRoomLocX, 1);
-  a.requirements.addEdge(targetRoom, links.list.wumpus_room_loc_y, targetRoomLocY, 1);
+  a.requirements.addEdge(currentRoom, links.list.wumpus_room_door, roomDirection, { pref: 3 });
+  a.requirements.addEdge(roomDirection, links.list.wumpus_room_door, targetRoom, { pref: 2 });
+  a.requirements.addEdge(currentRoom, links.list.type_of, roomType, { pref: 3 });
+  a.requirements.addEdge(targetRoom, links.list.type_of, roomType, { pref: 3 });
+  a.requirements.addEdge(targetRoom, links.list.wumpus_room_loc_x, targetRoomLocX, { pref: 1 });
+  a.requirements.addEdge(targetRoom, links.list.wumpus_room_loc_y, targetRoomLocY, { pref: 1 });
 
 
   // move through the door
@@ -108,17 +108,17 @@ exports.grab = function(agent, room, actuator_context) {
   var agentHasAlive = a.requirements.addVertex(subgraph.matcher.discrete, {value:true, unit: discrete.definitions.list.boolean});
   var agentLocation = a.requirements.addVertex(subgraph.matcher.filler);
   var agentHasGold = a.requirements.addVertex(subgraph.matcher.discrete, {value:false, unit: discrete.definitions.list.boolean}, {transitionable:true});
-  a.requirements.addEdge(agentInstance, links.list.type_of, a.requirements.addVertex(subgraph.matcher.id, agent), 6);
-  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasAlive'], agentHasAlive, 5);
-  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_loc'], agentLocation, 4);
-  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasGold'], agentHasGold, 5);
+  a.requirements.addEdge(agentInstance, links.list.type_of, a.requirements.addVertex(subgraph.matcher.id, agent), { pref: 6 });
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasAlive'], agentHasAlive, { pref: 5 });
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_loc'], agentLocation, { pref: 4 });
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasGold'], agentHasGold, { pref: 5 });
 
   // that room has gold
   var currentRoom = a.requirements.addVertex(subgraph.matcher.discrete, agentLocation, {matchRef:true});
   var roomType = a.requirements.addVertex(subgraph.matcher.id, room);
   var roomHasGold = a.requirements.addVertex(subgraph.matcher.discrete, {value:true, unit: discrete.definitions.list.boolean}, {transitionable:true});
-  a.requirements.addEdge(currentRoom, links.list.type_of, roomType, 3);
-  a.requirements.addEdge(currentRoom, links.list.wumpus_sense_hasGold, roomHasGold, 3);
+  a.requirements.addEdge(currentRoom, links.list.type_of, roomType, { pref: 3 });
+  a.requirements.addEdge(currentRoom, links.list.wumpus_sense_hasGold, roomHasGold, { pref: 3 });
 
 
   // pick up gold
@@ -149,18 +149,18 @@ exports.exit = function(agent, room, actuator_context) {
   var agentLocation = a.requirements.addVertex(subgraph.matcher.filler);
   var agentHasGold = a.requirements.addVertex(subgraph.matcher.discrete, {value:true, unit: discrete.definitions.list.boolean}, {transitionable:true});
   var agentHasWon = a.requirements.addVertex(subgraph.matcher.discrete, {value:false, unit: discrete.definitions.list.boolean}, {transitionable:true});
-  a.requirements.addEdge(agentInstance, links.list.type_of, a.requirements.addVertex(subgraph.matcher.id, agent), 6);
-  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasAlive'], agentHasAlive, 5);
-  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_loc'], agentLocation, 4);
-  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasGold'], agentHasGold, 5);
-  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasWon'], agentHasWon, 5);
+  a.requirements.addEdge(agentInstance, links.list.type_of, a.requirements.addVertex(subgraph.matcher.id, agent), { pref: 6 });
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasAlive'], agentHasAlive, { pref: 5 });
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_loc'], agentLocation, { pref: 4 });
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasGold'], agentHasGold, { pref: 5 });
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasWon'], agentHasWon, { pref: 5 });
 
   // that room has an exit
   var currentRoom = a.requirements.addVertex(subgraph.matcher.discrete, agentLocation, {matchRef:true});
   var roomType = a.requirements.addVertex(subgraph.matcher.id, room);
   var roomHasExit = a.requirements.addVertex(subgraph.matcher.discrete, {value:true, unit: discrete.definitions.list.boolean});
-  a.requirements.addEdge(currentRoom, links.list.type_of, roomType, 3);
-  a.requirements.addEdge(currentRoom, links.list.wumpus_sense_hasExit, roomHasExit, 3);
+  a.requirements.addEdge(currentRoom, links.list.type_of, roomType, { pref: 3 });
+  a.requirements.addEdge(currentRoom, links.list.wumpus_sense_hasExit, roomHasExit, { pref: 3 });
 
 
   // the agent has won
@@ -189,11 +189,11 @@ exports.adjacentRoomStub = function(directions, agent, room, room_coord, actuato
   var agentLocation = a.requirements.addVertex(subgraph.matcher.filler, undefined, {transitionable:true});
   var agentLocX = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id}, {transitionable:true});
   var agentLocY = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id}, {transitionable:true});
-  a.requirements.addEdge(agentInstance, links.list.type_of, a.requirements.addVertex(subgraph.matcher.id, agent), 6);
-  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasAlive'], agentHasAlive, 5);
-  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_loc'], agentLocation, 4);
-  a.requirements.addEdge(agentLocation, links.list['wumpus_room_loc_x'], agentLocX, 4);
-  a.requirements.addEdge(agentLocation, links.list['wumpus_room_loc_y'], agentLocY, 4);
+  a.requirements.addEdge(agentInstance, links.list.type_of, a.requirements.addVertex(subgraph.matcher.id, agent), { pref: 6 });
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasAlive'], agentHasAlive, { pref: 5 });
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_loc'], agentLocation, { pref: 4 });
+  a.requirements.addEdge(agentLocation, links.list['wumpus_room_loc_x'], agentLocX, { pref: 4 });
+  a.requirements.addEdge(agentLocation, links.list['wumpus_room_loc_y'], agentLocY, { pref: 4 });
 
   // there is an adjacent room
   var currentRoom = a.requirements.addVertex(subgraph.matcher.discrete, agentLocation, {matchRef:true});
@@ -202,12 +202,12 @@ exports.adjacentRoomStub = function(directions, agent, room, room_coord, actuato
   var roomType = a.requirements.addVertex(subgraph.matcher.id, room);
   var targetRoomLocX = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id});
   var targetRoomLocY = a.requirements.addVertex(subgraph.matcher.similar, {unit:room_coord.id});
-  a.requirements.addEdge(currentRoom, links.list.wumpus_room_door, roomDirection, 3);
-  a.requirements.addEdge(roomDirection, links.list.wumpus_room_door, targetRoom, 2);
-  a.requirements.addEdge(currentRoom, links.list.type_of, roomType, 3);
-  a.requirements.addEdge(targetRoom, links.list.type_of, roomType, 1);
-  a.requirements.addEdge(targetRoom, links.list.wumpus_room_loc_x, targetRoomLocX, 1);
-  a.requirements.addEdge(targetRoom, links.list.wumpus_room_loc_y, targetRoomLocY, 1);
+  a.requirements.addEdge(currentRoom, links.list.wumpus_room_door, roomDirection, { pref: 3 });
+  a.requirements.addEdge(roomDirection, links.list.wumpus_room_door, targetRoom, { pref: 2 });
+  a.requirements.addEdge(currentRoom, links.list.type_of, roomType, { pref: 3 });
+  a.requirements.addEdge(targetRoom, links.list.type_of, roomType, { pref: 1 });
+  a.requirements.addEdge(targetRoom, links.list.wumpus_room_loc_x, targetRoomLocX, { pref: 1 });
+  a.requirements.addEdge(targetRoom, links.list.wumpus_room_loc_y, targetRoomLocY, { pref: 1 });
 
 
   // move through the door
@@ -234,16 +234,16 @@ exports.deathByPit = function(agent, room, actuator_context) {
   var agentInstance = a.requirements.addVertex(subgraph.matcher.filler);
   var agentHasAlive = a.requirements.addVertex(subgraph.matcher.discrete, {value:true, unit: discrete.definitions.list.boolean}, {transitionable:true});
   var agentLocation = a.requirements.addVertex(subgraph.matcher.filler);
-  a.requirements.addEdge(agentInstance, links.list.type_of, a.requirements.addVertex(subgraph.matcher.id, agent), 6);
-  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasAlive'], agentHasAlive, 5);
-  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_loc'], agentLocation, 4);
+  a.requirements.addEdge(agentInstance, links.list.type_of, a.requirements.addVertex(subgraph.matcher.id, agent), { pref: 6 });
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_hasAlive'], agentHasAlive, { pref: 5 });
+  a.requirements.addEdge(agentInstance, links.list['wumpus_sense_agent_loc'], agentLocation, { pref: 4 });
 
   // that room has a pit
   var currentRoom = a.requirements.addVertex(subgraph.matcher.discrete, agentLocation, {matchRef:true});
   var roomType = a.requirements.addVertex(subgraph.matcher.id, room);
   var roomHasPit = a.requirements.addVertex(subgraph.matcher.discrete, {value:true, unit: discrete.definitions.list.boolean});
-  a.requirements.addEdge(currentRoom, links.list.type_of, roomType, 3);
-  a.requirements.addEdge(currentRoom, links.list.wumpus_sense_hasPit, roomHasPit, 3);
+  a.requirements.addEdge(currentRoom, links.list.type_of, roomType, { pref: 3 });
+  a.requirements.addEdge(currentRoom, links.list.wumpus_sense_hasPit, roomHasPit, { pref: 6 });
 
 
   // the agent has died

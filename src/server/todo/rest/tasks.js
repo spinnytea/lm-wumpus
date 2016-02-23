@@ -67,7 +67,7 @@ exports.rest = function(router) {
       if(!_.isArray(req.query.parent)) {
         var some_parent = ideas.proxy(req.query.parent);
         sgs.forEach(function (sg) {
-          sg.addEdge(sg.addVertex(subgraph.matcher.id, some_parent), links.list.lm_wumpus_todo__child, t, undefined, true);
+          sg.addEdge(sg.addVertex(subgraph.matcher.id, some_parent), links.list.lm_wumpus_todo__child, t, { transitive: true });
         });
       }
     }

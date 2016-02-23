@@ -254,11 +254,11 @@ exports.sense = function(state) {
       exports.subgraph.addEdge(exports.keys.roomDefinition, links.list.thought_description, keys_rI);
       exports.subgraph.addEdge(keys_rI, links.list.type_of, exports.keys.room);
       exports.subgraph.addEdge(keys_rI, links.list['wumpus_room_loc_x'],
-        exports.subgraph.addVertex(subgraph.matcher.number, number.cast({value: number.value(room.x), unit: exports.idea('room_coord').id})), -1);
+        exports.subgraph.addVertex(subgraph.matcher.number, number.cast({value: number.value(room.x), unit: exports.idea('room_coord').id})), { pref: -1 });
       exports.subgraph.addEdge(keys_rI, links.list['wumpus_room_loc_y'],
-        exports.subgraph.addVertex(subgraph.matcher.number, number.cast({value: number.value(room.y), unit: exports.idea('room_coord').id})), -1);
+        exports.subgraph.addVertex(subgraph.matcher.number, number.cast({value: number.value(room.y), unit: exports.idea('room_coord').id})), { pref: -1 });
       exports.subgraph.addEdge(keys_rI, links.list.property,
-        exports.subgraph.addVertex(subgraph.matcher.number, number.cast({value: number.value(gameConfig.room.radius), unit: exports.idea('radius_unit').id})), -1);
+        exports.subgraph.addVertex(subgraph.matcher.number, number.cast({value: number.value(gameConfig.room.radius), unit: exports.idea('radius_unit').id})), { pref: -1 });
       exports.subgraph.addEdge(keys_rI, links.list['wumpus_sense_hasPit'],
         exports.subgraph.addVertex(subgraph.matcher.id, roomHasPit));
       exports.subgraph.addEdge(keys_rI, links.list['wumpus_sense_hasGold'],

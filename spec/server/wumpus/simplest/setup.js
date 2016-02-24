@@ -3,7 +3,6 @@
 var expect = require('chai').expect;
 var _ = require('lodash');
 
-var blueprint = require('lime/src/planning/primitives/blueprint');
 var links = require('lime/src/database/links');
 var number = require('lime/src/planning/primitives/number');
 var scheduler = require('lime/src/planning/scheduler');
@@ -181,24 +180,6 @@ describe('setup', function() {
       });
 
       describe('up', function() {
-        it.skip('requirements', function() {
-          var a = blueprint.list(context.idea('action_up')).map(blueprint.load)[0];
-          expect(a).to.not.equal(undefined);
-
-          var result = subgraph.match(context.subgraph, a.requirements);
-          expect(result.length).to.equal(1);
-          result = result[0];
-
-          // XXX how do we know we have the correct IDs for the requirement fields?
-          // basic stuff about the requirements so we know the tests will work
-          //expect(a.requirements.getMatch(0).matcher.name).to.equal('filler');
-          var a_agentLocation = 3;
-          var a_currentRoom = 7;
-
-          expect(context.subgraph.getData(result[a_agentLocation]).value).to.equal(63);
-          expect(context.subgraph.getData(result[a_currentRoom]).value).to.equal(63);
-        });
-
         it('basic', function() {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentLocX').data().value).to.deep.equal(number.value(0));

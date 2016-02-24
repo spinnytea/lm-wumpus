@@ -1,0 +1,1 @@
+{"name":"add link transitions","description":"upgrade subgraph._edges to be an object with keys, allow parenting\ncreate transitions to move edges","resolution":""}

@@ -8,6 +8,7 @@ module.exports = angular.module('lime.client.todo', [
   require('./taskList').name,
   require('./taskGraph').name,
   require('./taskBreakdown').name,
+  require('./next/nextModule').name,
   require('../tagCloud').name,
   'ngRoute'
 ]);
@@ -32,6 +33,9 @@ module.exports.config([
     }).when('/todo/queries', {
       templateUrl: 'todo/queries.html',
       controller: 'lime.client.todo.queriesController',
+    }).when('/todo/next', {
+      templateUrl: 'todo/next/next.html',
+      controller: 'lime.client.todo.next.controller',
     });
   }
 ]);

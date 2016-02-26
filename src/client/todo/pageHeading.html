@@ -4,6 +4,7 @@
             <a class="navbar-brand" href="#/todo">Tasks</a>
         </div>
         <ul class="nav navbar-nav">
+            <li data-ng-class="{'active': (active==='next')}"><a href="#/todo/next">Next</a></li>
             <li data-ng-class="{'active': (active==='list')}"><a href="#/todo/tasks">List</a></li>
             <li data-ng-class="{'active': (active==='query')}"><a href="#/todo/queries">Query</a></li>
         </ul>

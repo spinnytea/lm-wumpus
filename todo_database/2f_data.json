@@ -1,1 +1,1 @@
-{"name":"filtering","description":"Right now queries are based on \"match this exactly\" but this should do something more complicated.\n\nUpdate: now we can search by a list of types (e.g. hideClosed). Do we still need something more?"}
+{"name":"filtering","description":"Right now queries are based on \"match this exactly\" but this should do something more complicated.\n\nUpdate: now we can search by a list of types (e.g. hideClosed). Do we still need something more?","resolution":"nixed the idea of complicated filters, just doing simple queries"}

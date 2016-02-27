@@ -1,1 +1,1 @@
-{"name":"How do we structure the filter?","description":"Do we OR a list of things to exclude? How will that be rendered? Can we do combo dropdowns?"}
+{"name":"How do we structure the filter?","description":"Do we OR a list of things to exclude? How will that be rendered? Can we do combo dropdowns?","resolution":"nixed the idea of a complicated filter, just doing queries"}

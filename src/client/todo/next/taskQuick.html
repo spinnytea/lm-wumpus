@@ -1,2 +1,5 @@
-<h2 ng-bind="task.name"></h2>
-<p ng-bind="task.description"></p>
+<div class="title">
+    <i ng-class="types[task.type].icon" title="{{types[task.type].name}}"></i>
+    <a ng-href="#/todo/tasks/{{task.id}}" ng-bind="task.name"></a>
+</div>
+<p class="content" ng-bind="task.description"></p>

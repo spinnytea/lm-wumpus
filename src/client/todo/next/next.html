@@ -1,10 +1,16 @@
 <div page-heading active="next"></div>
 
-<h1>Current</h1>
+<section class="tags_current">
+<header><h2 class="title">Current</h2></header>
 <div data-ng-repeat="task in current" task-quick="task"></div>
+</section>
 
-<h1>In Progress</h1>
+<section class="status_progress">
+<header><h2 class="title">In Progress</h2></header>
 <div data-ng-repeat="task in progress" task-quick="task"></div>
+</section>
 
-<h1>High Priority</h1>
+<section class="priority_high">
+<header><h2 class="title">High Priority</h2></header>
 <div data-ng-repeat="task in high" task-quick="task"></div>
+</section>

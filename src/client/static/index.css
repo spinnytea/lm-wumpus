@@ -124,6 +124,33 @@ svg.subgraph {
   text-align: center;
 }
 
+section.tags_current {
+  border-left: 2px solid mediumseagreen;
+  padding-left: 5px;
+}
+section.status_progress {
+  border-left: 2px solid cornflowerblue;
+  padding-left: 5px;
+}
+section.priority_high {
+  border-left: 2px solid goldenrod;
+  padding-left: 5px;
+}
+section.tags_current header .title,
+section.status_progress header .title,
+section.priority_high header .title {
+  font-weight: lighter;
+  padding-left: 5px;
+}
+
+[task-quick] .title {
+  font-size: 1.5em;
+  font-weight: lighter;
+}
+[task-quick] .content {
+  padding-left: 34px;
+}
+
 /*
  * tag cloud
  */

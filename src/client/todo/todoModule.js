@@ -145,7 +145,7 @@ module.exports.directive('taskId', [
           $scope.formData.name = '';
         };
       },
-      template: '<div class="form-inline"><input class="form-control" ng-model="formData.id" ng-model-options="{ updateOn: \'default blur\', debounce: {\'default\': 500, \'blur\': 0} }" ng-readonly="readonly" />&nbsp;<i ng-class="formData.icon"></i>&nbsp;<a href="#/todo/tasks/{{formData.id}}" ng-bind="formData.name" ng-class="formData.class"></a></div>',
+      template: '<div class="form-inline"><input class="form-control" ng-model="formData.id" ng-model-options="{ updateOn: \'default blur\', debounce: {\'default\': 500, \'blur\': 0} }" ng-readonly="readonly" />&nbsp;<i ng-class="formData.icon"></i>&nbsp;<a ng-href="#/todo/tasks/{{formData.id}}" ng-bind="formData.name" ng-class="formData.class"></a></div>',
       controller: ['$scope', '$http', function($scope, $http) {
         $scope.formData = {
           id: undefined,

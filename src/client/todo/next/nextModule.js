@@ -3,15 +3,10 @@ module.exports = angular.module('lime.client.todo.next', []);
 
 module.exports.controller('lime.client.todo.next.controller', [
   '$scope',
-  '$q',
   '$http',
   'lime.client.todo.enums.statuses',
-  function($scope, $q, $http, statusService) {
-    $scope.things = 'hi';
-
-    $q.all([
-      statusService.ready
-    ]).then(function() {
+  function($scope, $http, statusService) {
+    statusService.ready.then(function() {
       var currentParams = {};
       currentParams.status = statusService.getNonClosed();
       currentParams.tags = 'current';
@@ -32,22 +27,24 @@ module.exports.controller('lime.client.todo.next.controller', [
         $scope.high = data.list;
       });
     });
-
-
-
-    // In Progress
-    // http://localhost:3000/rest/todo/tasks?status=e
-
-    // High Priority
-    // http://localhost:3000/rest/todo/tasks?priority=38&status=7&status=j&status=e&status=6o&status=g
   }
 ]);
 
 module.exports.directive('taskQuick', [
-  function() {
+  'lime.client.todo.enums.statuses',
+  'lime.client.todo.enums.types',
+  'lime.client.todo.enums.priorities',
+  function(statusService, typeService, priorityService) {
     return {
       templateUrl: 'todo/next/taskQuick.html',
-      scope: { task: '=taskQuick' }
+      scope: { task: '=taskQuick' },
+      controller: [ '$scope', Controller ]
     };
+
+    function Controller($scope) {
+      statusService.ready.then(function() { $scope.statuses = statusService.map; });
+      typeService.ready.then(function() { $scope.types = typeService.map; });
+      priorityService.ready.then(function() { $scope.priorities = priorityService.map; });
+    }
   }
 ]);

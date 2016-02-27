@@ -1,0 +1,1 @@
+{"name":"is blocking even when closed","description":"tasks are colored \"red\" (marked as isBlocking by query) even when the blocking tasks are closed\nit's an edge case, but it's still a thing","resolution":""}

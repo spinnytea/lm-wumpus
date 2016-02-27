@@ -124,23 +124,27 @@ svg.subgraph {
   text-align: center;
 }
 
+section.tags_current,
+section.status_progress,
+section.priority_high {
+  margin-left: 2px;
+  border-left: 2px solid;
+  padding-left: 3px;
+}
 section.tags_current {
-  border-left: 2px solid mediumseagreen;
-  padding-left: 5px;
+  border-color: mediumseagreen;
 }
 section.status_progress {
-  border-left: 2px solid cornflowerblue;
-  padding-left: 5px;
+  border-color: cornflowerblue;
 }
 section.priority_high {
-  border-left: 2px solid goldenrod;
-  padding-left: 5px;
+  border-color: goldenrod;
 }
 section.tags_current header .title,
 section.status_progress header .title,
 section.priority_high header .title {
   font-weight: lighter;
-  padding-left: 5px;
+  padding-left: 4px;
 }
 
 [task-quick] .title {
@@ -148,7 +152,7 @@ section.priority_high header .title {
   font-weight: lighter;
 }
 [task-quick] .content {
-  padding-left: 34px;
+  padding-left: 32px;
 }
 
 /*

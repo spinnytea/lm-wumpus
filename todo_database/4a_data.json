@@ -1,1 +1,1 @@
-{"name":"query by text","description":"will this be just the name?\nwill it also include the description and resolution? should those be separate input fields?","resolution":""}
+{"name":"query by text","description":"will this be just the name?\nwill it also include the description and resolution? should those be separate input fields?","resolution":"oooops\ndidn't need to implement a substring match in lm\nhmm... should I back that out? oh well"}

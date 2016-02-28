@@ -110,8 +110,19 @@ exports.rest = function(router) {
       .map(function(sg) { return subgraph.search(sg); })
       .reduce(function(set, next) { next.forEach(function(g) { set[g.getIdea(t).id] = g.getIdea(t); }); return set; }, {}));
 
+    list = list.map(getTaskData);
+
+    if(req.query.text) {
+      var text = req.query.text.toLowerCase();
+      list = list.filter(function(t) {
+        return (t.name && t.name.toLowerCase().indexOf(text) !== -1) ||
+          (t.description && t.description.toLowerCase().indexOf(text) !== -1) ||
+          (t.resolution && t.resolution.toLowerCase().indexOf(text) !== -1);
+      });
+    }
+
     // return the list of task data
-    res.json({ list: list.map(getTaskData) });
+    res.json({ list: list });
   });
 
   // CREATE task

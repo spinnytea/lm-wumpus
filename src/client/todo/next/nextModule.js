@@ -5,27 +5,36 @@ module.exports.controller('lime.client.todo.next.controller', [
   '$scope',
   '$http',
   'lime.client.todo.enums.statuses',
-  function($scope, $http, statusService) {
+  'lime.client.todo.enums.types',
+  function($scope, $http, statusService, typeService) {
+    typeService.ready.then(function() {
     statusService.ready.then(function() {
       var currentParams = {};
       currentParams.status = statusService.getNonClosed();
       currentParams.tags = 'current';
       $http.get('/rest/todo/tasks', { params: currentParams }).success(function(data) {
-        $scope.current = data.list;
+        $scope.current = sort(data.list);
       });
 
       var progressParams = {};
       progressParams.status = 'e';
       $http.get('/rest/todo/tasks', { params: progressParams }).success(function(data) {
-        $scope.progress = data.list;
+        $scope.progress = sort(data.list);
       });
 
       var highParams = {};
       highParams.status = statusService.getNonClosed();
       highParams.priority = '38';
       $http.get('/rest/todo/tasks', { params: highParams }).success(function(data) {
-        $scope.high = data.list;
+        $scope.high = sort(data.list);
       });
+
+      function sort(list) {
+        return list.sort(function(a, b) {
+          return typeService.map[b.type].order - typeService.map[a.type].order;
+        });
+      }
+    });
     });
   }
 ]);

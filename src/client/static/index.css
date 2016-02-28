@@ -151,7 +151,6 @@ section.priority_high header .title {
   font-size: 1.5em;
   font-weight: lighter;
   text-decoration: none;
-  text-shadow: 1px 1px 2px beige;
 }
 [task-quick] a.title:hover {
   border-bottom: 1px solid rgba(35, 82, 124, 0.6);

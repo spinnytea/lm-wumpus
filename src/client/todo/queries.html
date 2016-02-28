@@ -1,6 +1,6 @@
 <div page-heading active="query"></div>
 
-<div class="form-horizontal well">
+<form class="form-horizontal well">
     <div class="row">
     <div class="col-md-6"> <!-- start of left part of form -->
 
@@ -69,12 +69,12 @@
         <div class="form-group" align="right">
             <div class="col-sm-12">
                 <span class="label label-default"><span ng-bind="tasks.length"></span> Results</span>
-                <button class="btn btn-primary" ng-click="search()" data-ng-disabled="searching"><i class="fa fa-search"></i> Search</button>
+                <button type="submit" class="btn btn-primary" ng-click="search()" data-ng-disabled="searching"><i class="fa fa-search"></i> Search</button>
             </div>
         </div>
 
     </div> <!-- end of right part of form -->
     </div>
-</div>
+</form>
 
 <div task-list data-tasks="tasks"></div>

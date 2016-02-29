@@ -124,27 +124,12 @@ svg.subgraph {
   text-align: center;
 }
 
-section.tags_current,
-section.status_progress,
-section.priority_high {
-  margin-left: 2px;
-  border-left: 2px solid;
-  padding-left: 3px;
-}
-section.tags_current {
-  border-color: mediumseagreen;
-}
-section.status_progress {
-  border-color: cornflowerblue;
-}
-section.priority_high {
-  border-color: goldenrod;
-}
-section.tags_current header .title,
-section.status_progress header .title,
-section.priority_high header .title {
+section.task-quick-list header .title {
   font-weight: lighter;
   padding-left: 4px;
+}
+section.task-quick-list {
+  margin-bottom: 50px;
 }
 
 [task-quick] .title {
@@ -158,6 +143,9 @@ section.priority_high header .title {
 [task-quick] .content {
   padding-left: 32px;
   color: #777;
+}
+[task-quick] {
+  margin-bottom: 20px;
 }
 
 /*

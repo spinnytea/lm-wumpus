@@ -1,10 +1,11 @@
 'use strict';
 var gulp = require('gulp');
+var istanbul = require('gulp-istanbul');
 var jshint = require('gulp-jshint');
 var lazypipe = require('lazypipe');
-var path = require('path');
 var mocha = require('gulp-mocha');
 var nodemon = require('gulp-nodemon');
+var path = require('path');
 
 // define which report we will use for the test
 // 'nyan' is the best, so that is the default
@@ -71,4 +72,22 @@ gulp.task('mocha', ['server-jshint', 'spec-jshint'], function() {
 gulp.task('test', [], function() {
   gulp.watch(['spec/**/*.js', 'src/server/**/*.js', 'node_modules/lime/**/*.js'], ['mocha']);
   gulp.start('mocha');
+});
+
+gulp.task('coverage', [], function (cb) {
+  gulp.src(['node_modules/lime/src/**/*.js'])
+    .pipe(istanbul({
+      includeUntested: true
+    })) // Covering files
+    .pipe(istanbul.hookRequire()) // Force `require` to return covered files
+    .on('finish', function () {
+      return gulp.src(['spec/**/*.js'], { read: false })
+        .pipe(mocha({
+          reporter: 'list'
+        }))
+        .pipe(istanbul.writeReports({
+          reporters: ['html']
+        }))
+        .on('end', cb);
+    });
 });

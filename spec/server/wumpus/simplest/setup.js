@@ -372,7 +372,7 @@ describe('setup', function() {
       });
     }); // end sensors
 
-    describe('goal', function() {
+    describe.skip('goal', function() {
       var goalCallback;
       before(function() {
         goalCallback = server.setup.goal(socket);

@@ -75,19 +75,13 @@ gulp.task('test', [], function() {
 });
 
 gulp.task('coverage', [], function (cb) {
-  gulp.src(['node_modules/lime/src/**/*.js'])
-    .pipe(istanbul({
-      includeUntested: true
-    })) // Covering files
+  gulp.src(['../lime/src/**/*.js'])
+    .pipe(istanbul({ includeUntested: true }))
     .pipe(istanbul.hookRequire()) // Force `require` to return covered files
     .on('finish', function () {
       return gulp.src(['spec/**/*.js'], { read: false })
-        .pipe(mocha({
-          reporter: 'list'
-        }))
-        .pipe(istanbul.writeReports({
-          reporters: ['html']
-        }))
+        .pipe(mocha({ reporter: 'list', timeout: 16000 }))
+        .pipe(istanbul.writeReports({ reporters: ['html'] }))
         .on('end', cb);
     });
 });

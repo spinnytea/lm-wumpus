@@ -89,7 +89,7 @@ describe('astar', function() {
   socket.setup(require('../simplest/test_data'));
 
   describe('basic', function() {
-    it('path', function() {
+    it.skip('path', function() {
       // first, let's just make sure we have things setup correctly
       expect(context.idea('agentLocation').data().value).to.equal(63);
       expect(context.idea('agentDirection').data().value).to.equal('east');
@@ -121,7 +121,7 @@ describe('astar', function() {
     });
   });
 
-  it('small step-through', function() {
+  it.skip('small step-through', function() {
     var agentLocation_vertexId = context.keys['agentLocation'];
     var states = createStates(68);
     var frontier = astar.units.frontier();

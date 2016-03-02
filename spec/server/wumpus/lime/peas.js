@@ -31,7 +31,7 @@ describe('peas', function() {
     // player: 'lemon' // lemon, person
   });
 
-  it('stochastic', function(done) {
+  it.skip('stochastic', function(done) {
     expect(agentState()).to.deep.equal([63, 'east', false, false, true]);
 
     goalCallback('goto gold').then(function() {

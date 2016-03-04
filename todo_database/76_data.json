@@ -1,1 +1,1 @@
-{"name":"improve subgraph.match","description":"Here's an idea: minimic subgraph search\nis it faster to build off known vertices than it is to match any \"good\" edge?\nis this already handled by edge prefs?","resolution":""}
+{"name":"improve subgraph.match","description":"Here's an idea: mimic subgraph search\nis it faster to build off known vertices than it is to match any \"good\" edge?\nis this already handled by edge prefs?","resolution":""}

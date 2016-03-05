@@ -1,4 +1,5 @@
 'use strict';
+var _ = require('lodash');
 // this is the visual representation of a socket connect
 // it won't react to EVERYTHING, but it renders the communication that makes sense
 
@@ -34,6 +35,8 @@ module.exports = angular.module('lime.client.wumpus.socketDirective', [
             processMessage('Got a context.');
           sg = JSON.parse(sg);
           sg.colors = {};
+
+          sg.edges = _.values(sg.edges);
 
           sg.edges.forEach(function(value) {
             value.src = +value.src;

@@ -372,7 +372,7 @@ describe('setup', function() {
       });
     }); // end sensors
 
-    describe.skip('goal', function() {
+    describe('goal', function() {
       var goalCallback;
       before(function() {
         goalCallback = server.setup.goal(socket);
@@ -469,7 +469,7 @@ describe('setup', function() {
         });
       }); // end room
 
-      describe('goto', function() {
+      describe.skip('goto', function() {
         it('gold', function(done) {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentDirection').data().value).to.equal('east');
@@ -511,7 +511,7 @@ describe('setup', function() {
         });
       }); // end goto
 
-      describe('gold', function() {
+      describe.skip('gold', function() {
         it('in the room', function(done) {
           expect(context.idea('agentLocation').data().value).to.equal(63);
           expect(context.idea('agentDirection').data().value).to.equal('east');

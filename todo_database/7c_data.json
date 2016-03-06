@@ -1,0 +1,1 @@
+{"name":"how do we deal with appearing / disappearing edges","description":"the context graph is meant to have fixed vertices and fixed edges\nsensors and move and add arbitrary edges\nthe subgraph needs to support that\n\nOORR we need to change what sensors can do","resolution":""}

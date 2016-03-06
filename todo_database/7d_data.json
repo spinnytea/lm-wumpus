@@ -1,0 +1,1 @@
+{"name":"parent doesn't search transitively","description":"search for \"Done\" under \"lime\"\nit only returns tasks that are direct children, rather than all children in the tree","resolution":""}

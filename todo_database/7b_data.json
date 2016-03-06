@@ -1,0 +1,1 @@
+{"name":"subgraph.match edges","description":"if edges can move, if they can be indexed:\n- we need to add an edgeMatch (not just a vertexMatch)\n- we need to add them to the blueprint glue\n- the transition edge_ids need to be converted between graphs","resolution":""}

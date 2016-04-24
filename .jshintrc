@@ -21,5 +21,7 @@
   "browser": false,
   "node": true,
 
-  "predef": ["angular"]
+  "globals": {
+    "angular": true
+  }
 }

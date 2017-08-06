@@ -1,1 +1,1 @@
-{"name":"lm-sobel","description":"","resolution":""}
+{"name":"lm-sobel","description":"This was a research project into feature detection. This was back before convolutional neural networks took off. That's not to say that this won't or can't be useful, but there are better approaches to take for now.","resolution":""}
